@@ -1,0 +1,32 @@
+html, body {
+  height: 200px;
+  width: 200px;
+}
+
+.hidden {
+  display: none;
+}
+
+.button {
+  margin: 10%;
+  padding: 4px;
+  text-align: center;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.beast:hover {
+  background-color: #CFF2F2;
+}
+
+.beast {
+  background-color: #E5F2F2;
+}
+
+.reset {
+  background-color: #FBFBC9;
+}
+
+.reset:hover {
+  background-color: #EAEA9D;
+}

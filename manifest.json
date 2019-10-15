@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "unClutter.js",
+  "version": "1.0",
+  "description": "Unclutters your tabs.",
+  "icons": {
+    "48": "shared/assets/logo-48.png",
+    "96": "shared/assets/logo-96.png"
+  },
+
+  "browser_action": {
+    "default_icon": "shared/assets/logo-32.png",
+    "default_title": "unClutter.js",
+    "default_popup": "popup/unclutter.html",
+    "browser_style": true
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["unclutterBackground.js"]
+    }
+  ]
+}
