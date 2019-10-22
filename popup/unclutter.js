@@ -1,3 +1,4 @@
+Components.utils.import("resource://gre/modules/Console.jsm");
 function getButtonIClick(buttonNum) {
   return () => {
     console.log("runnning");
