@@ -75,8 +75,30 @@ browser.runtime.onStartup.addListener((e) => {
     initializeTimersForTabs();
     timer.run()
 });
+
 browser.tabs.onActivated.addListener((e) => {
     console.log("NEW FOCUSED!");
     var currentTab = browser.tabs.getCurrent();
     currentTab.then(onCurrentTab, onError);
 });
+
+browser.tabs.onRemoved.addListener((tabId) => {
+    console.log("TAB CLOSED!");
+    inactiveTabs1 = startTimeMap.keys();
+    inactiveTabs2 = runTimeMap.keys();
+    for (let tab of inactiveTabs1) {
+        if (tab.id === tabId) {
+            startTimeMap.delete(tab);
+            runTimeMap.delete(tab);
+        }
+    }
+});
+
+browser.tabs.onCreated.addListener((tab) => {
+    console.log("TAB OPENED!");
+    let currentTime = Date.now()
+    
+});
+
+
+
