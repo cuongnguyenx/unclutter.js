@@ -8,25 +8,37 @@ html, body {
 }
 
 .button {
-  margin: 10%;
-  padding: 4px;
+  margin: 5%;
+  padding: 8px;
   text-align: center;
   font-size: 1.5em;
   cursor: pointer;
 }
 
-.beast:hover {
+.button0 {
+  background-color: #E5F2F2;
+}
+.button0:hover {
   background-color: #CFF2F2;
 }
 
-.beast {
-  background-color: #E5F2F2;
+.button1 {
+  background-color: #EAEA9D;
 }
-
-.reset {
+.button1:hover {
   background-color: #FBFBC9;
 }
 
-.reset:hover {
-  background-color: #EAEA9D;
+.button2 {
+  background-color: #EAAA9D;
+}
+.button2:hover {
+  background-color: #FBABC9;
+}
+
+.button3 {
+  background-color: #EAAA2D;
+}
+.button3:hover {
+  background-color: #FB40C9;
 }

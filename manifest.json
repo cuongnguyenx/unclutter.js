@@ -8,6 +8,10 @@
     "96": "shared/assets/logo-96.png"
   },
 
+  "permissions": [
+    
+  ],
+
   "browser_action": {
     "default_icon": "shared/assets/logo-32.png",
     "default_title": "unClutter.js",
@@ -18,7 +22,11 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["unclutterBackground.js"]
+      "js": ["unclutterContent.js"]
     }
+  ],
+
+  "background": [
+    "unclutterBackground.js"
   ]
 }
