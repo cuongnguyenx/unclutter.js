@@ -1,10 +1,50 @@
 html, body {
-  height: 200px;
-  width: 200px;
+  height: 500px;
+  width: 500px;
+}
+body {
+  margin: 0px !important;
 }
 
-.hidden {
-  display: none;
+.popup-content {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  background: #999999;
+}
+
+.nav-bar {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+  display: block;
+  background: #388;
+  align-content: center;
+  height: 10%;  
+}
+
+.nav-element {
+  display: block;
+  width: 30px;
+}
+
+.nav-button {
+  padding: 1px;
+  text-align: center;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.tab-list {
+  background: #DDDDDD;
+  border-radius: 10%;
+  list-style-type: none;
+}
+
+.tab {
+  margin: 2%;
+  background: #555555;
+  border-radius: 10%;
 }
 
 .button {
