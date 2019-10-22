@@ -1,4 +1,3 @@
-Components.utils.import("resource://gre/modules/Console.jsm");
 function getButtonIClick(buttonNum) {
   console.log(toString(buttonNum));
   return () => {
