@@ -1,3 +1,4 @@
+Components.utils.import("resource://gre/modules/Console.jsm");
 function getButtonIClick(buttonNum) {
   console.log(toString(buttonNum));
   return () => {
@@ -8,6 +9,7 @@ function getButtonIClick(buttonNum) {
 const content = document.getElementById("popup-content");
 
 for (let i = 0; i < 4; i++) {
+  console.log(i);
   let newButton = content.appendChild(document.createElement("div"));
   newButton.textContent = "Button" + i;
   newButton.classList.add("button");

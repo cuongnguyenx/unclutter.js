@@ -1,6 +1,6 @@
 {
   "manifest_version": 2,
-  "name": "unClutter.js",
+  "name": "unClutter",
   "version": "1.0",
   "description": "Unclutters your tabs.",
   "icons": {
@@ -8,25 +8,33 @@
     "96": "shared/assets/logo-96.png"
   },
 
+  "applications": {
+  "gecko": {
+    "strict_min_version": "58.0a1"
+    }
+  },
   "permissions": [
-    
+    "tabs"
   ],
 
   "browser_action": {
     "default_icon": "shared/assets/logo-32.png",
-    "default_title": "unClutter.js",
+    "default_title": "unClutter",
     "default_popup": "popup/unclutter.html",
     "browser_style": true
   },
-
+  "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/tabs-tabs-tabs",
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["unclutterContent.js"]
+      "js": ["unclutter.js"]
     }
   ],
 
-  "background": [
-    "unclutterBackground.js"
-  ]
+  "background": {
+    "scripts": [
+      "timer/timer.js"
+    ]
+  }
+
 }
