@@ -84,7 +84,7 @@ browser.tabs.onActivated.addListener((activeInfo) => {
         startTimeMap.set(tabPrev, Date.now());
     }
     console.log("NEW FOCUSED!");
-    var currentTab = browser.tabs.getCurrent();
+    var currentTab = chrome.tabs.getCurrent();
     currentTab.then(onCurrentTab, onError);
 });
 
@@ -123,6 +123,3 @@ browser.tabs.onCreated.addListener((tab) => {
     startTimeMap.set(tab, currentTime);
     runTimeMap.set(tab, 0)
 });
-
-
-

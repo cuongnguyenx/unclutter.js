@@ -22,7 +22,7 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["unclutter.js"]
+      "js": ["unclutterContent.js"]
     }
   ],
 
