@@ -7,11 +7,29 @@
   </head>
 
   <body>
-    <div id="popup-content">
+    <div class="popup-content">
+        <ul class="nav-bar">
+          <li class="nav-element"><a class="nav-button button0">Test</a></li>
+        </ul>
+
+      <div>
+        <ul class="tab-list" id="tab-list">
+          <li class="tab">
+            <span class="tab-text">Sample Tab 1</span>
+            <span class = "tab-options">
+              <span class="button close-button">Close</span><span class="button closesave-button">Close and Save</span><span class="button dismiss-button">Dismiss</span>
+            </span>
+          </li>
+          <li class="tab">
+              <span class="tab-text">Sample Tab 2</span>
+              <span class = "tab-options">
+                <span class="button close-button">Close</span><span class="button closesave-button">Close and Save</span><span class="button dismiss-button">Dismiss</span>
+              </span>
+            </li>
+        </span>
+      </div>
     </div>
-    <div id="error-content" class="hidden">
-      <p>Can't beastify this web page.</p><p>Try a different page.</p>
-    </div>
+
     <script type="module" src="unclutter.js"></script>
   </body>
 </html>

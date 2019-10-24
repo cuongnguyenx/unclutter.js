@@ -1,44 +1,91 @@
 html, body {
-  height: 200px;
-  width: 200px;
+  height: 500px;
+  width: 500px;
+}
+body {
+  margin: 0px !important;
 }
 
-.hidden {
-  display: none;
+.popup-content {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  background: #999999;
 }
 
-.button {
-  margin: 5%;
-  padding: 8px;
+.nav-bar {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+  display: block;
+  background: #388;
+  align-content: center;
+  height: 10%;  
+}
+
+.nav-element {
+  display: block;
+  width: 30px;
+}
+
+.nav-button {
+  padding: 1px;
   text-align: center;
   font-size: 1.5em;
   cursor: pointer;
 }
 
-.button0 {
-  background-color: #E5F2F2;
-}
-.button0:hover {
-  background-color: #CFF2F2;
-}
-
-.button1 {
-  background-color: #EAEA9D;
-}
-.button1:hover {
-  background-color: #FBFBC9;
+.tab-list {
+  margin: 2%;
+  background: #555555;
+  padding: 1%;
+  list-style-type: none;
 }
 
-.button2 {
-  background-color: #EAAA9D;
+.tab {
+  display: inline-block;
+  overflow: hidden;
+  background: #555555;
 }
-.button2:hover {
-  background-color: #FBABC9;
+.tab:hover {
+  background: #666666;
 }
 
-.button3 {
-  background-color: #EAAA2D;
+.tab-text {
+  float: left;
+  font-size: 2em;
+  color: #FFFFFF;
 }
-.button3:hover {
-  background-color: #FB40C9;
+
+.tab-options {
+  float: right;
+}
+
+.button {
+  height: 100%;
+  width: 15%;
+  text-align: center;
+  font-size: 2em;
+  cursor: pointer;
+}
+
+.close-button {
+  background-color: #770022;
+}
+.close-button:hover {
+  background-color: #972042;
+}
+
+.closesave-button {
+  background-color: #609560;
+}
+.closesave-button:hover {
+  background-color: #80B580;
+}
+
+.dismiss-button {
+  background-color: #333333;
+}
+.dismiss-button:hover {
+  background-color: #AAAAAA;
 }
