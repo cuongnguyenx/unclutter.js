@@ -1,17 +1,20 @@
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Working_with_the_Tabs_API
 // https://gist.github.com/manast/1185904
 // get all Tabs of the current Window
-// let timer = new interval(1000, updateTimeStatus);
+let timer = new interval(1000, updateTimeStatus);
 let startTimeMap = new Map();
 let runTimeMap = new Map();
+initializeTimersForTabs();
 
 function incrementTabs(tabs) {
     for (let tab of tabs) {
         // tab.url requires the `tabs` permission
+        console.log(tab);
         let inactiveTime = Date.now() - startTimeMap.get(tab);
         runTimeMap.set(tab, inactiveTime);
         console.log(tab.url);
         console.log(inactiveTime);
+        break;
     }
 }
 
@@ -29,6 +32,7 @@ function TimerHelper() {
 }
 
 function initializeTimersForTabs() {
+    timer.run()
     var querying = browser.tabs.query({active: false});
     querying.then(TimerHelper, onError);
 }
@@ -65,21 +69,19 @@ function interval(duration, fn){
     }
 }
 
-/*
 // On startup of addon
 browser.runtime.onStartup.addListener((e) => {
     initializeTimersForTabs();
-    timer.run()
 });
-*/
+
 // If the tab is newly active, then delete its inactive timer. Also if the tab it navigated from is still open,
 // initialize an inactive timer for that tab
 browser.tabs.onActivated.addListener((activeInfo) => {
 
     if (activeInfo.previousTabId > 1) {
         let tabPrev = findTab(activeInfo.previousTabId);
-        runTimeMap.add(tabPrev, 0);
-        startTimeMap.add(tabPrev, Date.now());
+        runTimeMap.set(tabPrev, 0);
+        startTimeMap.set(tabPrev, Date.now());
     }
     console.log("NEW FOCUSED!");
     var currentTab = browser.tabs.getCurrent();
