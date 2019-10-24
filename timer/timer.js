@@ -1,10 +1,7 @@
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Working_with_the_Tabs_API
 // https://gist.github.com/manast/1185904
 // get all Tabs of the current Window
-
-console.log("testing");
-
-let timer = new interval(1000, checkTimeStatus);
+// let timer = new interval(1000, updateTimeStatus);
 let startTimeMap = new Map();
 let runTimeMap = new Map();
 
@@ -18,6 +15,11 @@ function incrementTabs(tabs) {
     }
 }
 
+function updateTimeStatus() {
+    var querying = browser.tabs.query({active: false});
+    querying.then(incrementTabs, onError);
+}
+
 function TimerHelper() {
     let startDate = Date.now();
     for (let tab of querying) {
@@ -27,18 +29,13 @@ function TimerHelper() {
 }
 
 function initializeTimersForTabs() {
-    var querying = chrome.tabs.query({});
+    var querying = browser.tabs.query({active: false});
     querying.then(TimerHelper, onError);
 }
 
 
 function onError(error) {
     console.log(`Error: ${error}`);
-}
-
-function checkTimeStatus() {
-    var querying = chrome.tabs.query({active: false});
-    querying.then(logTabs, onError);
 }
 
 function interval(duration, fn){
@@ -68,40 +65,59 @@ function interval(duration, fn){
     }
 }
 
-function onCurrentTab(currentTab) {
-    startTimeMap.delete(currentTab);
-    runTimeMap.delete(currentTab);
-}
-
-
-chrome.runtime.onStartup.addListener((e) => {
+/*
+// On startup of addon
+browser.runtime.onStartup.addListener((e) => {
     initializeTimersForTabs();
     timer.run()
 });
+*/
+// If the tab is newly active, then delete its inactive timer. Also if the tab it navigated from is still open,
+// initialize an inactive timer for that tab
+browser.tabs.onActivated.addListener((activeInfo) => {
 
-chrome.tabs.onActivated.addListener((e) => {
+    if (activeInfo.previousTabId > 1) {
+        let tabPrev = findTab(activeInfo.previousTabId);
+        runTimeMap.add(tabPrev, 0);
+        startTimeMap.add(tabPrev, Date.now());
+    }
     console.log("NEW FOCUSED!");
     var currentTab = chrome.tabs.getCurrent();
     currentTab.then(onCurrentTab, onError);
 });
 
-chrome.tabs.onRemoved.addListener((tabId) => {
-    console.log("TAB CLOSED!");
+function onCurrentTab(currentTab) {
+    startTimeMap.delete(currentTab);
+    runTimeMap.delete(currentTab);
+}
+
+function findTab(tabId)
+{
     inactiveTabs1 = startTimeMap.keys();
     inactiveTabs2 = runTimeMap.keys();
     for (let tab of inactiveTabs1) {
         if (tab.id === tabId) {
-            startTimeMap.delete(tab);
-            runTimeMap.delete(tab);
+            return tab;
         }
     }
+    return null;
+}
+
+// If the tab is being removed, find the correct tab in startTimeMap and delete it.
+browser.tabs.onRemoved.addListener((tabId) => {
+    console.log("TAB CLOSED!");
+    let tabX;
+    if ((tabX = findTab(tabId)) != null) {
+        runTimeMap.delete(tabX);
+        startTimeMap.delete(tabX);
+    }
+
 });
 
-chrome.tabs.onCreated.addListener((tab) => {
+// On the creation of a new tab
+browser.tabs.onCreated.addListener((tab) => {
     console.log("TAB OPENED!");
-    let currentTime = Date.now()
-    
+    let currentTime = Date.now();
+    startTimeMap.set(tab, currentTime);
+    runTimeMap.set(tab, 0)
 });
-
-
-
