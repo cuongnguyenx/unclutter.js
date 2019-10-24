@@ -1,6 +1,9 @@
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Working_with_the_Tabs_API
 // https://gist.github.com/manast/1185904
 // get all Tabs of the current Window
+
+console.log("testing");
+
 let timer = new interval(1000, checkTimeStatus);
 let startTimeMap = new Map();
 let runTimeMap = new Map();
@@ -24,7 +27,7 @@ function TimerHelper() {
 }
 
 function initializeTimersForTabs() {
-    var querying = browser.tabs.query({});
+    var querying = chrome.tabs.query({});
     querying.then(TimerHelper, onError);
 }
 
@@ -34,7 +37,7 @@ function onError(error) {
 }
 
 function checkTimeStatus() {
-    var querying = browser.tabs.query({active: false});
+    var querying = chrome.tabs.query({active: false});
     querying.then(logTabs, onError);
 }
 
@@ -71,18 +74,18 @@ function onCurrentTab(currentTab) {
 }
 
 
-browser.runtime.onStartup.addListener((e) => {
+chrome.runtime.onStartup.addListener((e) => {
     initializeTimersForTabs();
     timer.run()
 });
 
-browser.tabs.onActivated.addListener((e) => {
+chrome.tabs.onActivated.addListener((e) => {
     console.log("NEW FOCUSED!");
-    var currentTab = browser.tabs.getCurrent();
+    var currentTab = chrome.tabs.getCurrent();
     currentTab.then(onCurrentTab, onError);
 });
 
-browser.tabs.onRemoved.addListener((tabId) => {
+chrome.tabs.onRemoved.addListener((tabId) => {
     console.log("TAB CLOSED!");
     inactiveTabs1 = startTimeMap.keys();
     inactiveTabs2 = runTimeMap.keys();
@@ -94,7 +97,7 @@ browser.tabs.onRemoved.addListener((tabId) => {
     }
 });
 
-browser.tabs.onCreated.addListener((tab) => {
+chrome.tabs.onCreated.addListener((tab) => {
     console.log("TAB OPENED!");
     let currentTime = Date.now()
     

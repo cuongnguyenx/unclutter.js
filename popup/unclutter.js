@@ -4,7 +4,7 @@ function getButtonIClick(buttonNum) {
   };
 }
 
-// const content = document.getElementById("tab-list");
+const content = document.getElementById("tab-list");
 
 // for (let i = 0; i < 4; i++) {
 //   let newListItem = content.appendChild(document.createElement("li"));

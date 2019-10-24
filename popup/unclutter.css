@@ -2,90 +2,86 @@ html, body {
   height: 500px;
   width: 500px;
 }
-body {
-  margin: 0px !important;
-}
 
 .popup-content {
   height: 100%;
   width: 100%;
-  margin: 0px;
-  background: #999999;
+  background: #646464;
 }
 
-.nav-bar {
-  margin: 0px;
-  padding: 0px;
-  list-style-type: none;
+.navbar {
   display: block;
-  background: #388;
-  align-content: center;
-  height: 10%;  
+  text-align: center;
+  background: #643764;
 }
 
-.nav-element {
-  display: block;
-  width: 30px;
+.nav-link {
+  font-size: 2em;
+  color: #FFFFFF;
+  background: #643764;
+}
+.nav-link:hover {
+  color: #FFFFFF;
+  background: #555555
 }
 
-.nav-button {
+/* .nav-button {
   padding: 1px;
   text-align: center;
   font-size: 1.5em;
   cursor: pointer;
-}
+} */
 
-.tab-list {
+/* .tab-list {
   margin: 2%;
   background: #555555;
   padding: 1%;
   list-style-type: none;
-}
+} */
 
-.tab {
-  display: inline-block;
+/* .tab {
+  display: block;
   overflow: hidden;
   background: #555555;
+  color: #FFFFFF;
 }
 .tab:hover {
   background: #666666;
 }
+.tab:hover > .tab-options > .button:not(:hover) {
+  background-color: #666666;
+} */
 
-.tab-text {
+/* .tab-text {
   float: left;
   font-size: 2em;
-  color: #FFFFFF;
-}
+} */
 
-.tab-options {
-  float: right;
-}
+/* .tab-options {
+  white-space: nowrap;
+  justify-content: right;
+  text-align: right;
+} */
 
-.button {
+/* .button {
   height: 100%;
-  width: 15%;
+  width: auto;
+  padding-left: 2%;
+  padding-right: 2%;
   text-align: center;
   font-size: 2em;
+  background-color: #555555;
   cursor: pointer;
-}
+} */
 
-.close-button {
+/* .close-button:hover {
   background-color: #770022;
 }
-.close-button:hover {
-  background-color: #972042;
-}
 
-.closesave-button {
+.closesave-button:hover {
   background-color: #609560;
 }
-.closesave-button:hover {
-  background-color: #80B580;
-}
 
-.dismiss-button {
-  background-color: #333333;
-}
 .dismiss-button:hover {
-  background-color: #AAAAAA;
-}
+  background-color: #333333;
+} */

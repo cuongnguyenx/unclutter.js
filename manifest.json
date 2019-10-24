@@ -8,11 +8,6 @@
     "96": "shared/assets/logo-96.png"
   },
 
-  "applications": {
-  "gecko": {
-    "strict_min_version": "58.0a1"
-    }
-  },
   "permissions": [
     "tabs"
   ],
@@ -27,7 +22,7 @@
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["unclutter.js"]
+      "js": ["unclutterContent.js"]
     }
   ],
 
