@@ -4,14 +4,14 @@
 
 class Interval {
     constructor(duration, callback) {
-        this.baseline = undefined;
+        this.baseline = -1;
         this.duration = duration;
         this.callback = callback;
     }
 
     run() {
-        if (this.baseline === undefined) {
-            this.baseline = new Date().getTime();
+        if (this.baseline === -1) {
+            this.baseline = Date.now();
         }
 
         this.callback();
@@ -47,17 +47,13 @@ function updateTimeStatus() {
 }
 
 function incrementTabs(tabs) {
+    for (let tab of tabs) {
+        let inactiveTime = (Date.now() - startTimeMap.get(tab.id)) / 1000;
+        runTimeMap.set(tab.id, inactiveTime);
+    }
+
     console.log(startTimeMap);
     console.log(runTimeMap);
-
-    tabs.forEach((tab) => {
-        let inactiveTime = Date.now() - startTimeMap.get(tab.id);
-
-        runTimeMap.set(tab.id, inactiveTime);
-
-        console.log(tab.id);
-        console.log(tab.url); // tab.url requires the `tabs` permission
-    });
 }
 
 function onError(error) {
@@ -68,7 +64,10 @@ initializeTimersForTabs();
 
 function initializeTimersForTabs() {
     let querying = browser.tabs.query({
-        hidden: true
+        active: false
+    });
+    querying.then(resetTimers, onError).then(() => {
+        console.log("Initialization Complete!");
     });
     querying.then(resetTimers, onError);
     timer.run();
@@ -99,6 +98,12 @@ browser.tabs.onActivated.addListener((activeInfo) => {
     currentTab.then(onCurrentTab, onError);
 });
 
+function onCurrentTab(currentTab) {
+    console.log(currentTab.url);
+    startTimeMap.delete(currentTab.id);
+    runTimeMap.delete(currentTab.id);
+}
+
 function findTab(tabId) {
     inactiveTabs1 = startTimeMap.keys();
     inactiveTabs2 = runTimeMap.keys();
@@ -118,17 +123,21 @@ function onCurrentTab(currentTab) {
 }
 
 // If the tab is being removed, find the correct tab in startTimeMap and delete it.
-browser.tabs.onRemoved.addListener((tab) => {
-    console.log("TAB CLOSED!");
-    runTimeMap.delete(tab.id);
-    startTimeMap.delete(tab.id);
+browser.tabs.onRemoved.addListener((tabId) => {
+    console.log("TAB CLOSED! " + tabId);
+    runTimeMap.delete(tabId);
+    startTimeMap.delete(tabId);
 });
 
 // On the creation of a new tab
 browser.tabs.onCreated.addListener((tab) => {
-    console.log("TAB OPENED!");
+    console.log("TAB OPENED! " + tab.id);
 
+    /*
     let currentTime = Date.now();
+    console.log("StartTimeMap");
     startTimeMap.set(tab.id, currentTime);
+    console.log("RunTimeMap");
     runTimeMap.set(tab.id, 0);
+     */
 });
