@@ -4,14 +4,14 @@
 
 class Interval {
     constructor(duration, callback) {
-        this.baseline = undefined;
+        this.baseline = -1;
         this.duration = duration;
         this.callback = callback;
     }
 
     run() {
-        if (this.baseline === undefined) {
-            this.baseline = new Date().getTime();
+        if (this.baseline === -1) {
+            this.baseline = Date.now();
         }
 
         this.callback();
@@ -35,9 +35,9 @@ class Interval {
     }
 }
 
-const startTimeMap = new Map();
-const runTimeMap = new Map();
-const timer = new Interval(1000, updateTimeStatus);
+let startTimeMap = new Map();
+let runTimeMap = new Map();
+const timer = new Interval(30000, updateTimeStatus);
 
 function updateTimeStatus() {
     let querying = browser.tabs.query({
@@ -48,15 +48,12 @@ function updateTimeStatus() {
 
 function incrementTabs(tabs) {
     for (let tab of tabs) {
-        let inactiveTime = Date.now() - startTimeMap.get(tab);
-
-        startTimeMap.set(tab.id, inactiveTime)
+        let inactiveTime = (Date.now() - startTimeMap.get(tab.id)) / 1000;
         runTimeMap.set(tab.id, inactiveTime);
-
-        console.log(tab);
-        console.log(tab.url); // tab.url requires the `tabs` permission
-        console.log(inactiveTime);
     }
+
+    console.log(startTimeMap);
+    console.log(runTimeMap);
 }
 
 function onError(error) {
@@ -70,7 +67,7 @@ function initializeTimersForTabs() {
         active: false
     });
     querying.then(resetTimers, onError).then(() => {
-        console.log(startTimeMap);
+        console.log("Initialization Complete!")
     });
     timer.run();
 }
@@ -94,18 +91,17 @@ browser.runtime.onStartup.addListener((e) => {
 browser.tabs.onActivated.addListener((activeInfo) => {
     console.log("NEW FOCUSED!");
 
-    if (activeInfo.previousTabId > 1) {
-        let tabPrev = findTab(activeInfo.previousTabId);
-
-        runTimeMap.set(tabPrev.id, 0);
-        startTimeMap.set(tabPrev.id, Date.now());
-    }
-
+    let prevTabId = activeInfo.previousTabId;
+    console.log(prevTabId);
+    startTimeMap.set(prevTabId, Date.now());
+    runTimeMap.set(prevTabId, 0);
+    
     let currentTab = browser.tabs.get(activeInfo.tabId);
     currentTab.then(onCurrentTab, onError);
 });
 
 function onCurrentTab(currentTab) {
+    console.log(currentTab.url)
     startTimeMap.delete(currentTab.id);
     runTimeMap.delete(currentTab.id);
 }
@@ -125,16 +121,20 @@ function findTab(tabId) {
 
 // If the tab is being removed, find the correct tab in startTimeMap and delete it.
 browser.tabs.onRemoved.addListener((tabId) => {
-    console.log("TAB CLOSED!");
+    console.log("TAB CLOSED! " + tabId);
     runTimeMap.delete(tabId);
     startTimeMap.delete(tabId);
 });
 
 // On the creation of a new tab
 browser.tabs.onCreated.addListener((tab) => {
-    console.log("TAB OPENED!");
+    console.log("TAB OPENED! " + tab.id);
 
+    /*
     let currentTime = Date.now();
+    console.log("StartTimeMap");
     startTimeMap.set(tab.id, currentTime);
+    console.log("RunTimeMap");
     runTimeMap.set(tab.id, 0);
+     */
 });
