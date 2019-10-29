@@ -68,8 +68,7 @@ function initializeTimersForTabs() {
     });
     querying.then(resetTimers, onError).then(() => {
         console.log("Initialization Complete!")
-    });
-    timer.run();
+    }).then(timer.run());
 }
 
 function resetTimers(querying) {
@@ -89,13 +88,12 @@ browser.runtime.onStartup.addListener((e) => {
 // If the tab is newly active, then delete its inactive timer. Also if the tab it navigated from is still open,
 // initialize an inactive timer for that tab
 browser.tabs.onActivated.addListener((activeInfo) => {
-    console.log("NEW FOCUSED!");
-
     let prevTabId = activeInfo.previousTabId;
-    console.log(prevTabId);
-    startTimeMap.set(prevTabId, Date.now());
-    runTimeMap.set(prevTabId, 0);
-    
+    console.log("NEW FOCUSED! " + tabId);
+    if (prevTabId != undefined) {
+        startTimeMap.set(prevTabId, Date.now());
+        runTimeMap.set(prevTabId, 0);
+    }
     let currentTab = browser.tabs.get(activeInfo.tabId);
     currentTab.then(onCurrentTab, onError);
 });
@@ -129,12 +127,4 @@ browser.tabs.onRemoved.addListener((tabId) => {
 // On the creation of a new tab
 browser.tabs.onCreated.addListener((tab) => {
     console.log("TAB OPENED! " + tab.id);
-
-    /*
-    let currentTime = Date.now();
-    console.log("StartTimeMap");
-    startTimeMap.set(tab.id, currentTime);
-    console.log("RunTimeMap");
-    runTimeMap.set(tab.id, 0);
-     */
 });
