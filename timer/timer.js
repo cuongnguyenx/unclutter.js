@@ -10,8 +10,8 @@ class Interval {
     }
 
     run() {
-        if(this.baseline === undefined) {
-            this.baseline = new Date().getTime()
+        if (this.baseline === undefined) {
+            this.baseline = new Date().getTime();
         }
 
         this.callback();
@@ -20,14 +20,14 @@ class Interval {
         this.baseline += this.duration;
 
         let nextTick = this.duration - (end - this.baseline);
-        if (nextTick<0) {
-            nextTick = 0
+        if (nextTick < 0) {
+            nextTick = 0;
         }
-        (function(i) {
-            i.timer = setTimeout(function() {
-                i.run(end)
-            }, nextTick)
-        }(this))
+        (function (i) {
+            i.timer = setTimeout(function () {
+                i.run(end);
+            }, nextTick);
+        }(this));
     }
 
     stop() {
@@ -40,7 +40,9 @@ const runTimeMap = new Map();
 const timer = new Interval(1000, updateTimeStatus);
 
 function updateTimeStatus() {
-    let querying = browser.tabs.query({active: false});
+    let querying = browser.tabs.query({
+        active: false
+    });
     querying.then(incrementTabs, onError);
 }
 
@@ -65,10 +67,14 @@ function onError(error) {
 initializeTimersForTabs();
 
 function initializeTimersForTabs() {
-    timer.run()
+    timer.run();
 
-    let querying = browser.tabs.query({active: false});
-    querying.then(resetTimers, onError).then(() => {console.log(startTimeMap);});
+    let querying = browser.tabs.query({
+        active: false
+    });
+    querying.then(resetTimers, onError).then(() => {
+        console.log(startTimeMap);
+    });
 }
 
 function resetTimers(querying) {
@@ -92,7 +98,7 @@ browser.tabs.onActivated.addListener((activeInfo) => {
 
     if (activeInfo.previousTabId > 1) {
         let tabPrev = findTab(activeInfo.previousTabId);
-        
+
         runTimeMap.set(tabPrev, 0);
         startTimeMap.set(tabPrev, Date.now());
     }
@@ -136,5 +142,5 @@ browser.tabs.onCreated.addListener((tab) => {
 
     let currentTime = Date.now();
     startTimeMap.set(tab, currentTime);
-    runTimeMap.set(tab, 0)
+    runTimeMap.set(tab, 0);
 });

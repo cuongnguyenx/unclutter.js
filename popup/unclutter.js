@@ -1,6 +1,8 @@
 function getButtonIClick(buttonNum) {
   return () => {
-    chrome.browserAction.setBadgeText({ text: buttonNum.toString() })
+    chrome.browserAction.setBadgeText({
+      text: buttonNum.toString()
+    });
   };
 }
 
