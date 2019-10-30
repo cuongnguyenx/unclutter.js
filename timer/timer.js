@@ -23,11 +23,14 @@ class Interval {
         if (nextTick < 0) {
             nextTick = 0;
         }
-        (function (i) {
-            i.timer = setTimeout(function () {
-                i.run(end);
-            }, nextTick);
-        }(this));
+
+        Interval.queueNextInterval(this, nextTick);
+    }
+
+    static queueNextInterval(interval, nextTick) {
+        interval.timer = setTimeout(() => {
+            interval.run();
+        }, nextTick);
     }
 
     stop() {
@@ -37,7 +40,7 @@ class Interval {
 
 const startTimeMap = new Map();
 const runTimeMap = new Map();
-const timer = new Interval(10000, updateTimeStatus);
+const timer = new Interval(3000, updateTimeStatus);
 
 function updateTimeStatus() {
     browser.tabs.query({
@@ -93,23 +96,20 @@ browser.tabs.onActivated.addListener((activeInfo) => {
 
     if (activeInfo.previousTabId != undefined) {
         browser.tabs.get(activeInfo.previousTabId)
-            .then((previousTab) => {
-                runTimeMap.set(previousTab.id, 0);
-                startTimeMap.set(previousTab.id, Date.now());
-            });
+            .then(resetTabTimes, onError);
     }
 
     browser.tabs.get(activeInfo.tabId)
         .then(onCurrentTab, onError);
 });
 
-function onCurrentTab(currentTab) {
-    console.log(currentTab.url);
-    startTimeMap.delete(currentTab.id);
-    runTimeMap.delete(currentTab.id);
+function resetTabTimes(tab) {
+    startTimeMap.set(tab.id, Date.now());
+    runTimeMap.set(tab.id, 0);
 }
 
 function onCurrentTab(currentTab) {
+    console.log(currentTab.url);
     startTimeMap.delete(currentTab.id);
     runTimeMap.delete(currentTab.id);
 }
