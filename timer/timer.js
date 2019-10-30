@@ -23,11 +23,14 @@ class Interval {
         if (nextTick < 0) {
             nextTick = 0;
         }
-        (function (i) {
-            i.timer = setTimeout(function () {
-                i.run(end);
-            }, nextTick);
-        }(this));
+
+        Interval.queueNextInterval(this, nextTick);
+    }
+
+    static queueNextInterval(interval, nextTick) {
+        interval.timer = setTimeout(() => {
+            interval.run();
+        }, nextTick);
     }
 
     stop() {
@@ -69,19 +72,17 @@ function onError(error) {
     console.log(`Error: ${error}`);
 }
 
-function closeTab(tabId) {
-
-}
-
 initializeTimersForTabs();
 
 function initializeTimersForTabs() {
-    let querying = browser.tabs.query({
-        active: false
-    });
-    querying.then(resetTimers, onError).then(() => {
-        console.log("Initialization Complete!")
-    }).then(timer.run());
+    browser.tabs.query({
+            active: false
+        })
+        .then(resetTimers, onError)
+        .then(() => {
+            console.log("Initialization Complete!");
+        })
+        .then(startTimer, onError);
 }
 
 function resetTimers(querying) {
@@ -91,6 +92,10 @@ function resetTimers(querying) {
         startTimeMap.set(tab.id, startTime);
         runTimeMap.set(tab.id, 0);
     }
+}
+
+function startTimer() {
+    timer.run();
 }
 
 // If the tab is newly active, then delete its inactive timer. Also if the tab it navigated from is still open,
