@@ -40,8 +40,8 @@ class Interval {
 
 let startTimeMap = new Map();
 let runTimeMap = new Map();
-const timer = new Interval(30000, updateTimeStatus);
-const GLOBAL_TIME_LIMIT = 120;
+const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
+const GLOBAL_TIME_LIMIT = 120; // seconds
 
 function updateTimeStatus() {
     let querying = browser.tabs.query({
