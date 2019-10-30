@@ -38,6 +38,7 @@ class Interval {
 let startTimeMap = new Map();
 let runTimeMap = new Map();
 const timer = new Interval(30000, updateTimeStatus);
+const GLOBAL_TIME_LIMIT = 120;
 
 function updateTimeStatus() {
     let querying = browser.tabs.query({
@@ -49,15 +50,27 @@ function updateTimeStatus() {
 function incrementTabs(tabs) {
     for (let tab of tabs) {
         let inactiveTime = (Date.now() - startTimeMap.get(tab.id)) / 1000;
-        runTimeMap.set(tab.id, inactiveTime);
+        if (inactiveTime > GLOBAL_TIME_LIMIT) {
+            let removed = browser.tabs.remove(tab.id);
+            removed.then(() => {
+                startTimeMap.delete(tab.id);
+                runTimeMap.delete(tab.id);
+            });
+        } else {
+            runTimeMap.set(tab.id, inactiveTime);
+            console.log(tab.url)
+        }
     }
-
-    console.log(startTimeMap);
-    console.log(runTimeMap);
+    // console.log(startTimeMap);
+    // console.log(runTimeMap);
 }
 
 function onError(error) {
     console.log(`Error: ${error}`);
+}
+
+function closeTab(tabId) {
+
 }
 
 initializeTimersForTabs();
@@ -80,16 +93,11 @@ function resetTimers(querying) {
     }
 }
 
-// On startup of addon
-browser.runtime.onStartup.addListener((e) => {
-    initializeTimersForTabs();
-});
-
 // If the tab is newly active, then delete its inactive timer. Also if the tab it navigated from is still open,
 // initialize an inactive timer for that tab
 browser.tabs.onActivated.addListener((activeInfo) => {
     let prevTabId = activeInfo.previousTabId;
-    console.log("NEW FOCUSED! " + tabId);
+    console.log("NEW FOCUSED! " + prevTabId);
     if (prevTabId != undefined) {
         startTimeMap.set(prevTabId, Date.now());
         runTimeMap.set(prevTabId, 0);
@@ -102,19 +110,6 @@ function onCurrentTab(currentTab) {
     console.log(currentTab.url)
     startTimeMap.delete(currentTab.id);
     runTimeMap.delete(currentTab.id);
-}
-
-function findTab(tabId) {
-    inactiveTabs1 = startTimeMap.keys();
-    inactiveTabs2 = runTimeMap.keys();
-
-    for (let tab of inactiveTabs1) {
-        if (tab.id === tabId) {
-            return tab;
-        }
-    }
-
-    return null;
 }
 
 // If the tab is being removed, find the correct tab in startTimeMap and delete it.
