@@ -41,7 +41,7 @@ class Interval {
 let startTimeMap = new Map();
 let runTimeMap = new Map();
 const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
-const GLOBAL_TIME_LIMIT = 120; // seconds
+const GLOBAL_TIME_LIMIT = 999999; // seconds
 
 function updateTimeStatus() {
     let querying = browser.tabs.query({
@@ -61,7 +61,7 @@ function incrementTabs(tabs) {
             });
         } else {
             runTimeMap.set(tab.id, inactiveTime);
-            console.log(tab.url)
+            console.log(tab.url);
         }
     }
     // console.log(startTimeMap);
