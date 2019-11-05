@@ -1,28 +1,59 @@
+const tabList = document.getElementById("tab-list");
+browser.storage.local.get("temp").then(loadInitialTabList);
+
+function loadInitialTabList(tabs) {
+  if (!tabs || !tabs.temp) {
+    return;
+  }
+
+  addTabListings(tabs.temp);
+}
+
+function addTabListings(tabId) {
+  for (let tabId in tabs.temp) {
+    addTabListing(tabId);
+  }
+}
+
+function addTabListing(tabId) {
+  console.log("Created listing for " + tabId);
+}
+
 browser.storage.onChanged.addListener(onStorageChange);
 
-function onStorageChange() {
-  console.log("Change detected in storage!");
+function onStorageChange(changes) {
+  if (changes.temp) {
+    processChangesToTabQueue(changes.temp);
+  }
 }
 
-browser.storage.local.get("temp").then((retrievedItems) => { console.log(retrievedItems); });
-
-function getButtonIClick(buttonNum) {
-  return () => {
-    browser.browserAction.setBadgeText({
-      text: buttonNum.toString()
-    });
-  };
+function processChangesToTabQueue(tabQueueChanges) {
+  processQueueAdditions(tabQueueChanges);
+  processQueueRemovals(tabQueueChanges);
 }
 
-const content = document.getElementById("tab-list");
+function processQueueAdditions(tabQueueChanges) {
+  for (let tabId in tabQueueChanges.newValue) {
+    if (!(tabId in tabQueueChanges.oldValue)) {
+      addTabListing(tabId);
+    }
+  }
+}
 
-// for (let i = 0; i < 4; i++) {
-//   let newListItem = content.appendChild(document.createElement("li"));
-//   newListItem.classList.add("tab");
+function processQueueRemovals(tabQueueChanges) {
+  for (let tabId in tabQueueChanges.oldValue) {
+    if (!(tabId in tabQueueChanges.newValue)) {
+      removeTabListing(tabId);
+    }
+  }
+}
 
-//   let newButton = newListItem.appendChild(document.createElement("div"));
-//   newButton.textContent = "Button" + i;
-//   newButton.classList.add("button");
-//   newButton.classList.add("button" + i);
-//   newButton.addEventListener("click", getButtonIClick(i));
-// }
+function removeTabListings(tabIdsToBeRemoved) {
+  for (let tabId in tabIdsToBeRemoved) {
+    removeTabListing(tabId)
+  }
+}
+
+function removeTabListing(tabId) {
+  console.log("Removed listing for " + tab);
+}
