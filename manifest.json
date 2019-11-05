@@ -25,11 +25,11 @@
     "default_popup": "popup/unclutter.html",
     "browser_style": true
   },
-  "homepage_url": "https://github.com/mdn/webextensions-examples/tree/master/tabs-tabs-tabs",
+  "homepage_url": "https://vnexpress.net",
   "content_scripts": [
     {
       "matches": ["*://*/*"],
-      "js": ["unclutter.js"]
+      "js": []
     }
   ],
 
