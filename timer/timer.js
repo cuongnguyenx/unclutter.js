@@ -43,6 +43,17 @@ let runTimeMap = new Map();
 const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
 const GLOBAL_TIME_LIMIT = 120; // seconds
 
+// Initialize the storage
+browser.runtime.onInstalled.addListener(details => {
+    browser.storage.local.set({
+        temp: [],
+        stored: []
+    }).then(results => {
+        console.log("Storage initialized successfully")
+    });
+});
+
+
 function updateTimeStatus() {
     let querying = browser.tabs.query({
         active: false
@@ -50,22 +61,49 @@ function updateTimeStatus() {
     querying.then(incrementTabs, onError);
 }
 
-function incrementTabs(tabs) {
+
+// Asynchronous function, takes in the ID of the tab, checks if the temp database already has the ID, if not
+// add it to temp database (either moved into @stored or remove from @temp)
+async function addDataToTempStorage(id) {
+    let tabToAdd = await browser.tabs.get(id);
+    let storedTabsDatabase = await browser.storage.local.get();
+    let currTemp = storedTabsDatabase.temp;
+    if (!(currTemp.includes(tabToAdd.id))) {
+        browser.storage.local.set({
+            temp: currTemp.concat([tabToAdd.id])
+        }).then(e => {
+            console.log("Tab added to Temp queue successfully!")
+        });
+    }
+}
+
+
+async function incrementTabs(tabs) {
+    let index = 0;
+    // console.log("TIME UPDATED")
     for (let tab of tabs) {
         let inactiveTime = (Date.now() - startTimeMap.get(tab.id)) / 1000;
         if (inactiveTime > GLOBAL_TIME_LIMIT) {
-            let removed = browser.tabs.remove(tab.id);
-            removed.then(() => {
-                startTimeMap.delete(tab.id);
-                runTimeMap.delete(tab.id);
-            });
+            // removeTab(tab.id);
+            let msg = await addDataToTempStorage(tab.id, index);
+            runTimeMap.set(tab.id, inactiveTime);
         } else {
             runTimeMap.set(tab.id, inactiveTime);
-            console.log(tab.url)
         }
+        index++;
     }
     // console.log(startTimeMap);
-    // console.log(runTimeMap);
+    console.log(runTimeMap);
+    let storedTabsDatabase = await browser.storage.local.get("temp");
+    console.log(storedTabsDatabase)
+}
+
+function removeTab(id) {
+    let removed = browser.tabs.remove(id);
+    removed.then(() => {
+        startTimeMap.delete(id);
+        runTimeMap.delete(id);
+    });
 }
 
 function onError(error) {
@@ -76,8 +114,8 @@ initializeTimersForTabs();
 
 function initializeTimersForTabs() {
     browser.tabs.query({
-            active: false
-        })
+        active: false
+    })
         .then(resetTimers, onError)
         .then(() => {
             console.log("Initialization Complete!");
@@ -86,6 +124,7 @@ function initializeTimersForTabs() {
 }
 
 function resetTimers(querying) {
+    // used by initializeTimers
     let startTime = Date.now();
 
     for (let tab of querying) {
@@ -112,10 +151,12 @@ browser.tabs.onActivated.addListener((activeInfo) => {
 });
 
 function onCurrentTab(currentTab) {
+    // used by onActivated
     console.log(currentTab.url)
     startTimeMap.delete(currentTab.id);
     runTimeMap.delete(currentTab.id);
 }
+
 
 // If the tab is being removed, find the correct tab in startTimeMap and delete it.
 browser.tabs.onRemoved.addListener((tabId) => {
@@ -127,4 +168,8 @@ browser.tabs.onRemoved.addListener((tabId) => {
 // On the creation of a new tab
 browser.tabs.onCreated.addListener((tab) => {
     console.log("TAB OPENED! " + tab.id);
+});
+
+browser.storage.onChanged.addListener((changes) => {
+    // console.log(changes)
 });
