@@ -40,25 +40,17 @@ body {
   padding: 1%;
 }
 
-/* .tab {
-  display: block;
-  overflow: hidden;
-  background: #555555;
-  color: #FFFFFF;
+.tab {
+  margin: 0%;
 }
-.tab:hover {
-  background: #666666;
-}
-.tab:hover > .tab-options > .button:not(:hover) {
-  background-color: #666666;
-} */
 
 .tab-text {
-  display: inline;
   font-size: 2em;
 }
 
 .tab-options {
+  margin-top: 0%;
+  margin-bottom: 0%;
   height: 100%;
   font-size: 1.5em;
   color: #FFFFFF;

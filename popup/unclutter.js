@@ -1,3 +1,11 @@
+browser.storage.onChanged.addListener(onStorageChange);
+
+function onStorageChange() {
+  console.log("Change detected in storage!");
+}
+
+browser.storage.local.get("temp").then((retrievedItems) => { console.log(retrievedItems); });
+
 function getButtonIClick(buttonNum) {
   return () => {
     chrome.browserAction.setBadgeText({
