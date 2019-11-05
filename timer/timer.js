@@ -41,7 +41,7 @@ class Interval {
 let startTimeMap = new Map();
 let runTimeMap = new Map();
 const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
-const GLOBAL_TIME_LIMIT = 60; // seconds
+const GLOBAL_TIME_LIMIT = 120; // seconds
 
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
@@ -100,12 +100,16 @@ async function incrementTabs(tabs) {
     console.log(storedTabsDatabase)
 }
 
-function removeTab(id) {
-    let removed = browser.tabs.remove(id);
-    removed.then(() => {
-        startTimeMap.delete(id);
-        runTimeMap.delete(id);
-    });
+async function removeFromTemp(id) {
+    let tempTabsDatabase = await browser.storage.local.get("temp");
+    let tempArray = tempTabsDatabase.temp;
+    let indexTab = tempArray.indexOf(id);
+    if (indexTab > -1) {
+        let discardArray = tempArray.splice(indexTab, 1)
+        browser.storage.local.set({
+            temp: tempArray
+        });
+    }
 }
 
 function onError(error) {
@@ -152,11 +156,13 @@ browser.tabs.onActivated.addListener((activeInfo) => {
     currentTab.then(onCurrentTab, onError);
 });
 
-function onCurrentTab(currentTab) {
+async function onCurrentTab(currentTab) {
     // used by onActivated
     console.log(currentTab.url)
     startTimeMap.delete(currentTab.id);
     runTimeMap.delete(currentTab.id);
+
+    await removeFromTemp(currentTab.id);
 }
 
 
@@ -165,6 +171,9 @@ browser.tabs.onRemoved.addListener((tabId) => {
     console.log("TAB CLOSED! " + tabId);
     runTimeMap.delete(tabId);
     startTimeMap.delete(tabId);
+    removeFromTemp(tabId).then(e => {
+        console.log("Finished Removing")
+    });
 });
 
 // On the creation of a new tab
@@ -173,9 +182,22 @@ browser.tabs.onCreated.addListener((tab) => {
 });
 
 browser.storage.onChanged.addListener((changes) => {
+    console.log(changes)
     if (changes.temp) {
+        let amountTabsSaved = changes.temp.newValue.length.toString();
+
+        if (amountTabsSaved < 20) {
+            browser.browserAction.setBadgeBackgroundColor({
+                color: "green"
+            });
+        } else {
+            browser.browserAction.setBadgeBackgroundColor({
+                color: "red"
+            });
+        }
+
         browser.browserAction.setBadgeText({
-            text: changes.temp.newValue.length.toString()
+            text: amountTabsSaved
         });
     }
 });
