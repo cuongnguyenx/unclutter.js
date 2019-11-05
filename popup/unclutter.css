@@ -27,6 +27,7 @@ body {
   background: #555555
 }
 
+
 /* .nav-button {
   padding: 1px;
   text-align: center;
@@ -34,12 +35,10 @@ body {
   cursor: pointer;
 } */
 
-/* .tab-list {
+.tab-list {
   margin: 2%;
-  background: #555555;
   padding: 1%;
-  list-style-type: none;
-} */
+}
 
 /* .tab {
   display: block;
@@ -54,10 +53,16 @@ body {
   background-color: #666666;
 } */
 
-/* .tab-text {
-  float: left;
+.tab-text {
+  display: inline;
   font-size: 2em;
-} */
+}
+
+.tab-options {
+  height: 100%;
+  font-size: 1.5em;
+  color: #FFFFFF;
+}
 
 /* .tab-options {
   white-space: nowrap;
