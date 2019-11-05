@@ -8,7 +8,7 @@ browser.storage.local.get("temp").then((retrievedItems) => { console.log(retriev
 
 function getButtonIClick(buttonNum) {
   return () => {
-    chrome.browserAction.setBadgeText({
+    browser.browserAction.setBadgeText({
       text: buttonNum.toString()
     });
   };
@@ -26,11 +26,3 @@ const content = document.getElementById("tab-list");
 //   newButton.classList.add("button" + i);
 //   newButton.addEventListener("click", getButtonIClick(i));
 // }
-browser.storage.onChanged.addListener((changes) => {
-  // console.log(detectChange(changes))
-  console.log("Howdy Partner!")
-});
-
-function detectChange(changes) {
-  return;
-}
