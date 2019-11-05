@@ -26,3 +26,11 @@ const content = document.getElementById("tab-list");
 //   newButton.classList.add("button" + i);
 //   newButton.addEventListener("click", getButtonIClick(i));
 // }
+browser.storage.onChanged.addListener((changes) => {
+  // console.log(detectChange(changes))
+  console.log("Howdy Partner!")
+});
+
+function detectChange(changes) {
+  return;
+}
