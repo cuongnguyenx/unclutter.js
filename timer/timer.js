@@ -46,8 +46,7 @@ const GLOBAL_TIME_LIMIT = 120; // seconds
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
     browser.storage.local.set({
-        temp: [],
-        stored: []
+        temp: []
     }).then(results => {
         console.log("Storage initialized successfully")
     });
@@ -172,4 +171,5 @@ browser.tabs.onCreated.addListener((tab) => {
 
 browser.storage.onChanged.addListener((changes) => {
     // console.log(changes)
+    b
 });
