@@ -41,14 +41,17 @@ class Interval {
 let startTimeMap = new Map();
 let runTimeMap = new Map();
 const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
-const GLOBAL_TIME_LIMIT = 120; // seconds
+const GLOBAL_TIME_LIMIT = 60; // seconds
 
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
     browser.storage.local.set({
         temp: []
     }).then(results => {
-        console.log("Storage initialized successfully")
+        console.log("Storage initialized successfully");
+        browser.browserAction.setBadgeText({
+            text: "0"
+        });
     });
 });
 
@@ -170,6 +173,9 @@ browser.tabs.onCreated.addListener((tab) => {
 });
 
 browser.storage.onChanged.addListener((changes) => {
-    // console.log(changes)
-    b
+    if (changes.temp) {
+        browser.browserAction.setBadgeText({
+            text: changes.temp.newValue.length.toString()
+        });
+    }
 });
