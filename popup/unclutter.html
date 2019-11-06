@@ -4,14 +4,14 @@
 
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="dependencies/font-awesome.min.css">
-  <link rel="stylesheet" href="dependencies/bootstrap.min.css">
-  <link rel="stylesheet" href="unclutter.css" />
+  <link rel="stylesheet" href="./dependencies/font-awesome.min.css">
+  <link rel="stylesheet" href="./dependencies/bootstrap.min.css">
+  <link rel="stylesheet" href="./unclutter.css" />
 
-  <script src="dependencies/jquery-3.3.1.slim.min.js"></script>
-  <script src="dependencies/popper.min.js"></script>
-  <script src="dependencies/bootstrap.min.js"></script>
-  <script type="module" src="unclutter.js"></script>
+  <script src="./dependencies/jquery-3.3.1.slim.min.js"></script>
+  <script src="./dependencies/popper.min.js"></script>
+  <script src="./dependencies/bootstrap.min.js"></script>
+  <script type="module" src="./unclutter.js"></script>
 </head>
 
 <body>
@@ -24,26 +24,68 @@
 
     <div>
       <ul class="list-group tab-list" id="tab-list">
-        <li class="list-group-item container-fluid">
-          <div class="row no-gutters tab">
-            <div class="col-8 align-self-start">
-              <p class="tab-text lead">Sample Tab 1</p>
+        <li class="list-group-item container-fluid tab-listing">
+          <div class="row no-gutters tab-listing-content">
+            <div class="col-8 tab-left-section">
+              <p class="align-middle tab-text">Sample Tab 1</p>
             </div>
-            <div class="col-4 align-self-end">
-              <div class="btn-group btn-group-lg tab-options justify-content-end">
-                <a class="btn btn-secondary">
-                  <i class="fa fa-times"></i>
+            <div class="col-4 tab-right-section">
+              <span class="btn-group btn-group-lg float-right tab-options">
+                <a class="btn tab-button" data-toggle="tooltip" title="Permanently close">
+                  <i class="fa fa-trash fa-2x"></i>
                 </a>
-                <a class="btn btn-secondary">
-                  <i class="fa fa-save"></i>
+                <a class="btn tab-button" data-toggle="tooltip" title="Save and close">
+                  <i class="fa fa-save fa-2x"></i>
                 </a>
-                <a class="btn btn-secondary">
-                  <i class="fa fa-trash"></i>
+                <a class="btn tab-button" data-toggle="tooltip" title="Dismiss">
+                  <i class="fa fa-times fa-2x"></i>
                 </a>
-              </div>
+              </span>
             </div>
           </div>
         </li>
+
+        <li class="list-group-item container-fluid tab-listing">
+            <div class="row no-gutters tab-listing-content">
+              <div class="col-8 tab-left-section">
+                <p class="align-middle tab-text">Sample Tab 2</p>
+              </div>
+              <div class="col-4 tab-right-section">
+                <span class="btn-group btn-group-lg float-right tab-options">
+                  <a class="btn tab-button" data-toggle="tooltip" title="Permanently close">
+                    <i class="fa fa-trash fa-2x"></i>
+                  </a>
+                  <a class="btn tab-button" data-toggle="tooltip" title="Save and close">
+                    <i class="fa fa-save fa-2x"></i>
+                  </a>
+                  <a class="btn tab-button" data-toggle="tooltip" title="Dismiss">
+                    <i class="fa fa-times fa-2x"></i>
+                  </a>
+                </span>
+              </div>
+            </div>
+          </li>
+
+          <li class="list-group-item container-fluid tab-listing">
+              <div class="row no-gutters tab-listing-content">
+                <div class="col-8 tab-left-section">
+                  <p class="align-middle tab-text">Sample Tab 3</p>
+                </div>
+                <div class="col-4 tab-right-section">
+                  <span class="btn-group btn-group-lg float-right tab-options">
+                    <a class="btn tab-button" data-toggle="tooltip" title="Permanently close">
+                      <i class="fa fa-trash fa-2x"></i>
+                    </a>
+                    <a class="btn tab-button" data-toggle="tooltip" title="Save and close">
+                      <i class="fa fa-save fa-2x"></i>
+                    </a>
+                    <a class="btn tab-button" data-toggle="tooltip" title="Dismiss">
+                      <i class="fa fa-times fa-2x"></i>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </li>
     </div>
   </div>
 </body>

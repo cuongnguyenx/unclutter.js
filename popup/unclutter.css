@@ -21,7 +21,6 @@ body {
   color: #FFFFFF;
   background: #643764;
 }
-
 .nav-link:hover {
   color: #FFFFFF;
   background: #555555
@@ -40,27 +39,62 @@ body {
   padding: 1%;
 }
 
-.tab {
+.tab-listing {
+  background: #FFFFFF;
+  padding: 0%;
   margin: 0%;
+}
+.tab-listing:hover {
+  transition: background 0.05s;
+  background: #DDDDDD;
+}
+
+.tab-listing-content {
+  height: 100%;
+  width: 100%;
+  margin: 0%;
+  padding: 0%;
+}
+
+.tab-left-section {
+  margin: 0%;
+  padding: 0%;
+  height: 100%;
+  width: 100%;
 }
 
 .tab-text {
-  font-size: 2em;
+  margin: 0%;
+  padding: 0%;
+  padding-left: 5%;
+  height: 100%;
+  width: 100%;
+  font-size: 2.3rem;
+  font-weight: 340;
+}
+
+.tab-right-section {
+  margin: 0%;
+  padding: 0%;
+  height: 100%;
+  width: 100%;
 }
 
 .tab-options {
-  margin-top: 0%;
-  margin-bottom: 0%;
+  padding: 0%;
+  margin: 0%;
   height: 100%;
-  font-size: 1.5em;
-  color: #FFFFFF;
+  widows: 100%;
 }
 
-/* .tab-options {
-  white-space: nowrap;
-  justify-content: right;
-  text-align: right;
-} */
+.tab-button {
+  padding: 0%;
+}
+.tab-button:hover {
+  transition: all 0.2s;
+  background: #555555;
+  color: #FFFFFF !important;
+}
 
 /* .button {
   height: 100%;

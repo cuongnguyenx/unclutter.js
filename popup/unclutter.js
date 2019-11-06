@@ -1,3 +1,8 @@
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip();
+});
+//document.querySelector('[data-toggle="tooltip"]').tooltip();
+
 const tabList = document.getElementById("tab-list");
 browser.storage.local.get("temp").then(loadInitialTabList);
 
@@ -9,8 +14,8 @@ function loadInitialTabList(tabs) {
   addTabListings(tabs.temp);
 }
 
-function addTabListings(tabId) {
-  for (let tabId in tabs.temp) {
+function addTabListings(tabIdsToBeAdded) {
+  for (let tabId in tabIdsToBeAdded) {
     addTabListing(tabId);
   }
 }
@@ -50,10 +55,10 @@ function processQueueRemovals(tabQueueChanges) {
 
 function removeTabListings(tabIdsToBeRemoved) {
   for (let tabId in tabIdsToBeRemoved) {
-    removeTabListing(tabId)
+    removeTabListing(tabId);
   }
 }
 
 function removeTabListing(tabId) {
-  console.log("Removed listing for " + tab);
+  console.log("Removed listing for " + tabId);
 }
