@@ -43,45 +43,49 @@ function addTabListing(tabId) {
     </div>
   </li>
   */
-  tabList.appendChild(createListingElement(tabId));
+  createListingElement(tabId).then(listingElement => {
+    tabList.appendChild(listingElement);
+  });
 
-  console.log("Created listing for " + tabId);
+  console.log(tabId);
+  console.log(`Created listing for ${tabId}`);
 }
 
-function createListingElement(tabId) {
+async function createListingElement(tabId) {
   let listing = document.createElement("li");
   listing.classList.add("list-group-item", "container-fluid", "tab-listing");
   listing.id = `tab-listing-${tabId}`;
-  listing.appendChild(createListingContentElement(tabId));
+  let tabPromise = browser.tabs.get(tabId);
+  listing.appendChild(createListingContentElement(tabPromise));
   return listing;
 }
 
-function createListingContentElement(tabId) {
+async function createListingContentElement(tabPromise) {
   let listingContent = document.createElement("div");
-  listingContent.classList.add("row","no-gutters", "tab-listing-content");
-  listingContent.appendChild(createListingLeftSectionElement(tabId));
-  listingContent.appendChild(createListingRightSectionElement(tabId));
+  listingContent.classList.add("row", "no-gutters", "tab-listing-content");
+  listingContent.appendChild(createListingLeftSectionElement(tabPromise));
+  listingContent.appendChild(createListingRightSectionElement(tabPromise));
   return listingContent;
 }
 
-function createListingLeftSectionElement(tabId) {
+async function createListingLeftSectionElement(tabPromise) {
   let listingLeftSection = document.createElement("div");
   listingLeftSection.classList.add("col-8", "tab-left-section");
-  listingLeftSection.appendChild(createListingTitleTextElement(tabId));
+  listingLeftSection.appendChild(createListingTitleTextElement(tabPromise));
   return listingLeftSection;
 }
 
-function createListingTitleTextElement(tabId) {
+async function createListingTitleTextElement(tabPromise) {
   let listingTitleText = document.createElement("p");
   listingTitleText.classList.add("align-middle", "tab-text");
-  browser.tabs.get(tabId).then((tab) => {
-    listingTitleText.textContent = "";
+  tabPromise.then(tab => {
+    listingTitleText.textContent = tab.title;
   });
   return listingTitleText;
 }
 
-function createListingRightSectionElement(tabId) {
-  
+async function createListingRightSectionElement(tabId) {
+
 }
 
 browser.storage.onChanged.addListener(onStorageChange);

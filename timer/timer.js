@@ -41,7 +41,7 @@ class Interval {
 let startTimeMap = new Map();
 let runTimeMap = new Map();
 const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
-const GLOBAL_TIME_LIMIT = 120; // seconds
+const GLOBAL_TIME_LIMIT = 10; // seconds
 
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
