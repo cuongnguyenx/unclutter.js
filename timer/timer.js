@@ -41,14 +41,26 @@ class Interval {
 let startTimeMap = new Map();
 let runTimeMap = new Map();
 const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
-const GLOBAL_TIME_LIMIT = 10; // seconds
-
+let GLOBAL_TIME_LIMIT = 120; // seconds
+let EXCLUSION_REGEX = " ";
+let AUTO_KILL_TABS = true; // will be set to false right after initialization
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
     browser.storage.local.set({
         temp: []
     }).then(results => {
         console.log("Storage initialized successfully");
+        browser.browserAction.setBadgeText({
+            text: "0"
+        });
+    });
+
+    browser.storage.sync.set({
+        regex: "",
+        timeLimit: 120,
+        checkValue: "unchecked"
+    }).then(results => {
+        console.log("Settings Reset!");
         browser.browserAction.setBadgeText({
             text: "0"
         });
@@ -80,24 +92,36 @@ async function addDataToTempStorage(id) {
 }
 
 
+function removeTab(id) {
+    let removed = browser.tabs.remove(id);
+    removed.then(() => {
+        startTimeMap.delete(id);
+        runTimeMap.delete(id);
+    });
+}
+
 async function incrementTabs(tabs) {
     let index = 0;
     // console.log("TIME UPDATED")
     for (let tab of tabs) {
         let inactiveTime = (Date.now() - startTimeMap.get(tab.id)) / 1000;
         if (inactiveTime > GLOBAL_TIME_LIMIT) {
-            // removeTab(tab.id);
-            let msg = await addDataToTempStorage(tab.id, index);
-            runTimeMap.set(tab.id, inactiveTime);
+            if (AUTO_KILL_TABS) {
+                removeTab(tab.id);
+            }
+            else {
+                let msg = await addDataToTempStorage(tab.id, index);
+                runTimeMap.set(tab.id, inactiveTime);
+            }
         } else {
             runTimeMap.set(tab.id, inactiveTime);
         }
         index++;
     }
     // console.log(startTimeMap);
-    console.log(runTimeMap);
+    // console.log(runTimeMap);
     let storedTabsDatabase = await browser.storage.local.get("temp");
-    console.log(storedTabsDatabase)
+    // console.log(storedTabsDatabase)
 }
 
 async function removeFromTemp(id) {
@@ -181,9 +205,8 @@ browser.tabs.onCreated.addListener((tab) => {
     console.log("TAB OPENED! " + tab.id);
 });
 
-browser.storage.onChanged.addListener((changes) => {
-    console.log(changes)
-    if (changes.temp) {
+browser.storage.onChanged.addListener((changes, areaName) => {
+    if (changes.temp && (areaName === "local")) {
         let amountTabsSaved = changes.temp.newValue.length.toString();
 
         if (amountTabsSaved < 20) {
@@ -199,5 +222,25 @@ browser.storage.onChanged.addListener((changes) => {
         browser.browserAction.setBadgeText({
             text: amountTabsSaved
         });
+    }
+
+    // changes with the setting
+    else if (areaName === "sync") {
+        let newRegex = changes.regex.newValue;
+        if (EXCLUSION_REGEX != newRegex) {
+        EXCLUSION_REGEX = newRegex;
+    }
+        let newTimeLimit = Number.parseInt(changes.timeLimit.newValue, 10);
+        if (newTimeLimit != GLOBAL_TIME_LIMIT) {
+            GLOBAL_TIME_LIMIT = newTimeLimit;
+            startTimeMap = new Map();
+            runTimeMap = new Map();
+            initializeTimersForTabs();
+        }
+
+        else {
+            AUTO_KILL_TABS = !AUTO_KILL_TABS;
+            console.log(AUTO_KILL_TABS);
+        }
     }
 });

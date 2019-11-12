@@ -3,14 +3,27 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="./options.css" />
 </head>
 
 <body>
 
 <form>
-    <label>Exclusion Regex<input type="text" id="exregex" ></label>
-    <button type="submit">Save</button>
+    <label>Exclusion Regex:  <input type="text" id="exregex" ></label>
+    <button type="submit">Save 1</button>
 </form>
+
+<form>
+    <label>Inactive Time Limit:  <input type="text" id="timelim" ></label>
+    <button type="submit">Save 2</button>
+</form>
+
+
+<label class="switch">
+    Extreme Kill Switch:
+    <input class="switch-input" type="checkbox" id="killtabs" />
+</label>
+
 
 <script src="options.js"></script>
 
