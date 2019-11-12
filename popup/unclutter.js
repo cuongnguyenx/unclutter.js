@@ -15,9 +15,10 @@ function loadInitialTabList(tabs) {
 }
 
 function addTabListings(tabIdsToBeAdded) {
-  for (let tabId in tabIdsToBeAdded) {
-    addTabListing(tabId);
-  }
+  console.log(tabIdsToBeAdded);
+  Array.prototype.forEach.call(tabIdsToBeAdded, tabId => {
+    addTabListing(Number.parseInt(tabId));
+  });
 }
 
 function addTabListing(tabId) {
@@ -47,7 +48,6 @@ function addTabListing(tabId) {
     tabList.appendChild(listingElement);
   });
 
-  console.log(tabId);
   console.log(`Created listing for ${tabId}`);
 }
 
@@ -60,7 +60,7 @@ async function createListingElement(tabId) {
   return listing;
 }
 
-async function createListingContentElement(tabPromise) {
+function createListingContentElement(tabPromise) {
   let listingContent = document.createElement("div");
   listingContent.classList.add("row", "no-gutters", "tab-listing-content");
   listingContent.appendChild(createListingLeftSectionElement(tabPromise));
@@ -68,14 +68,14 @@ async function createListingContentElement(tabPromise) {
   return listingContent;
 }
 
-async function createListingLeftSectionElement(tabPromise) {
+function createListingLeftSectionElement(tabPromise) {
   let listingLeftSection = document.createElement("div");
   listingLeftSection.classList.add("col-8", "tab-left-section");
   listingLeftSection.appendChild(createListingTitleTextElement(tabPromise));
   return listingLeftSection;
 }
 
-async function createListingTitleTextElement(tabPromise) {
+function createListingTitleTextElement(tabPromise) {
   let listingTitleText = document.createElement("p");
   listingTitleText.classList.add("align-middle", "tab-text");
   tabPromise.then(tab => {
@@ -84,8 +84,10 @@ async function createListingTitleTextElement(tabPromise) {
   return listingTitleText;
 }
 
-async function createListingRightSectionElement(tabId) {
-
+function createListingRightSectionElement(tabPromise) {
+  let listingRightSection = document.createElement("div");
+  listingRightSection.classList.add("col-4", "tab-right-section");
+  return listingRightSection;
 }
 
 browser.storage.onChanged.addListener(onStorageChange);
@@ -102,25 +104,25 @@ function processChangesToTabQueue(tabQueueChanges) {
 }
 
 function processQueueAdditions(tabQueueChanges) {
-  for (let tabId in tabQueueChanges.newValue) {
-    if (!(tabId in tabQueueChanges.oldValue)) {
-      addTabListing(tabId);
+  Array.prototype.forEach.call(tabQueueChanges.newValue, tabId => {
+    if (!(Array.prototype.includes.call(tabQueueChanges.oldValue, tabId))) {
+      addTabListing(Number.parseInt(tabId));
     }
-  }
+  });
 }
 
 function processQueueRemovals(tabQueueChanges) {
-  for (let tabId in tabQueueChanges.oldValue) {
-    if (!(tabId in tabQueueChanges.newValue)) {
-      removeTabListing(tabId);
+  Array.prototype.forEach.call(tabQueueChanges.oldValue, tabId => {
+    if (!(Array.prototype.includes.call(tabQueueChanges.newValue, tabId))) {
+      removeTabListing(Number.parseInt(tabId));
     }
-  }
+  });
 }
 
 function removeTabListings(tabIdsToBeRemoved) {
-  for (let tabId in tabIdsToBeRemoved) {
-    removeTabListing(tabId);
-  }
+  Array.prototype.forEach.call(tabIdsToBeRemoved, tabId => {
+    removeTabListing(Number.parseInt(tabId));
+  });
 }
 
 function removeTabListing(tabId) {
