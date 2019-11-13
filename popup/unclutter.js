@@ -84,6 +84,7 @@ function createListingTitleTextElement(tabPromise) {
 }
 
 const GLOBAL_TITLE_LENGTH_LIMIT = 24;
+
 function fitTitleTextToListing(title) {
   if (title.length < GLOBAL_TITLE_LENGTH_LIMIT) {
     return title;
@@ -94,15 +95,6 @@ function fitTitleTextToListing(title) {
   title = `${title}...`;
 
   return title;
-}
-
-function getWidthOfText(txt, fontname, fontsize){
-  if(getWidthOfText.c === undefined){
-      getWidthOfText.c=document.createElement('canvas');
-      getWidthOfText.ctx=getWidthOfText.c.getContext('2d');
-  }
-  getWidthOfText.ctx.font = fontsize + ' ' + fontname;
-  return getWidthOfText.ctx.measureText(txt).width;
 }
 
 function createListingRightSectionElement(tabPromise) {
