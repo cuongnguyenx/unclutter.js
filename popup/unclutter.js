@@ -1,7 +1,6 @@
-$(function () {
-  $('[data-toggle="tooltip"]').tooltip();
+$('body').tooltip({
+  selector: '[data-toggle=tooltip]',
 });
-//document.querySelector('[data-toggle="tooltip"]').tooltip();
 
 const tabList = document.getElementById("tab-list");
 browser.storage.local.get("temp").then(loadInitialTabList);
@@ -63,15 +62,15 @@ async function createListingElement(tabId) {
 function createListingContentElement(tabPromise) {
   let listingContent = document.createElement("div");
   listingContent.classList.add("row", "no-gutters", "tab-listing-content");
-  listingContent.appendChild(createListingLeftSectionElement(tabPromise));
-  listingContent.appendChild(createListingRightSectionElement(tabPromise));
+  listingContent.append(createListingLeftSectionElement(tabPromise),
+    createListingRightSectionElement(tabPromise));
   return listingContent;
 }
 
 function createListingLeftSectionElement(tabPromise) {
   let listingLeftSection = document.createElement("div");
   listingLeftSection.classList.add("col-8", "tab-left-section");
-  listingLeftSection.appendChild(createListingTitleTextElement(tabPromise));
+  listingLeftSection.append(createListingTitleTextElement(tabPromise));
   return listingLeftSection;
 }
 
@@ -79,15 +78,114 @@ function createListingTitleTextElement(tabPromise) {
   let listingTitleText = document.createElement("p");
   listingTitleText.classList.add("align-middle", "tab-text");
   tabPromise.then(tab => {
-    listingTitleText.textContent = tab.title;
+    listingTitleText.textContent = fitTitleTextToListing(tab.title);
   });
   return listingTitleText;
+}
+
+const GLOBAL_TITLE_LENGTH_LIMIT = 24;
+function fitTitleTextToListing(title) {
+  if (title.length < GLOBAL_TITLE_LENGTH_LIMIT) {
+    return title;
+  }
+
+  title = title.substring(0, GLOBAL_TITLE_LENGTH_LIMIT);
+  title = title.substring(0, title.lastIndexOf(" "));
+  title = `${title}...`;
+
+  return title;
+}
+
+function getWidthOfText(txt, fontname, fontsize){
+  if(getWidthOfText.c === undefined){
+      getWidthOfText.c=document.createElement('canvas');
+      getWidthOfText.ctx=getWidthOfText.c.getContext('2d');
+  }
+  getWidthOfText.ctx.font = fontsize + ' ' + fontname;
+  return getWidthOfText.ctx.measureText(txt).width;
 }
 
 function createListingRightSectionElement(tabPromise) {
   let listingRightSection = document.createElement("div");
   listingRightSection.classList.add("col-4", "tab-right-section");
+  listingRightSection.append(createListingActionsElement(tabPromise));
   return listingRightSection;
+}
+
+function createListingActionsElement(tabPromise) {
+  let listingActions = document.createElement("div");
+  listingActions.classList.add("btn-group", "btn-group-lg", "float-right", "tab-options");
+  listingActions.append(createListingDeleteButtonElement(tabPromise),
+    createListingSaveCloseButtonElement(tabPromise),
+    createListingDismissButtonElement(tabPromise));
+  return listingActions;
+}
+
+function createListingDeleteButtonElement(tabPromise) {
+  let listingDeleteButton = document.createElement("a");
+  listingDeleteButton.classList.add("btn", "tab-button");
+  listingDeleteButton.setAttribute("data-toggle", "tooltip");
+  listingDeleteButton.setAttribute("title", "Permanently Close");
+  listingDeleteButton.appendChild(createListingDeleteIconElement());
+
+  tabPromise.then(tab => {
+    listingDeleteButton.addEventListener("click", () => {
+      console.log("Delete clicked");
+    });
+  });
+
+  return listingDeleteButton;
+}
+
+function createListingDeleteIconElement() {
+  let listingDeleteIcon = document.createElement("i");
+  listingDeleteIcon.classList.add("fa", "fa-trash", "fa-2x");
+  return listingDeleteIcon;
+}
+
+function createListingSaveCloseButtonElement(tabPromise) {
+  let listingSaveCloseButton = document.createElement("a");
+  listingSaveCloseButton.classList.add("btn", "tab-button");
+  listingSaveCloseButton.setAttribute("data-toggle", "tooltip");
+  listingSaveCloseButton.setAttribute("title", "Save and Close");
+  listingSaveCloseButton.appendChild(createListingSaveCloseIconElement());
+
+  tabPromise.then(tab => {
+    listingSaveCloseButton.addEventListener("click", () => {
+      console.log("Saveclose clicked");
+    });
+  });
+
+  return listingSaveCloseButton;
+}
+
+function createListingSaveCloseIconElement() {
+  let listingDeleteIcon = document.createElement("i");
+  listingDeleteIcon.classList.add("fa", "fa-save", "fa-2x");
+  return listingDeleteIcon;
+}
+
+function createListingDismissButtonElement(tabPromise) {
+  let listingDismissButton = document.createElement("a");
+  listingDismissButton.classList.add("btn", "tab-button");
+  listingDismissButton.setAttribute("data-toggle", "tooltip");
+  listingDismissButton.setAttribute("title", "Dismiss");
+  listingDismissButton.appendChild(createListingDismissIconElement());
+
+  tabPromise.then(tab => {
+    listingDismissButton.addEventListener("click", () => {
+      removeTabListing(tab.id);
+      console.log("Dismiss clicked");
+    });
+  });
+
+  return listingDismissButton;
+}
+
+function createListingDismissIconElement() {
+  let listingDeleteIcon = document.createElement("i");
+  listingDeleteIcon.classList.add("fa", "fa-times", "fa-2x");
+  return listingDeleteIcon;
 }
 
 browser.storage.onChanged.addListener(onStorageChange);
@@ -126,5 +224,7 @@ function removeTabListings(tabIdsToBeRemoved) {
 }
 
 function removeTabListing(tabId) {
+  let listingToBeRemoved = document.getElementById(`tab-listing-${tabId}`);
+  listingToBeRemoved.remove();
   console.log("Removed listing for " + tabId);
 }
