@@ -83,7 +83,7 @@ function createListingTitleTextElement(tabPromise) {
   return listingTitleText;
 }
 
-const GLOBAL_TITLE_LENGTH_LIMIT = 24;
+const GLOBAL_TITLE_LENGTH_LIMIT = 18;
 
 function fitTitleTextToListing(title) {
   if (title.length < GLOBAL_TITLE_LENGTH_LIMIT) {
@@ -217,9 +217,15 @@ function removeTabListings(tabIdsToBeRemoved) {
 
 function removeTabListing(tabId) {
   let listingToBeRemoved = document.getElementById(`tab-listing-${tabId}`);
-  listingToBeRemoved.classList.add("removed");
-  setTimeout(() => {
-    listingToBeRemoved.remove();
-  }, 500);
+  collapseListing(listingToBeRemoved);
+  listingToBeRemoved.addEventListener("mouseleave", () => {
+    setTimeout(() => {
+      listingToBeRemoved.remove();
+    }, 1000);
+  });
   console.log("Removed listing for " + tabId);
+}
+
+function collapseListing(listing) {
+  listing.classList.add("removed");
 }

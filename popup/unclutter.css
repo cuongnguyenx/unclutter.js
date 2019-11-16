@@ -65,25 +65,25 @@ body {
 }
 
 .tab-listing {
+  overflow: hidden;
+  max-height: 50px;
+  margin: 0%;
   padding: 0%;
   border-color: #BBBBBB;
   background: #646464;
   color: #BBBBBB;
 }
 
-.removed {
-  transition: all 0.2s;
-  height: 0%;
-  width: 0%;
-  margin: 0%;
-  padding: 0%;
-  font-size: 0em;
-  border: none;
-}
-
 .tab-listing:hover {
   transition: background 0.05s;
   background: #555555;
+}
+
+.tab-listing.removed {
+  transition: all 0.2s ease-out;
+  max-height: 0px;
+  border-top: none;
+  border-bottom: none;
 }
 
 .tab-listing-content {
@@ -99,7 +99,7 @@ body {
 .tab-text {
   margin: 0% 0% 0% 5%;
   height: 100%;
-  font-size: 2.3em;
+  font-size: 2.3rem;
   font-weight: 340;
   display: flex;
   flex-direction: column;
@@ -113,7 +113,7 @@ body {
 
 .tab-options {
   height: 100%;
-  widows: 100%;
+  width: 100%;
 }
 
 .tab-button:hover {
