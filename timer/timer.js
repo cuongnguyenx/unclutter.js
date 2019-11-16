@@ -86,7 +86,7 @@ async function addDataToTempStorage(id) {
         browser.storage.local.set({
             temp: currTemp.concat([tabToAdd.id])
         }).then(e => {
-            console.log("Tab added to Temp queue successfully!")
+            console.log("Tab added to Temp queue successfully!");
         });
     }
 }
@@ -108,8 +108,7 @@ async function incrementTabs(tabs) {
         if (inactiveTime > GLOBAL_TIME_LIMIT) {
             if (AUTO_KILL_TABS) {
                 removeTab(tab.id);
-            }
-            else {
+            } else {
                 let msg = await addDataToTempStorage(tab.id, index);
                 runTimeMap.set(tab.id, inactiveTime);
             }
@@ -129,7 +128,7 @@ async function removeFromTemp(id) {
     let tempArray = tempTabsDatabase.temp;
     let indexTab = tempArray.indexOf(id);
     if (indexTab > -1) {
-        let discardArray = tempArray.splice(indexTab, 1)
+        let discardArray = tempArray.splice(indexTab, 1);
         browser.storage.local.set({
             temp: tempArray
         });
@@ -144,8 +143,8 @@ initializeTimersForTabs();
 
 function initializeTimersForTabs() {
     browser.tabs.query({
-        active: false
-    })
+            active: false
+        })
         .then(resetTimers, onError)
         .then(() => {
             console.log("Initialization Complete!");
@@ -182,7 +181,7 @@ browser.tabs.onActivated.addListener((activeInfo) => {
 
 async function onCurrentTab(currentTab) {
     // used by onActivated
-    console.log(currentTab.url)
+    console.log(currentTab.url);
     startTimeMap.delete(currentTab.id);
     runTimeMap.delete(currentTab.id);
 
@@ -196,7 +195,7 @@ browser.tabs.onRemoved.addListener((tabId) => {
     runTimeMap.delete(tabId);
     startTimeMap.delete(tabId);
     removeFromTemp(tabId).then(e => {
-        console.log("Finished Removing")
+        console.log("Finished Removing");
     });
 });
 
@@ -228,17 +227,15 @@ browser.storage.onChanged.addListener((changes, areaName) => {
     else if (areaName === "sync") {
         let newRegex = changes.regex.newValue;
         if (EXCLUSION_REGEX != newRegex) {
-        EXCLUSION_REGEX = newRegex;
-    }
+            EXCLUSION_REGEX = newRegex;
+        }
         let newTimeLimit = Number.parseInt(changes.timeLimit.newValue, 10);
         if (newTimeLimit != GLOBAL_TIME_LIMIT) {
             GLOBAL_TIME_LIMIT = newTimeLimit;
             startTimeMap = new Map();
             runTimeMap = new Map();
             initializeTimersForTabs();
-        }
-
-        else {
+        } else {
             AUTO_KILL_TABS = !AUTO_KILL_TABS;
             console.log(AUTO_KILL_TABS);
         }
