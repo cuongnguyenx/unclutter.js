@@ -70,6 +70,7 @@ function createListingContentElement(tabPromise) {
 function createListingLeftSectionElement(tabPromise) {
   let listingLeftSection = document.createElement("div");
   listingLeftSection.classList.add("col-8", "tab-left-section");
+  listingLeftSection.style
   listingLeftSection.append(createListingTitleTextElement(tabPromise));
   return listingLeftSection;
 }
@@ -89,7 +90,8 @@ function fitTitleTextToListing(title) {
     return title;
   }
 
-  title = title.substring(0, GLOBAL_TITLE_LENGTH_LIMIT);
+  title = title.replace(/([:/;])/, / (1) /);
+  title = title.substring(0, Math.max(GLOBAL_TITLE_LENGTH_LIMIT, title.indexOf(" ")));
   title = title.substring(0, title.lastIndexOf(" "));
   title = `${title}...`;
 
