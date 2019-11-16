@@ -56,7 +56,7 @@ body {
   width: 100%;
   height: 88%;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .tab-list {
@@ -69,6 +69,16 @@ body {
   border-color: #BBBBBB;
   background: #646464;
   color: #BBBBBB;
+}
+
+.removed {
+  transition: all 0.2s;
+  height: 0%;
+  width: 0%;
+  margin: 0%;
+  padding: 0%;
+  font-size: 0em;
+  border: none;
 }
 
 .tab-listing:hover {

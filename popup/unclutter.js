@@ -217,6 +217,9 @@ function removeTabListings(tabIdsToBeRemoved) {
 
 function removeTabListing(tabId) {
   let listingToBeRemoved = document.getElementById(`tab-listing-${tabId}`);
-  listingToBeRemoved.remove();
+  listingToBeRemoved.classList.add("removed");
+  setTimeout(() => {
+    listingToBeRemoved.remove();
+  }, 500);
   console.log("Removed listing for " + tabId);
 }
