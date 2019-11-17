@@ -1,7 +1,3 @@
-$('body').tooltip({
-  selector: '[data-toggle=tooltip]',
-});
-
 const tabList = document.getElementById("tab-list");
 browser.storage.local.get("temp").then(loadInitialTabList);
 
@@ -43,8 +39,11 @@ function addTabListing(tabId) {
     </div>
   </li>
   */
+
   createListingElement(tabId).then(listingElement => {
     tabList.appendChild(listingElement);
+    activateListingTooltips(tabId);
+    listingElement.classList.remove("removed");
   });
 
   console.log(`Created listing for ${tabId}`);
@@ -52,7 +51,7 @@ function addTabListing(tabId) {
 
 async function createListingElement(tabId) {
   let listing = document.createElement("li");
-  listing.classList.add("list-group-item", "container-fluid", "tab-listing");
+  listing.classList.add("list-group-item", "container-fluid", "tab-listing", "removed");
   listing.id = `tab-listing-${tabId}`;
   let tabPromise = browser.tabs.get(tabId);
   listing.appendChild(createListingContentElement(tabPromise));
@@ -122,7 +121,7 @@ function createListingDeleteButtonElement(tabPromise) {
 
   tabPromise.then(tab => {
     listingDeleteButton.addEventListener("click", () => {
-      console.log("Delete clicked");
+      console.log("Delete clicked for " + tab.id);
     });
   });
 
@@ -144,7 +143,7 @@ function createListingSaveCloseButtonElement(tabPromise) {
 
   tabPromise.then(tab => {
     listingSaveCloseButton.addEventListener("click", () => {
-      console.log("Saveclose clicked");
+      console.log("SaveClose clicked for " + tab.id);
     });
   });
 
@@ -167,7 +166,7 @@ function createListingDismissButtonElement(tabPromise) {
   tabPromise.then(tab => {
     listingDismissButton.addEventListener("click", () => {
       removeTabListing(tab.id);
-      console.log("Dismiss clicked");
+      console.log("Dismiss clicked for " + tab.id);
     });
   });
 
@@ -178,6 +177,12 @@ function createListingDismissIconElement() {
   let listingDeleteIcon = document.createElement("i");
   listingDeleteIcon.classList.add("fa", "fa-times", "fa-2x");
   return listingDeleteIcon;
+}
+
+function activateListingTooltips(tabId) {
+  $(`#tab-listing-${tabId}`).tooltip({
+    selector: "[data-toggle=tooltip]"
+  });
 }
 
 browser.storage.onChanged.addListener(onStorageChange);
@@ -218,14 +223,26 @@ function removeTabListings(tabIdsToBeRemoved) {
 function removeTabListing(tabId) {
   let listingToBeRemoved = document.getElementById(`tab-listing-${tabId}`);
   collapseListing(listingToBeRemoved);
-  listingToBeRemoved.addEventListener("mouseleave", () => {
-    setTimeout(() => {
-      listingToBeRemoved.remove();
-    }, 1000);
-  });
-  console.log("Removed listing for " + tabId);
+  queueListingRemoval(listingToBeRemoved);
 }
 
 function collapseListing(listing) {
   listing.classList.add("removed");
+}
+
+function queueListingRemoval(listing) {
+  $(`#${listing.id}`).find("[data-toggle=tooltip]").on('hidden.bs.tooltip', function () {
+    if (!listing) {
+      return;
+    }
+    console.log("Removed listing for " + listing.id);
+    preventBorderArtifacts(listing);
+    tabList.removeChild(listing);
+    listing.remove();
+  });
+  console.log(`Queued removal for ${listing.id}`);
+}
+
+function preventBorderArtifacts(listing) {
+  listing.style.border = "none";
 }

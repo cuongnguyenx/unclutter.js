@@ -75,12 +75,12 @@ body {
 }
 
 .tab-listing:hover {
-  transition: background 0.05s;
+  transition: all 0.05s;
   background: #555555;
 }
 
 .tab-listing.removed {
-  transition: all 0.2s ease-out;
+  transition: all 0.25s ease-out;
   max-height: 0px;
   border-top: none;
   border-bottom: none;
