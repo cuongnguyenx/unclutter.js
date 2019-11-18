@@ -66,6 +66,7 @@ body {
 
 .tab-listing {
   overflow: hidden;
+  transition: max-height 0.25s ease-in;
   max-height: 50px;
   margin: 0%;
   padding: 0%;
