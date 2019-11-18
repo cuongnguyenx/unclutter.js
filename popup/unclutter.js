@@ -234,37 +234,21 @@ function removeTabListings(tabIdsToBeRemoved) {
 function removeTabListing(tabId) {
     let listingToBeRemoved = document.getElementById(`tab-listing-${tabId}`);
 
-    collapseListing(listingToBeRemoved);
     queueListingRemoval(listingToBeRemoved);
+    collapseListing(listingToBeRemoved);
 }
 
 function collapseListing(listing) {
+    $(`#${listing.id}`).find("[data-toggle=tooltip]").tooltip("hide");
     listing.classList.add("removed");
 }
 
 function queueListingRemoval(listing) {
-    // FIXME: Edge case where the listing is not deleted from the table because the button was hit before the tooltip appears
-    $(`#${listing.id}`).find("[data-toggle=tooltip]").on('hidden.bs.tooltip', () => {
-        listingSafeDelete(listing);
-    });
-    console.log(`Queued removal for ${listing.id}`);
-}
-
-function listingSafeDelete(listing) {
-    if (!(listing && listing.parentElement)) {
-        return;
-    }
-    deleteListing(listing);
-}
-
-function deleteListing(listing) {
-    if (listing.parentElement.querySelector(":hover") === listing) {
-        listing.addEventListener("mouseleave", () => {
+    listing.addEventListener("transitionend", (event) => {
+        if (event.propertyName === "max-height") {
             deleteListingElement(listing);
-        });
-    } else {
-        deleteListingElement(listing);
-    }
+        }
+    });
 }
 
 function deleteListingElement(listing) {
