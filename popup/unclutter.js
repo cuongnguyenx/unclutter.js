@@ -2,6 +2,8 @@ const tabList = document.getElementById("tab-list");
 
 browser.storage.local.get("temp").then(loadInitialTabList);
 
+// TODO: Add visual categorization system for tabs
+
 function loadInitialTabList(tabs) {
     if (!tabs || !tabs.temp) {
         return;
@@ -44,7 +46,7 @@ function addTabListing(tabId) {
     createListingElement(tabId).then(listingElement => {
         tabList.appendChild(listingElement);
         activateListingTooltips(listingElement.id);
-        animateListingElementEntry(listingElement);
+        transitionListingElementEntry(listingElement);
     });
 
     console.log(`Created listing for ${tabId}`);
@@ -92,7 +94,8 @@ function fitTitleTextToListing(title) {
     }
 
     title = title.substring(0, GLOBAL_TITLE_LENGTH_LIMIT);
-    title = title.substring(0, title.lastIndexOf(" "));
+    let titleStopPoint = title.lastIndexOf(" ");
+    title = title.substring(0, titleStopPoint < 0 ? GLOBAL_TITLE_LENGTH_LIMIT : titleStopPoint);
     title = `${title}...`;
 
     return title;
@@ -123,7 +126,10 @@ function createListingDeleteButtonElement(tabPromise) {
 
     tabPromise.then(tab => {
         listingDeleteButton.addEventListener("click", () => {
-            // TODO: Implement the deletion button functionality
+            browser.runtime.sendMessage({
+                "tabId": tab.id,
+                "action": "perm_close"
+            });
             console.log("Delete clicked for " + tab.id);
         });
     });
@@ -146,7 +152,10 @@ function createListingSaveCloseButtonElement(tabPromise) {
 
     tabPromise.then(tab => {
         listingSaveCloseButton.addEventListener("click", () => {
-            // TODO: Implement save/close button functionality
+            browser.runtime.sendMessage({
+                "tabId": tab.id,
+                "action": "save_close"
+            });
             console.log("SaveClose clicked for " + tab.id);
         });
     });
@@ -169,8 +178,10 @@ function createListingDismissButtonElement(tabPromise) {
 
     tabPromise.then(tab => {
         listingDismissButton.addEventListener("click", () => {
-            // TODO: Implement dismiss function functionality
-            removeTabListing(tab.id);
+            browser.runtime.sendMessage({
+                "tabId": tab.id,
+                "action": "dismiss"
+            });
             console.log("Dismiss clicked for " + tab.id);
         });
     });
@@ -190,7 +201,7 @@ function activateListingTooltips(listingId) {
     });
 }
 
-function animateListingElementEntry(listingElement) {
+function transitionListingElementEntry(listingElement) {
     setTimeout(() => {
         listingElement.classList.remove("removed");
     }, 5);
@@ -252,12 +263,14 @@ function queueListingRemoval(listing) {
 }
 
 function deleteListingElement(listing) {
-    console.log("Removed listing for " + listing.id);
-    preventBorderArtifacts(listing);
-    tabList.removeChild(listing);
     listing.remove();
+    updateTabList();
+    console.log("Removed listing for " + listing.id);
 }
 
-function preventBorderArtifacts(listing) {
-    listing.style.border = "none";
+function updateTabList() {
+    // TODO: Give some indication that the tab list is currently empty
+    if (tabList.childElementCount === 0) {
+        tabList.textContent = "Empty!";
+    }
 }

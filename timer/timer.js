@@ -44,8 +44,11 @@ const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
 let GLOBAL_TIME_LIMIT = 120; // seconds
 let EXCLUSION_REGEX = " ";
 let AUTO_KILL_TABS = true; // will be set to false right after initialization
+
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
+    setupPersistentStorage();
+
     browser.storage.local.set({
         temp: []
     }).then(results => {
@@ -66,6 +69,10 @@ browser.runtime.onInstalled.addListener(details => {
         });
     });
 });
+
+function setupPersistentStorage() {
+    // TODO: Add persistence
+}
 
 
 function updateTimeStatus() {
@@ -95,9 +102,13 @@ async function addDataToTempStorage(id) {
 function removeTab(id) {
     let removed = browser.tabs.remove(id);
     removed.then(() => {
-        startTimeMap.delete(id);
-        runTimeMap.delete(id);
+        removeTabFromMaps(id);
     });
+}
+
+function removeTabFromMaps(id) {
+    startTimeMap.delete(id);
+    runTimeMap.delete(id);
 }
 
 async function incrementTabs(tabs) {
@@ -182,8 +193,7 @@ browser.tabs.onActivated.addListener((activeInfo) => {
 async function onCurrentTab(currentTab) {
     // used by onActivated
     console.log(currentTab.url);
-    startTimeMap.delete(currentTab.id);
-    runTimeMap.delete(currentTab.id);
+    removeTabFromMaps(currentTab.id);
 
     await removeFromTemp(currentTab.id);
 }
@@ -192,8 +202,7 @@ async function onCurrentTab(currentTab) {
 // If the tab is being removed, find the correct tab in startTimeMap and delete it.
 browser.tabs.onRemoved.addListener((tabId) => {
     console.log("TAB CLOSED! " + tabId);
-    runTimeMap.delete(tabId);
-    startTimeMap.delete(tabId);
+    removeTabFromMaps(tabId);
     removeFromTemp(tabId).then(e => {
         console.log("Finished Removing");
     });
@@ -208,15 +217,20 @@ browser.storage.onChanged.addListener((changes, areaName) => {
     if (changes.temp && (areaName === "local")) {
         let amountTabsSaved = changes.temp.newValue.length.toString();
 
-        if (amountTabsSaved < 20) {
-            browser.browserAction.setBadgeBackgroundColor({
-                color: "green"
-            });
-        } else {
-            browser.browserAction.setBadgeBackgroundColor({
-                color: "red"
-            });
-        }
+        // if (amountTabsSaved < 20) {
+        //     browser.browserAction.setBadgeBackgroundColor({
+        //         color: "green"
+        //     });
+        // } else {
+        //     browser.browserAction.setBadgeBackgroundColor({
+        //         color: "red"
+        //     });
+        //
+
+        // FIXME: Colors have too much funk
+        browser.browserAction.setBadgeBackgroundColor({
+            color: badgeColor(amountTabsSaved)
+        });
 
         browser.browserAction.setBadgeText({
             text: amountTabsSaved
@@ -241,3 +255,68 @@ browser.storage.onChanged.addListener((changes, areaName) => {
         }
     }
 });
+
+const BADGE_COLOR_NO_TABS = 0x00FF00;
+const BADGE_COLOR_MAX_TABS = 0xFF0000;
+const BADGE_MAX_TABS = 20;
+
+function badgeColor(tabsSaved) {
+    let color = mapRange(tabsSaved, 0, BADGE_MAX_TABS, BADGE_COLOR_NO_TABS, BADGE_COLOR_MAX_TABS);
+    console.log(color.toString(16));
+    return `#${padWithZeroes(color.toString(16), 6)}`;
+}
+
+function mapRange(value, fromMin, fromMax, toMin, toMax) {
+    return (value - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin;
+}
+
+function padWithZeroes(string, padAmount) {
+    while (string.length < padAmount) {
+        string = `0${string}`;
+    }
+    return string;
+}
+
+browser.runtime.onMessage.addListener(onMessageListener);
+
+function onMessageListener(message, sender, sendResponse) {
+    if (!(message.tabId && message.action)) {
+        return;
+    }
+    runAction(message);
+}
+
+function runAction(actionToPerform) {
+    switch (actionToPerform.action) {
+        case "dismiss":
+            dismissTab(actionToPerform.tabId);
+            break;
+        case "save_close":
+            saveCloseTab(actionToPerform.tabId);
+            break;
+        case "perm_close":
+            permCloseTab(actionToPerform.tabId);
+            break;
+    }
+}
+
+function dismissTab(tabId) {
+    stopTabTracking(tabId);
+}
+
+function saveCloseTab(tabId) {
+    // TODO: Implement saving
+    // removeFromTemp(tabId);
+    // removeTabFromMaps(tabId);
+}
+
+function permCloseTab(tabId) {
+    browser.tabs.remove(tabId).then(() => {
+        stopTabTracking(tabId);
+    });
+}
+
+function stopTabTracking(tabId) {
+    removeTabFromMaps(tabId);
+    removeFromTemp(tabId);
+}
