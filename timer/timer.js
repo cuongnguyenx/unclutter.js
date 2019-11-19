@@ -204,23 +204,25 @@ browser.tabs.onCreated.addListener((tab) => {
     console.log("TAB OPENED! " + tab.id);
 });
 
+function updateBadge(amount) {
+    if (amount < 20) {
+        browser.browserAction.setBadgeBackgroundColor({
+            color: "green"
+        });
+    } else {
+        browser.browserAction.setBadgeBackgroundColor({
+            color: "red"
+        });
+    }
+
+    browser.browserAction.setBadgeText({
+        text: amount
+    });
+}
 browser.storage.onChanged.addListener((changes, areaName) => {
     if (changes.temp && (areaName === "local")) {
         let amountTabsSaved = changes.temp.newValue.length.toString();
-
-        if (amountTabsSaved < 20) {
-            browser.browserAction.setBadgeBackgroundColor({
-                color: "green"
-            });
-        } else {
-            browser.browserAction.setBadgeBackgroundColor({
-                color: "red"
-            });
-        }
-
-        browser.browserAction.setBadgeText({
-            text: amountTabsSaved
-        });
+        updateBadge(amountTabsSaved)
     }
 
     // changes with the setting
@@ -239,5 +241,7 @@ browser.storage.onChanged.addListener((changes, areaName) => {
             AUTO_KILL_TABS = !AUTO_KILL_TABS;
             console.log(AUTO_KILL_TABS);
         }
+
+        updateBadge(0)
     }
 });
