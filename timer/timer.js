@@ -47,31 +47,69 @@ let AUTO_KILL_TABS = true; // will be set to false right after initialization
 
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
-    setupPersistentStorage();
+    setupStorage();
+});
 
+function setupStorage() {
+    setupPersistentStorage();
+    clearTemporaryStorage();
+}
+
+function setupPersistentStorage() {
+    setupBookmarkStorage();
+    setupSettingsStorage();
+}
+
+function setupBookmarkStorage() {
+    browser.storage.local.get("bookmarks")
+        .then((queryResult) => {
+            if (!queryResult.bookmarks) {
+                instantiateBookmarks();
+            }
+        });
+}
+
+function instantiateBookmarks() {
+    browser.storage.local.set({
+        bookmarks: []
+    }).then(() => {
+        console.log("Bookmark storage initialized successfully!");
+    });
+}
+
+function setupSettingsStorage() {
+    browser.storage.local.get("settings")
+        .then((queryResult) => {
+            if (!queryResult.settings) {
+                instantiateSettings();
+            }
+        });
+}
+
+function instantiateSettings() {
+    browser.storage.sync.set({
+        settings: {
+            regex: "",
+            timeLimit: 120,
+            autoKillingTabs: false
+        }
+    }).then(() => {
+        console.log("Settings initialized!");
+        browser.browserAction.setBadgeText({
+            text: "0"
+        });
+    });
+}
+
+function clearTemporaryStorage() {
     browser.storage.local.set({
         temp: []
     }).then(results => {
-        console.log("Storage initialized successfully");
+        console.log("Temporary storage initialized successfully!");
         browser.browserAction.setBadgeText({
             text: "0"
         });
     });
-
-    browser.storage.sync.set({
-        regex: "",
-        timeLimit: 120,
-        checkValue: "unchecked"
-    }).then(results => {
-        console.log("Settings Reset!");
-        browser.browserAction.setBadgeText({
-            text: "0"
-        });
-    });
-});
-
-function setupPersistentStorage() {
-    // TODO: Add persistence
 }
 
 
@@ -239,19 +277,24 @@ browser.storage.onChanged.addListener((changes, areaName) => {
 
     // changes with the setting
     else if (areaName === "sync") {
-        let newRegex = changes.regex.newValue;
+        if (!changes.settings) {
+            return;
+        }
+        console.log(changes);
+        let newRegex = changes.settings.newValue.regex;
         if (EXCLUSION_REGEX != newRegex) {
             EXCLUSION_REGEX = newRegex;
         }
-        let newTimeLimit = Number.parseInt(changes.timeLimit.newValue, 10);
+        let newTimeLimit = changes.settings.newValue.timeLimit;
         if (newTimeLimit != GLOBAL_TIME_LIMIT) {
             GLOBAL_TIME_LIMIT = newTimeLimit;
+            // TODO: Check if re-instantiating maps is really necessary
             startTimeMap = new Map();
             runTimeMap = new Map();
             initializeTimersForTabs();
         } else {
-            AUTO_KILL_TABS = !AUTO_KILL_TABS;
-            console.log(AUTO_KILL_TABS);
+            AUTO_KILL_TABS = changes.settings.newValue.autoKillingTabs;
+            console.log(`Auto-Kill: ${AUTO_KILL_TABS}`);
         }
     }
 });
@@ -262,7 +305,6 @@ const BADGE_MAX_TABS = 20;
 
 function badgeColor(tabsSaved) {
     let color = mapRange(tabsSaved, 0, BADGE_MAX_TABS, BADGE_COLOR_NO_TABS, BADGE_COLOR_MAX_TABS);
-    console.log(color.toString(16));
     return `#${padWithZeroes(color.toString(16), 6)}`;
 }
 
@@ -301,22 +343,25 @@ function runAction(actionToPerform) {
 }
 
 function dismissTab(tabId) {
-    stopTabTracking(tabId);
+    stopTrackingTab(tabId);
 }
 
 function saveCloseTab(tabId) {
     // TODO: Implement saving
+    addBookmark(tabId);
     // removeFromTemp(tabId);
     // removeTabFromMaps(tabId);
 }
 
+function addBookmark() {}
+
 function permCloseTab(tabId) {
     browser.tabs.remove(tabId).then(() => {
-        stopTabTracking(tabId);
+        stopTrackingTab(tabId);
     });
 }
 
-function stopTabTracking(tabId) {
+function stopTrackingTab(tabId) {
     removeTabFromMaps(tabId);
     removeFromTemp(tabId);
 }
