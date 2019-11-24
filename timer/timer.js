@@ -61,16 +61,16 @@ function setupPersistentStorage() {
 }
 
 function setupBookmarkStorage() {
-    browser.storage.local.get("bookmarks")
+    browser.storage.sync.get("bookmarks")
         .then((queryResult) => {
             if (!queryResult.bookmarks) {
-                instantiateBookmarks();
+                initializeBookmarks();
             }
         });
 }
 
-function instantiateBookmarks() {
-    browser.storage.local.set({
+function initializeBookmarks() {
+    browser.storage.sync.set({
         bookmarks: []
     }).then(() => {
         console.log("Bookmark storage initialized successfully!");
@@ -78,15 +78,15 @@ function instantiateBookmarks() {
 }
 
 function setupSettingsStorage() {
-    browser.storage.local.get("settings")
+    browser.storage.sync.get("settings")
         .then((queryResult) => {
             if (!queryResult.settings) {
-                instantiateSettings();
+                initializeSettings();
             }
         });
 }
 
-function instantiateSettings() {
+function initializeSettings() {
     browser.storage.sync.set({
         settings: {
             regex: "",
@@ -168,7 +168,7 @@ async function incrementTabs(tabs) {
     }
     // console.log(startTimeMap);
     // console.log(runTimeMap);
-    let storedTabsDatabase = await browser.storage.local.get("temp");
+    // let storedTabsDatabase = await browser.storage.local.get("temp");
     // console.log(storedTabsDatabase)
 }
 
@@ -253,70 +253,70 @@ browser.tabs.onCreated.addListener((tab) => {
 
 browser.storage.onChanged.addListener((changes, areaName) => {
     if (changes.temp && (areaName === "local")) {
-        let amountTabsSaved = changes.temp.newValue.length.toString();
-
-        // if (amountTabsSaved < 20) {
-        //     browser.browserAction.setBadgeBackgroundColor({
-        //         color: "green"
-        //     });
-        // } else {
-        //     browser.browserAction.setBadgeBackgroundColor({
-        //         color: "red"
-        //     });
-        //
-
-        // FIXME: Colors have too much funk
-        browser.browserAction.setBadgeBackgroundColor({
-            color: badgeColor(amountTabsSaved)
-        });
-
-        browser.browserAction.setBadgeText({
-            text: amountTabsSaved
-        });
+        updateBadge(changes.temp.newValue.length);
     }
 
     // changes with the setting
     else if (areaName === "sync") {
-        if (!changes.settings) {
-            return;
-        }
-        console.log(changes);
-        let newRegex = changes.settings.newValue.regex;
-        if (EXCLUSION_REGEX != newRegex) {
-            EXCLUSION_REGEX = newRegex;
-        }
-        let newTimeLimit = changes.settings.newValue.timeLimit;
-        if (newTimeLimit != GLOBAL_TIME_LIMIT) {
-            GLOBAL_TIME_LIMIT = newTimeLimit;
-            // TODO: Check if re-instantiating maps is really necessary
-            startTimeMap = new Map();
-            runTimeMap = new Map();
-            initializeTimersForTabs();
-        } else {
-            AUTO_KILL_TABS = changes.settings.newValue.autoKillingTabs;
-            console.log(`Auto-Kill: ${AUTO_KILL_TABS}`);
-        }
+        updateSettings(changes.settings);
     }
 });
+
+function updateBadge(tabCount) {
+    browser.browserAction.setBadgeBackgroundColor({
+        color: badgeColor(tabCount)
+    });
+
+    browser.browserAction.setBadgeText({
+        text: badgeText(tabCount)
+    });
+}
 
 const BADGE_COLOR_NO_TABS = 0x00FF00;
 const BADGE_COLOR_MAX_TABS = 0xFF0000;
 const BADGE_MAX_TABS = 20;
 
 function badgeColor(tabsSaved) {
-    let color = mapRange(tabsSaved, 0, BADGE_MAX_TABS, BADGE_COLOR_NO_TABS, BADGE_COLOR_MAX_TABS);
+    let color = mapColorRange(tabsSaved, 0, BADGE_MAX_TABS, BADGE_COLOR_NO_TABS, BADGE_COLOR_MAX_TABS);
     return `#${padWithZeroes(color.toString(16), 6)}`;
 }
 
-function mapRange(value, fromMin, fromMax, toMin, toMax) {
+function mapColorRange(tabsSaved, minTabCount, maxTabCount, minColor, maxColor) {
+    let colorResult = 0;
+
+    let currentColorBitMask = 0xFF;
+    for (let rgb = 0; rgb < 3; rgb++) {
+        let currentRGBMask = currentColorBitMask << (8 * rgb);
+        let minRGB = (minColor & currentRGBMask) >> (8 * rgb);
+        let maxRGB = (maxColor & currentRGBMask) >> (8 * rgb);
+        let resultRGB = mapNumberRanges(tabsSaved, minTabCount, maxTabCount, minRGB, maxRGB);
+        colorResult |= resultRGB << (8 * rgb);
+    }
+
+    return colorResult;
+}
+
+function mapNumberRanges(value, fromMin, fromMax, toMin, toMax) {
     return (value - fromMin) / (fromMax - fromMin) * (toMax - toMin) + toMin;
 }
 
 function padWithZeroes(string, padAmount) {
-    while (string.length < padAmount) {
-        string = `0${string}`;
+    return string.length >= padAmount ? string : `${new Array(padAmount - string.length + 1).join("0")}${string}`;
+}
+
+function badgeText(tabCount) {
+    return tabCount === 0 ? "" : tabCount.toString();
+}
+
+function updateSettings(settings) {
+    if (!settings) {
+        return;
     }
-    return string;
+    console.log(settings.newValue);
+    EXCLUSION_REGEX = settings.newValue.regex;
+    GLOBAL_TIME_LIMIT = settings.newValue.timeLimit;
+    AUTO_KILL_TABS = settings.newValue.autoKillingTabs;
+    console.log(`Auto-Kill: ${AUTO_KILL_TABS}`);
 }
 
 browser.runtime.onMessage.addListener(onMessageListener);
@@ -328,18 +328,14 @@ function onMessageListener(message, sender, sendResponse) {
     runAction(message);
 }
 
+const POSSIBLE_ACTIONS = {
+    "dismiss": dismissTab,
+    "save_close": saveCloseTab,
+    "perm_close": permCloseTab
+};
+
 function runAction(actionToPerform) {
-    switch (actionToPerform.action) {
-        case "dismiss":
-            dismissTab(actionToPerform.tabId);
-            break;
-        case "save_close":
-            saveCloseTab(actionToPerform.tabId);
-            break;
-        case "perm_close":
-            permCloseTab(actionToPerform.tabId);
-            break;
-    }
+    POSSIBLE_ACTIONS[actionToPerform.action](actionToPerform.tabId);
 }
 
 function dismissTab(tabId) {
@@ -347,13 +343,26 @@ function dismissTab(tabId) {
 }
 
 function saveCloseTab(tabId) {
-    // TODO: Implement saving
     addBookmark(tabId);
-    // removeFromTemp(tabId);
-    // removeTabFromMaps(tabId);
+    stopTrackingTab();
 }
 
-function addBookmark() {}
+function addBookmark(tabId) {
+    browser.tabs.get(tabId).then(async (tab) => {
+        let bookmarkResult = await browser.storage.sync.get("bookmarks");
+
+        console.log(bookmarkResult);
+
+        Array.prototype.push.call(bookmarkResult.bookmarks, {
+            url: tab.url,
+            category: "none"
+        });
+
+        await browser.storage.sync.set({
+            bookmarks: bookmarkResult.bookmarks
+        });
+    });
+}
 
 function permCloseTab(tabId) {
     browser.tabs.remove(tabId).then(() => {
