@@ -268,6 +268,7 @@ function addToTreeMass(hierachy, dataMul, traversal) {
     });
 }
 
+/*
 let testHierachy = new linkHierachy("master");
 addToTreeIndividual(testHierachy, "https://amazon.com/a/b/c", testHierachy.tree.traverseBF);
 addToTreeIndividual(testHierachy,"https://amazon.com/a/b", testHierachy.tree.traverseBF);
@@ -284,5 +285,6 @@ testHierachy.tree.traverseDF(callbackxx, testHierachy);
 for (var i = 0; i < testHierachy.globalHierachy.length; i++) {
     console.log(testHierachy.globalHierachy[i]);
 }
+ */
 
 

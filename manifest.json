@@ -35,12 +35,16 @@
 
   "background": {
     "scripts": [
-      "timer/timer.js"
+      "timer/timer.js",
+      "nlp/testNLP.js",
+      "nlp/linkHierachy.js"
     ]
   },
 
   "options_ui": {
     "page": "settings/options.html"
-  }
+  },
+
+  "web_accessible_resources": ["assets/result.txt", "assets/stopwords.txt"]
 
 }
