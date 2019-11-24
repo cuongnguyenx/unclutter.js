@@ -2,7 +2,10 @@ const tabList = document.getElementById("tab-list");
 
 browser.storage.local.get("temp").then(loadInitialTabList);
 
-// TODO: Add visual categorization system for tabs
+// TODO: Add bookmarks view
+// TODO: Add settings view
+
+// TODO: Add visual categorization system to tab view
 
 function loadInitialTabList(tabs) {
     if (!tabs || !tabs.temp) {
