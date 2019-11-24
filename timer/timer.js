@@ -44,6 +44,7 @@ const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
 let GLOBAL_TIME_LIMIT = 120; // seconds
 let EXCLUSION_REGEX = " ";
 let AUTO_KILL_TABS = false; // will be set to false right after initialization
+let title_Comparer = new Comparer()
 
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
@@ -61,9 +62,6 @@ function setupPersistentStorage() {
 }
 
 function setupBookmarkStorage() {
-    let compardre = new Comparer()
-    console.log(compardre.compare("Read Manga here", "I like to read books"))
-    console.log(compardre.compare("Read Manga here", "I like to read manga"))
     browser.storage.local.get("bookmarks")
     browser.storage.sync.get("bookmarks")
         .then((queryResult) => {
