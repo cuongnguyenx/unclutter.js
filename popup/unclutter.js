@@ -85,6 +85,8 @@ function createListingTitleTextElement(tabPromise) {
     listingTitleText.classList.add("align-middle", "tab-text");
     tabPromise.then(tab => {
         listingTitleText.textContent = fitTitleTextToListing(tab.title);
+        listingTitleText.setAttribute("data-toggle", "tooltip");
+        listingTitleText.setAttribute("title", tab.url);
     });
     return listingTitleText;
 }
