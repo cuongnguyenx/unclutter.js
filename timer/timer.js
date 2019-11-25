@@ -331,9 +331,9 @@ function onMessageListener(message, sender, sendResponse) {
 }
 
 const POSSIBLE_ACTIONS = {
-    "dismiss": dismissTab,
-    "save_close": saveCloseTab,
-    "perm_close": permCloseTab
+    dismiss: dismissTab,
+    save_close: saveCloseTab,
+    perm_close: permCloseTab
 };
 
 function runAction(actionToPerform) {

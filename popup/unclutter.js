@@ -22,7 +22,7 @@ function addTabListings(tabIdsToBeAdded) {
     });
 }
 
-function addTabListing(tabId) {
+async function addTabListing(tabId) {
     /* Listing HTML:
     <li class="list-group-item container-fluid tab-listing" id="tab-listing-1">
         <div class="row no-gutters tab-listing-content">
@@ -46,23 +46,29 @@ function addTabListing(tabId) {
     </li>
     */
 
-    createListingElement(tabId).then(listingElement => {
-        tabList.appendChild(listingElement);
-        activateListingTooltips(listingElement.id);
-        transitionListingElementEntry(listingElement);
+    await createListingElement(tabId).then(listingElement => {
+        if (!listingElement) {
+            console.log(`Tab with ID ${tabId} does not exist.`);
+            return;
+        }
+        addListingElementToTabView(listingElement);
+        console.log(`Created listing for ${tabId}`);
     });
-
-    console.log(`Created listing for ${tabId}`);
 }
 
 async function createListingElement(tabId) {
     let listing = document.createElement("li");
     listing.classList.add("list-group-item", "container-fluid", "tab-listing", "removed");
     listing.id = `tab-listing-${tabId}`;
-    let tabPromise = browser.tabs.get(tabId);
+    let tabPromise = browser.tabs.get(tabId).finally(tab => {
+        if (!tab) {
+            return Promise.resolve(undefined);
+        }
+    });
     listing.appendChild(createListingContentElement(tabPromise));
 
-    return listing;
+    await tabPromise;
+    return Promise.resolve(listing);
 }
 
 function createListingContentElement(tabPromise) {
@@ -84,6 +90,9 @@ function createListingTitleTextElement(tabPromise) {
     let listingTitleText = document.createElement("p");
     listingTitleText.classList.add("align-middle", "tab-text");
     tabPromise.then(tab => {
+        if (tab === undefined) {
+            return;
+        }
         listingTitleText.textContent = fitTitleTextToListing(tab.title);
     });
     return listingTitleText;
@@ -128,16 +137,22 @@ function createListingDeleteButtonElement(tabPromise) {
     listingDeleteButton.appendChild(createListingDeleteIconElement());
 
     tabPromise.then(tab => {
-        listingDeleteButton.addEventListener("click", () => {
-            browser.runtime.sendMessage({
-                "tabId": tab.id,
-                "action": "perm_close"
-            });
-            console.log("Delete clicked for " + tab.id);
-        });
+        if (!tab) {
+            return;
+        }
+        addActionToButton(listingDeleteButton, "perm_close", tab.id);
     });
 
     return listingDeleteButton;
+}
+
+function addActionToButton(button, action, tabId) {
+    button.addEventListener("click", () => {
+        browser.runtime.sendMessage({
+            tabId: tabId,
+            action: action
+        });
+    });
 }
 
 function createListingDeleteIconElement() {
@@ -154,13 +169,10 @@ function createListingSaveCloseButtonElement(tabPromise) {
     listingSaveCloseButton.appendChild(createListingSaveCloseIconElement());
 
     tabPromise.then(tab => {
-        listingSaveCloseButton.addEventListener("click", () => {
-            browser.runtime.sendMessage({
-                "tabId": tab.id,
-                "action": "save_close"
-            });
-            console.log("SaveClose clicked for " + tab.id);
-        });
+        if (!tab) {
+            return;
+        }
+        addActionToButton(listingSaveCloseButton, "save_close", tab.id);
     });
 
     return listingSaveCloseButton;
@@ -180,13 +192,10 @@ function createListingDismissButtonElement(tabPromise) {
     listingDismissButton.appendChild(createListingDismissIconElement());
 
     tabPromise.then(tab => {
-        listingDismissButton.addEventListener("click", () => {
-            browser.runtime.sendMessage({
-                "tabId": tab.id,
-                "action": "dismiss"
-            });
-            console.log("Dismiss clicked for " + tab.id);
-        });
+        if (!tab) {
+            return;
+        }
+        addActionToButton(listingDismissButton, "dismiss", tab.id);
     });
 
     return listingDismissButton;
@@ -196,6 +205,12 @@ function createListingDismissIconElement() {
     let listingDeleteIcon = document.createElement("i");
     listingDeleteIcon.classList.add("fa", "fa-times", "fa-2x");
     return listingDeleteIcon;
+}
+
+function addListingElementToTabView(listingElement) {
+    tabList.appendChild(listingElement);
+    activateListingTooltips(listingElement.id);
+    transitionListingElementEntry(listingElement);
 }
 
 function activateListingTooltips(listingId) {
