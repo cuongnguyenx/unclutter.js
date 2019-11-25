@@ -64,10 +64,11 @@ function setupPersistentStorage() {
 
 function setupBookmarkStorage() {
     // console.log(title_Comparer.compare("We live in a Vietnamese village", "Villages in Thailand are small"));
-    console.log(website_Categorizer.search_category("https://nytimes.com/a/b"));
+    // console.log(website_Categorizer.search_category("https://nytimes.com/a/b"));
     browser.storage.sync.get("bookmarks")
         .then((queryResult) => {
-            if (!queryResult.bookmarks) {
+            // TODO remove || true in prod
+            if (!queryResult.bookmarks || true) {
                 initializeBookmarks();
             }
         });
@@ -348,7 +349,7 @@ function dismissTab(tabId) {
 
 function saveCloseTab(tabId) {
     addBookmark(tabId);
-    stopTrackingTab();
+    stopTrackingTab(tabId);
 }
 
 function addBookmark(tabId) {
@@ -361,7 +362,7 @@ function addBookmark(tabId) {
             url: tab.url,
             title: tab.title,
             time_closed: tab.lastAccessed,
-            category: "none"
+            category: website_Categorizer.search_category(tab.url)
         });
 
         await browser.storage.sync.set({
