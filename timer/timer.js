@@ -48,7 +48,7 @@ let title_Comparer = new Comparer();
 let website_Categorizer = new Categorizer();
 
 // Initialize the storage
-browser.runtime.onInstalled.addListener(details => {
+browser.runtime.onInstalled.addListener(() => {
     setupStorage();
 });
 
@@ -64,8 +64,7 @@ function setupPersistentStorage() {
 
 function setupBookmarkStorage() {
     // console.log(title_Comparer.compare("We live in a Vietnamese village", "Villages in Thailand are small"));
-    console.log(website_Categorizer.search_category("https://nhentai.net/g/177013"))
-    browser.storage.local.get("bookmarks")
+    console.log(website_Categorizer.search_category("https://nhentai.net/g/177013"));
     browser.storage.sync.get("bookmarks")
         .then((queryResult) => {
             if (!queryResult.bookmarks) {
@@ -102,6 +101,10 @@ function initializeSettings() {
         console.log("Settings initialized!");
     });
 }
+
+browser.runtime.onStartup.addListener(() => {
+    clearTemporaryStorage();
+});
 
 function clearTemporaryStorage() {
     browser.storage.local.set({
@@ -149,7 +152,7 @@ async function incrementTabTime(tabId) {
         if (AUTO_KILL_TABS) {
             removeTab(tabId);
         } else {
-            await addDataToTempStorage(tabId.id);
+            await addDataToTempStorage(tabId);
             runTimeMap.set(tabId, inactiveTime);
         }
     } else {
