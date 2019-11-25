@@ -1,29 +1,29 @@
 class Categorizer {
     constructor() {
         this.categories_websites = [adult, arts, business, computers, games, health, news, recreation,
-            education, science, shopping, sports];
+            education, science, shopping, sports]
         this.keys = ["Adults", "Arts", "Business", "Computers", "Games", "Health", "News",
-            "Recreation", "Education", "Science", "Shopping", "Sports"];
+            "Recreation", "Education", "Science", "Shopping", "Sports"]
 
-        this.category_website_dict = {};
+        this.category_website_dict = {}
         for (let i = 0; i < this.keys.length; i++) {
-            this.category_website_dict[this.keys[i]] = this.categories_websites[i].split("\n");
+            this.category_website_dict[this.keys[i]] = this.categories_websites[i].split("\n")
         }
     }
 
     search_category(website) {
-        let idx = 99999999999; // Arbitrary large number
-        let category = "Miscellaneous";
-        let website_root = getLinkRoot(website).replace("https://", "www.");
-        console.log(website_root);
+        let idx = 99999999999 // Arbitrary large number
+        let category = "Miscellaneous"
+        let website_root = getLinkRoot(website).replace("https://", "www.")
+        console.log(website_root)
         this.keys.forEach(element => {
-            let idx_get = this.category_website_dict[element].indexOf(website_root);
+            let idx_get = this.category_website_dict[element].indexOf(website_root)
             if (idx_get !== -1 && idx_get < idx) {
-                idx = idx_get;
-                category = element;
+                idx = idx_get
+                category = element
             }
         });
-        return category;
+        return category
     }
 }
 
@@ -2026,7 +2026,7 @@ let adult = "www.xvideos.com\n" +
     "www.dubaichamadi.com\n" +
     "www.dubai-love.com\n" +
     "www.dubberley.com\n" +
-    "www.dublinescort.com\n";
+    "www.dublinescort.com\n"
 
 let arts = "www.xvideos.com\n" +
     "www.xnxx.com\n" +
@@ -4027,7 +4027,7 @@ let arts = "www.xvideos.com\n" +
     "www.dubaichamadi.com\n" +
     "www.dubai-love.com\n" +
     "www.dubberley.com\n" +
-    "www.dublinescort.com\n";
+    "www.dublinescort.com\n"
 
 let business = "www.office.com\n" +
     "www.espn.com\n" +
@@ -6028,7 +6028,7 @@ let business = "www.office.com\n" +
     "www.pola.co.jp\n" +
     "www.kleintools.com\n" +
     "www.trains.com\n" +
-    "www.ttiinc.com\n";
+    "www.ttiinc.com\n"
 
 let computers = "www.google.com\n" +
     "www.youtube.com\n" +
@@ -8029,7 +8029,7 @@ let computers = "www.google.com\n" +
     "www.windowsphone.com\n" +
     "www.turnkeyinternet.net\n" +
     "www.streamingmedia.com\n" +
-    "www.dotnetnuke.com\n";
+    "www.dotnetnuke.com\n"
 
 let games = "www.twitch.tv\n" +
     "www.roblox.com\n" +
@@ -10030,7 +10030,7 @@ let games = "www.twitch.tv\n" +
     "www.poptropicasecrets.com\n" +
     "www.penangchess.com\n" +
     "www.dolserver.net\n" +
-    "www.pearlriverresort.com\n";
+    "www.pearlriverresort.com\n"
 
 let health = "www.nih.gov\n" +
     "www.webmd.com\n" +
@@ -12031,7 +12031,7 @@ let health = "www.nih.gov\n" +
     "www.ncbtmb.org\n" +
     "www.lupusresearch.org\n" +
     "www.wddty.com\n" +
-    "www.advancedfertility.com\n";
+    "www.advancedfertility.com\n"
 
 let news = "www.reddit.com\n" +
     "www.nytimes.com\n" +
@@ -14032,7 +14032,7 @@ let news = "www.reddit.com\n" +
     "www.unothegateway.com\n" +
     "www.themontclarion.org\n" +
     "www.quippingqueen.blogspot.com\n" +
-    "www.universitychron.com\n";
+    "www.universitychron.com\n"
 
 let recreation = "www.booking.com\n" +
     "www.tripadvisor.com\n" +
@@ -16033,7 +16033,7 @@ let recreation = "www.booking.com\n" +
     "www.balpoa.net\n" +
     "www.olive-drab.com\n" +
     "www.tomroelandts.com\n" +
-    "www.costaricaexpeditions.com\n";
+    "www.costaricaexpeditions.com\n"
 
 let education = "www.stackoverflow.com\n" +
     "www.udemy.com\n" +
@@ -18034,7 +18034,7 @@ let education = "www.stackoverflow.com\n" +
     "www.southalabama.edu\n" +
     "www.guggenheim.org\n" +
     "www.ri.cmu.edu\n" +
-    "www.findlay.edu\n";
+    "www.findlay.edu\n"
 
 let science = "www.translate.google.com\n" +
     "www.researchgate.net\n" +
@@ -20035,7 +20035,7 @@ let science = "www.translate.google.com\n" +
     "www.phys.ksu.edu\n" +
     "www.tatmachinery.com\n" +
     "www.met.gov.my\n" +
-    "www.moscowzoo.ru\n";
+    "www.moscowzoo.ru\n"
 
 let shopping = "www.amazon.com\n" +
     "www.netflix.com\n" +
@@ -22036,7 +22036,7 @@ let shopping = "www.amazon.com\n" +
     "www.reckeweg-india.com\n" +
     "www.forplaycatalog.com\n" +
     "www.easytogrowbulbs.com\n" +
-    "www.bigfinish.com\n";
+    "www.bigfinish.com\n"
 
 let sports = "www.espn.com\n" +
     "www.sports.yahoo.com\n" +
@@ -24037,4 +24037,4 @@ let sports = "www.espn.com\n" +
     "www.cararuns.org\n" +
     "www.rcrracing.com\n" +
     "www.sarodeo.com\n" +
-    "www.northridgegolf.com\n";
+    "www.northridgegolf.com\n"
