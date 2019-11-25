@@ -1,28 +1,37 @@
-class Comparer{
+class Comparer {
     constructor() {
         this.wordScoreDict = {};
         this.stopWords_arr = stopWords.split("\n")
         let intermediaryArr = wordToScore.split("\n")
         intermediaryArr.forEach(element => {
-           let entries = element.split("\t");
-           this.wordScoreDict[entries[0]] = parseFloat(entries[1])
+            let entries = element.split("\t");
+            this.wordScoreDict[entries[0]] = parseFloat(entries[1])
         });
     }
 
     remove_punct_and_normalized(str) {
-        return str.replace(/(~|`|!|@|#|$|%|^|&|\*|\(|\)|{|}|\[|\]|;|:|\"|'|<|,|\.|>|\?|\/|\\|\||-|_|\+|=)/g," ").toLowerCase()
+        return str.replace(/(~|`|!|@|#|$|%|^|&|\*|\(|\)|{|}|\[|\]|;|:|\"|'|<|,|\.|>|\?|\/|\\|\||-|_|\+|=)/g, " ").toLowerCase()
     }
 
-    purify_tokens(tokenized_arr, stopwords) {
-        let filtered = tokenized_arr.filter(function(value, index, arr){
-            return value.length > 2 && stopwords.indexOf(value) === -1 ;
+    // https://github.com/takafumir/javascript-lemmatizer
+    purify_tokens(tokenized_arr, stopwords, lemmatize) {
+        let filtered = tokenized_arr.filter(function (value, index, arr) {
+            return value.length > 2 && stopwords.indexOf(value) === -1;
         });
+
+        if (lemmatize) {
+            let lemmatizer = new Lemmatizer();
+            filtered.forEach(function (element, index, array) {
+                array[index] = lemmatizer.only_lemmas(element)[0]
+            });
+        }
         return filtered
     }
 
     compare(sent1, sent2) {
-        let tokenized_sent1 = this.purify_tokens(this.remove_punct_and_normalized(sent1).split(" "), this.stopWords_arr)
-        let tokenized_sent2 = this.purify_tokens(this.remove_punct_and_normalized(sent2).split(" "), this.stopWords_arr)
+
+        let tokenized_sent1 = this.purify_tokens(this.remove_punct_and_normalized(sent1).split(" "), this.stopWords_arr, false)
+        let tokenized_sent2 = this.purify_tokens(this.remove_punct_and_normalized(sent2).split(" "), this.stopWords_arr, false)
 
 
         let uniq_tokenized_sent1 = new Set(tokenized_sent1);
@@ -31,6 +40,7 @@ class Comparer{
         // https://stackoverflow.com/questions/1723168/what-is-the-fastest-or-most-elegant-way-to-compute-a-set-difference-using-javascript
         let overlap_set = [...uniq_tokenized_sent1].filter(x => uniq_tokenized_sent2.has(x))
         let union_elems = uniq_tokenized_sent1.size + uniq_tokenized_sent2.size - overlap_set.length
+        console.log(overlap_set)
 
         let weighted_score = 0.0;
         for (let item of overlap_set) {
@@ -48103,7 +48113,7 @@ const stopWords = 'a\n' +
     'yours\n' +
     'yourself\n' +
     'yourselves\n' +
-    'zero\n'
+    'zero\n';
 
 
 

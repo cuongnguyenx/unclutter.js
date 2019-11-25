@@ -44,7 +44,8 @@ const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
 let GLOBAL_TIME_LIMIT = 120; // seconds
 let EXCLUSION_REGEX = " ";
 let AUTO_KILL_TABS = false; // will be set to false right after initialization
-let title_Comparer = new Comparer()
+let title_Comparer = new Comparer();
+let website_Categorizer = new Categorizer();
 
 // Initialize the storage
 browser.runtime.onInstalled.addListener(details => {
@@ -62,6 +63,8 @@ function setupPersistentStorage() {
 }
 
 function setupBookmarkStorage() {
+    // console.log(title_Comparer.compare("We live in a Vietnamese village", "Villages in Thailand are small"));
+    console.log(website_Categorizer.search_category("https://nhentai.net/g/177013"))
     browser.storage.local.get("bookmarks")
     browser.storage.sync.get("bookmarks")
         .then((queryResult) => {
@@ -114,7 +117,7 @@ function clearTemporaryStorage() {
     });
 }
 
-
+// update inactive time for all current inactive tabs
 function updateTimeStatus() {
     let querying = browser.tabs.query({
         active: false
@@ -357,6 +360,8 @@ function addBookmark(tabId) {
 
         Array.prototype.push.call(bookmarkResult.bookmarks, {
             url: tab.url,
+            title: tab.title,
+            time_closed: tab.lastAccessed,
             category: "none"
         });
 

@@ -35,16 +35,16 @@
 
   "background": {
     "scripts": [
+      "nlp/js/lemmatizer.js",
+      "nlp/js/NLP.js",
+      "nlp/js/linkHierachy.js",
+      "timer/websites.js",
       "timer/timer.js",
-      "nlp/testNLP.js",
-      "nlp/linkHierachy.js"
+      "nlp/bower_components/underscore/underscore.js"
     ]
   },
 
   "options_ui": {
     "page": "settings/options.html"
-  },
-
-  "web_accessible_resources": ["assets/result.txt", "assets/stopwords.txt"]
-
+  }
 }
