@@ -64,7 +64,7 @@ function setupPersistentStorage() {
 
 function setupBookmarkStorage() {
     // console.log(title_Comparer.compare("We live in a Vietnamese village", "Villages in Thailand are small"));
-    console.log(website_Categorizer.search_category("https://nhentai.net/g/177013"));
+    console.log(website_Categorizer.search_category("https://nytimes.com/a/b"));
     browser.storage.sync.get("bookmarks")
         .then((queryResult) => {
             if (!queryResult.bookmarks) {
@@ -138,7 +138,7 @@ function removeTabFromMaps(id) {
 async function incrementTabs(tabs) {
     // console.log("TIME UPDATED")
     for (let tab of tabs) {
-        incrementTabTime(tab.id);
+        await incrementTabTime(tab.id);
     }
     // console.log(startTimeMap);
     // console.log(runTimeMap);
@@ -166,8 +166,10 @@ async function addDataToTempStorage(id) {
     let storedTabsDatabase = await browser.storage.local.get("temp");
     let currTemp = storedTabsDatabase.temp;
     if (!(currTemp.includes(id))) {
+        console.log(id)
+        let newTemp = currTemp.concat([id])
         browser.storage.local.set({
-            temp: currTemp.concat([id])
+            temp: newTemp
         }).then(e => {
             console.log("Tab added to Temp queue successfully!");
         });
