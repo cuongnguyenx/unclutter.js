@@ -350,6 +350,7 @@ function dismissTab(tabId) {
 function saveCloseTab(tabId) {
     addBookmark(tabId);
     stopTrackingTab(tabId);
+    removeTab(tabId);
 }
 
 function addBookmark(tabId) {
@@ -372,9 +373,8 @@ function addBookmark(tabId) {
 }
 
 function permCloseTab(tabId) {
-    browser.tabs.remove(tabId).then(() => {
-        stopTrackingTab(tabId);
-    });
+    stopTrackingTab(tabId);
+    removeTab(tabId)
 }
 
 function stopTrackingTab(tabId) {
