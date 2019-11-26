@@ -17,8 +17,8 @@ function loadInitialTabList(tabs) {
 
 function addTabListings(tabIdsToBeAdded) {
     console.log(tabIdsToBeAdded);
-    Array.prototype.forEach.call(tabIdsToBeAdded, tabId => {
-        addTabListing(Number.parseInt(tabId));
+    tabIdsToBeAdded.forEach(tabId => {
+        addTabListing(tabId);
     });
 }
 
@@ -240,23 +240,15 @@ function processChangesToTabQueue(tabQueueChanges) {
 }
 
 function processQueueAdditions(tabQueueChanges) {
-    Array.prototype.forEach.call(tabQueueChanges.newValue, tabId => {
-        if (!(Array.prototype.includes.call(tabQueueChanges.oldValue, tabId))) {
-            addTabListing(tabId);
-        }
-    });
+    removeTabListings(tabQueueChanges.newValue.filter(tab => !tabQueueChanges.oldValue.includes(tab)));
 }
 
 function processQueueRemovals(tabQueueChanges) {
-    Array.prototype.forEach.call(tabQueueChanges.oldValue, tabId => {
-        if (!(Array.prototype.includes.call(tabQueueChanges.newValue, tabId))) {
-            removeTabListing(tabId);
-        }
-    });
+    removeTabListings(tabQueueChanges.oldValue.filter(tab => !tabQueueChanges.newValue.includes(tab)));
 }
 
 function removeTabListings(tabIdsToBeRemoved) {
-    Array.prototype.forEach.call(tabIdsToBeRemoved, tabId => {
+    tabIdsToBeRemoved.forEach(tabId => {
         removeTabListing(tabId);
     });
 }

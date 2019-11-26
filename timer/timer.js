@@ -3,6 +3,7 @@
 // get all Tabs of the current Window
 
 // FIXME: A bug exists where closing a tab that has been added to temp, manually, results in an error being thrown
+// UPDATE: Might be caused by Firefox itself. Will look into it
 
 class Interval {
     constructor(duration, callback) {
@@ -42,7 +43,7 @@ class Interval {
 
 let startTimeMap = new Map();
 let runTimeMap = new Map();
-const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
+const timer = new Interval(15000, updateTimeStatus); // === 30 seconds
 let GLOBAL_TIME_LIMIT = 120; // seconds
 let EXCLUSION_REGEX = " ";
 let AUTO_KILL_TABS = false; // will be set to false right after initialization
@@ -213,15 +214,18 @@ function startTimer() {
 browser.tabs.onActivated.addListener((activeInfo) => {
     let prevTabId = activeInfo.previousTabId;
 
-    console.log("NEW FOCUSED! " + prevTabId);
+    console.log("NEW FOCUSED!");
+    console.log(activeInfo);
 
     if (prevTabId !== undefined) {
         startTimeMap.set(prevTabId, Date.now());
         runTimeMap.set(prevTabId, 0);
     }
 
-    browser.tabs.get(activeInfo.tabId)
-        .then(onCurrentTab, onError);
+    if (activeInfo.tabId !== undefined) {
+        browser.tabs.get(activeInfo.tabId)
+            .then(onCurrentTab, onError);
+    }
 });
 
 async function onCurrentTab(currentTab) {
@@ -266,8 +270,6 @@ browser.storage.onChanged.addListener((changes, areaName) => {
     if (changes.temp && (areaName === "local")) {
         updateBadge(changes.temp.newValue.length);
     }
-
-    // changes with the setting
     else if (areaName === "sync") {
         updateSettings(changes.settings);
     }
@@ -368,17 +370,16 @@ async function addBookmark(tabId) {
             return;
         }
 
-        console.log(bookmarks);
         await saveNewBookmark(bookmarks, tab);
     });
 }
 
 function bookmarkAlreadyExists(bookmarks, tab) {
-    return Array.prototype.find.call(bookmarks, bookmark => bookmark.url === tab.url);
+    return bookmarks.find(bookmark => bookmark.url === tab.url);
 }
 
 async function saveNewBookmark(bookmarks, tab) {
-    Array.prototype.push.call(bookmarks, {
+    bookmarks.push({
         url: tab.url,
         title: tab.title,
         time_closed: tab.lastAccessed,
