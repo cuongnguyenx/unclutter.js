@@ -12,19 +12,18 @@ function saveOptions(e) {
 }
 
 function restoreOptions() {
-
-    function setCurrentChoice(result) {
-        document.querySelector("#exregex").value = result.settings.regex || "*://*/*";
-        document.querySelector("#timelim").value = result.settings.timeLimit || 120;
-        document.querySelector("#killtabs").checked = result.settings.autoKillingTabs ? true : false;
-    }
-
-    function onError(error) {
-        console.log(`Error: ${error}`);
-    }
-
     var getting = browser.storage.sync.get("settings");
     getting.then(setCurrentChoice, onError);
+}
+
+function setCurrentChoice(result) {
+    document.querySelector("#exregex").value = result.settings.regex || "*://*/*";
+    document.querySelector("#timelim").value = result.settings.timeLimit || 120;
+    document.querySelector("#killtabs").checked = result.settings.autoKillingTabs ? true : false;
+}
+
+function onError(error) {
+    console.log(`Error: ${error}`);
 }
 
 document.addEventListener("DOMContentLoaded", restoreOptions);

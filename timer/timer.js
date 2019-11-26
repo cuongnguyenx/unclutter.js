@@ -167,8 +167,8 @@ async function addDataToTempStorage(id) {
     let storedTabsDatabase = await browser.storage.local.get("temp");
     let currTemp = storedTabsDatabase.temp;
     if (!(currTemp.includes(id))) {
-        console.log(id)
-        let newTemp = currTemp.concat([id])
+        console.log(id);
+        let newTemp = currTemp.concat([id]);
         browser.storage.local.set({
             temp: newTemp
         }).then(e => {
@@ -374,7 +374,7 @@ function addBookmark(tabId) {
 
 function permCloseTab(tabId) {
     stopTrackingTab(tabId);
-    removeTab(tabId)
+    removeTab(tabId);
 }
 
 function stopTrackingTab(tabId) {
