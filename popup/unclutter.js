@@ -8,7 +8,7 @@ browser.storage.local.get("temp").then(loadInitialTabList);
 // TODO: Add visual categorization system to tab view
 
 function loadInitialTabList(tabs) {
-    if (!tabs || !tabs.temp) {
+    if (!(tabs && tabs.temp)) {
         return;
     }
 
@@ -242,7 +242,7 @@ function processChangesToTabQueue(tabQueueChanges) {
 function processQueueAdditions(tabQueueChanges) {
     Array.prototype.forEach.call(tabQueueChanges.newValue, tabId => {
         if (!(Array.prototype.includes.call(tabQueueChanges.oldValue, tabId))) {
-            addTabListing(Number.parseInt(tabId));
+            addTabListing(tabId);
         }
     });
 }
@@ -250,19 +250,23 @@ function processQueueAdditions(tabQueueChanges) {
 function processQueueRemovals(tabQueueChanges) {
     Array.prototype.forEach.call(tabQueueChanges.oldValue, tabId => {
         if (!(Array.prototype.includes.call(tabQueueChanges.newValue, tabId))) {
-            removeTabListing(Number.parseInt(tabId));
+            removeTabListing(tabId);
         }
     });
 }
 
 function removeTabListings(tabIdsToBeRemoved) {
     Array.prototype.forEach.call(tabIdsToBeRemoved, tabId => {
-        removeTabListing(Number.parseInt(tabId));
+        removeTabListing(tabId);
     });
 }
 
 function removeTabListing(tabId) {
     let listingToBeRemoved = document.getElementById(`tab-listing-${tabId}`);
+
+    if (!listingToBeRemoved) {
+        return;
+    }
 
     queueListingRemoval(listingToBeRemoved);
     collapseListing(listingToBeRemoved);
