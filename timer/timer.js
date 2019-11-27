@@ -43,7 +43,7 @@ class Interval {
 
 let startTimeMap = new Map();
 let runTimeMap = new Map();
-const timer = new Interval(15000, updateTimeStatus); // === 30 seconds
+const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
 let GLOBAL_TIME_LIMIT = 120; // seconds
 let EXCLUSION_REGEX = " ";
 let AUTO_KILL_TABS = false; // will be set to false right after initialization
