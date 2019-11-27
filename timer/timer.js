@@ -2,6 +2,9 @@
 // https://gist.github.com/manast/1185904
 // get all Tabs of the current Window
 
+// FIXME: A bug exists where closing a tab that has been added to temp, manually, results in an error being thrown
+// UPDATE: Might be caused by Firefox itself. Will look into it
+
 class Interval {
     constructor(duration, callback) {
         this.baseline = -1;
@@ -40,32 +43,36 @@ class Interval {
 
 let startTimeMap = new Map();
 let runTimeMap = new Map();
-const timer = new Interval(30000, updateTimeStatus); // === 30 seconds
+const timer = new Interval(15000, updateTimeStatus); // === 30 seconds
 let GLOBAL_TIME_LIMIT = 120; // seconds
 let EXCLUSION_REGEX = " ";
 let AUTO_KILL_TABS = false; // will be set to false right after initialization
 let title_Comparer = new Comparer();
 let website_Categorizer = new Categorizer();
 
+browser.runtime.onInstalled.addListener(runStartup);
+browser.runtime.onStartup.addListener(runStartup);
+
+function runStartup() {
+    setupStorage().then(() => {
+        initializeTimersForTabs();
+        console.log("Timers started!");
+    });
+}
+
 // Initialize the storage
-browser.runtime.onInstalled.addListener(() => {
-    setupStorage();
-});
-
-function setupStorage() {
-    setupPersistentStorage();
-    clearTemporaryStorage();
+async function setupStorage() {
+    return Promise.all([setupPersistentStorage(), clearTemporaryStorage()]);
 }
 
-function setupPersistentStorage() {
-    setupBookmarkStorage();
-    setupSettingsStorage();
+async function setupPersistentStorage() {
+    return Promise.all([setupBookmarkStorage(), setupSettingsStorage()]);
 }
 
-function setupBookmarkStorage() {
+async function setupBookmarkStorage() {
     // console.log(title_Comparer.compare("We live in a Vietnamese village", "Villages in Thailand are small"));
     // console.log(website_Categorizer.search_category("https://nytimes.com/a/b"));
-    browser.storage.sync.get("bookmarks")
+    return browser.storage.sync.get("bookmarks")
         .then((queryResult) => {
             // TODO remove || true in prod
             if (!queryResult.bookmarks || true) {
@@ -74,16 +81,16 @@ function setupBookmarkStorage() {
         });
 }
 
-function initializeBookmarks() {
-    browser.storage.sync.set({
+async function initializeBookmarks() {
+    await browser.storage.sync.set({
         bookmarks: []
     }).then(() => {
         console.log("Bookmark storage initialized successfully!");
     });
 }
 
-function setupSettingsStorage() {
-    browser.storage.sync.get("settings")
+async function setupSettingsStorage() {
+    await browser.storage.sync.get("settings")
         .then((queryResult) => {
             if (!queryResult.settings) {
                 initializeSettings();
@@ -91,8 +98,8 @@ function setupSettingsStorage() {
         });
 }
 
-function initializeSettings() {
-    browser.storage.sync.set({
+async function initializeSettings() {
+    await browser.storage.sync.set({
         settings: {
             regex: "",
             timeLimit: 120,
@@ -103,14 +110,10 @@ function initializeSettings() {
     });
 }
 
-browser.runtime.onStartup.addListener(() => {
-    clearTemporaryStorage();
-});
-
-function clearTemporaryStorage() {
-    browser.storage.local.set({
+async function clearTemporaryStorage() {
+    return browser.storage.local.set({
         temp: []
-    }).then(results => {
+    }).then(() => {
         console.log("Temporary storage initialized successfully!");
         updateBadge(0);
     });
@@ -167,8 +170,8 @@ async function addDataToTempStorage(id) {
     let storedTabsDatabase = await browser.storage.local.get("temp");
     let currTemp = storedTabsDatabase.temp;
     if (!(currTemp.includes(id))) {
-        console.log(id)
-        let newTemp = currTemp.concat([id])
+        console.log(id);
+        let newTemp = currTemp.concat([id]);
         browser.storage.local.set({
             temp: newTemp
         }).then(e => {
@@ -181,17 +184,15 @@ function onError(error) {
     console.log(`Error: ${error}`);
 }
 
-initializeTimersForTabs();
-
 function initializeTimersForTabs() {
     browser.tabs.query({
             active: false
         })
         .then(resetTimers, onError)
+        .then(startTimer, onError)
         .then(() => {
             console.log("Initialization Complete!");
-        })
-        .then(startTimer, onError);
+        });
 }
 
 function resetTimers(querying) {
@@ -212,16 +213,25 @@ function startTimer() {
 // initialize an inactive timer for that tab
 browser.tabs.onActivated.addListener((activeInfo) => {
     let prevTabId = activeInfo.previousTabId;
-    console.log("NEW FOCUSED! " + prevTabId);
-    if (prevTabId != undefined) {
+
+    console.log("NEW FOCUSED!");
+    console.log(activeInfo);
+
+    if (prevTabId !== undefined) {
         startTimeMap.set(prevTabId, Date.now());
         runTimeMap.set(prevTabId, 0);
     }
-    let currentTab = browser.tabs.get(activeInfo.tabId);
-    currentTab.then(onCurrentTab, onError);
+
+    if (activeInfo.tabId !== undefined) {
+        browser.tabs.get(activeInfo.tabId)
+            .then(onCurrentTab, onError);
+    }
 });
 
 async function onCurrentTab(currentTab) {
+    if (!currentTab) {
+        return;
+    }
     // used by onActivated
     console.log(currentTab.url);
     removeTabFromMaps(currentTab.id);
@@ -232,9 +242,9 @@ async function onCurrentTab(currentTab) {
 async function removeFromTemp(id) {
     let tempTabsDatabase = await browser.storage.local.get("temp");
     let tempArray = tempTabsDatabase.temp;
-    let indexTab = tempArray.indexOf(id);
-    if (indexTab > -1) {
-        let discardArray = tempArray.splice(indexTab, 1);
+    let tabIndex = tempArray.indexOf(id);
+    if (tabIndex > -1) {
+        tempArray.splice(tabIndex, 1);
         await browser.storage.local.set({
             temp: tempArray
         });
@@ -246,7 +256,7 @@ async function removeFromTemp(id) {
 browser.tabs.onRemoved.addListener((tabId) => {
     console.log("TAB CLOSED! " + tabId);
     removeTabFromMaps(tabId);
-    removeFromTemp(tabId).then(e => {
+    removeFromTemp(tabId).then(() => {
         console.log("Finished Removing");
     });
 });
@@ -260,8 +270,6 @@ browser.storage.onChanged.addListener((changes, areaName) => {
     if (changes.temp && (areaName === "local")) {
         updateBadge(changes.temp.newValue.length);
     }
-
-    // changes with the setting
     else if (areaName === "sync") {
         updateSettings(changes.settings);
     }
@@ -289,11 +297,11 @@ function badgeColor(tabsSaved) {
 function mapColorRange(tabsSaved, minTabCount, maxTabCount, minColor, maxColor) {
     let colorResult = 0;
 
-    let currentColorBitMask = 0xFF;
+    let colorBitMask = 0xFF;
     for (let rgb = 0; rgb < 3; rgb++) {
-        let currentRGBMask = currentColorBitMask << (8 * rgb);
-        let minRGB = (minColor & currentRGBMask) >> (8 * rgb);
-        let maxRGB = (maxColor & currentRGBMask) >> (8 * rgb);
+        let currentRGBBitMask = colorBitMask << (8 * rgb);
+        let minRGB = (minColor & currentRGBBitMask) >> (8 * rgb);
+        let maxRGB = (maxColor & currentRGBBitMask) >> (8 * rgb);
         let resultRGB = mapNumberRanges(tabsSaved, minTabCount, maxTabCount, minRGB, maxRGB);
         colorResult |= resultRGB << (8 * rgb);
     }
@@ -334,9 +342,9 @@ function onMessageListener(message, sender, sendResponse) {
 }
 
 const POSSIBLE_ACTIONS = {
-    "dismiss": dismissTab,
-    "save_close": saveCloseTab,
-    "perm_close": permCloseTab
+    dismiss: dismissTab,
+    save_close: saveCloseTab,
+    perm_close: permCloseTab
 };
 
 function runAction(actionToPerform) {
@@ -348,33 +356,44 @@ function dismissTab(tabId) {
 }
 
 function saveCloseTab(tabId) {
-    addBookmark(tabId);
-    stopTrackingTab(tabId);
-    removeTab(tabId);
+    addBookmark(tabId).then(() => {
+        stopTrackingTab(tabId);
+        removeTab(tabId);
+    });
 }
 
-function addBookmark(tabId) {
-    browser.tabs.get(tabId).then(async (tab) => {
-        let bookmarkResult = await browser.storage.sync.get("bookmarks");
+async function addBookmark(tabId) {
+    return browser.tabs.get(tabId).then(async (tab) => {
+        let bookmarks = (await browser.storage.sync.get("bookmarks")).bookmarks;
 
-        console.log(bookmarkResult);
+        if (bookmarkAlreadyExists(bookmarks, tab)) {
+            return;
+        }
 
-        Array.prototype.push.call(bookmarkResult.bookmarks, {
-            url: tab.url,
-            title: tab.title,
-            time_closed: tab.lastAccessed,
-            category: website_Categorizer.search_category(tab.url)
-        });
+        await saveNewBookmark(bookmarks, tab);
+    });
+}
 
-        await browser.storage.sync.set({
-            bookmarks: bookmarkResult.bookmarks
-        });
+function bookmarkAlreadyExists(bookmarks, tab) {
+    return bookmarks.find(bookmark => bookmark.url === tab.url);
+}
+
+async function saveNewBookmark(bookmarks, tab) {
+    bookmarks.push({
+        url: tab.url,
+        title: tab.title,
+        time_closed: tab.lastAccessed,
+        category: website_Categorizer.search_category(tab.url)
+    });
+
+    await browser.storage.sync.set({
+        bookmarks: bookmarks
     });
 }
 
 function permCloseTab(tabId) {
     stopTrackingTab(tabId);
-    removeTab(tabId)
+    removeTab(tabId);
 }
 
 function stopTrackingTab(tabId) {
