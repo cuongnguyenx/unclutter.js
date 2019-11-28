@@ -71,42 +71,19 @@ async function createListingElement(tabId) {
 function createListingContentElement(tabPromise) {
     let listingContent = document.createElement("div");
     listingContent.classList.add("row", "no-gutters", "tab-listing-content");
-    listingContent.append(createListingIconSectionElement(tabPromise), createListingLeftSectionElement(tabPromise),
-        createListingRightSectionElement(tabPromise));
+    listingContent.append(
+        createListingIconSectionElement(tabPromise),
+        createListingLeftSectionElement(tabPromise),
+        createListingRightSectionElement(tabPromise)
+    );
     return listingContent;
 }
 
 function createListingIconSectionElement(tabPromise) {
     let listingIconSection = document.createElement("div");
-    listingIconSection.classList.add("col-1", "tab-left-section");
+    listingIconSection.classList.add("col-1", "tab-icon-section");
     listingIconSection.appendChild(createListingFavIconElement(tabPromise));
     return listingIconSection;
-}
-
-function createListingLeftSectionElement(tabPromise) {
-    let listingLeftSection = document.createElement("div");
-    listingLeftSection.classList.add("col-7", "tab-left-section");
-    listingLeftSection.append(createListingTitleTextElement(tabPromise));
-    return listingLeftSection;
-}
-
-function createListingTitleTextElement(tabPromise) {
-    let listingTitleText = document.createElement("p");
-    listingTitleText.classList.add("align-middle", "tab-text");
-    tabPromise.then(tab => {
-        if (!tab) {
-            return;
-        }
-        setListingTitleText(listingTitleText, tab.title);
-        listingTitleText.setAttribute("data-toggle", "tooltip");
-        listingTitleText.setAttribute("title", tab.url);
-    });
-
-    return listingTitleText;
-}
-
-function setListingTitleText(listingTitleText, title) {
-    listingTitleText.textContent = fitTitleTextToListing(title);
 }
 
 function createListingFavIconElement(tabPromise) {
@@ -129,20 +106,57 @@ function setListingFavIcon(listingFavIcon, url) {
 }
 
 function getLinkRoot(link) {
-    let startIndex = link.search("https://"); // should be 0 if exist
-    if (startIndex > -1) {
-        startIndex += 8;
-    } else {
-        startIndex = 0;
-    }
+    let endIndex = findLinkRootEndIndex(link);
 
-    let endIndex = link.indexOf("/", startIndex);
+    link = link.substring(0, endIndex);
+    if (link.indexOf("www.") === -1) {
+        return link.replace("https://", "www.");
+    }
+    return link.replace("https://", "");
+}
+
+function findLinkRootEndIndex(link) {
+    let searchStartIndex = findLinkRootSearchStartIndex(link);
+
+    let endIndex = link.indexOf("/", searchStartIndex);
     if (endIndex === -1) {
-        endIndex = link.length;
+        return link.length;
     }
+    return endIndex;
+}
 
-    return link.indexOf("www.") === -1 ? link.substring(0, endIndex).replace("https://", "www.") :
-        link.substring(0, endIndex).replace("https://", "");
+function findLinkRootSearchStartIndex(link) {
+    let startIndex = link.search("https://"); // should be 0 if exists
+    if (startIndex > -1) {
+        return startIndex + 8;
+    }
+    return 0;
+}
+
+function createListingLeftSectionElement(tabPromise) {
+    let listingLeftSection = document.createElement("div");
+    listingLeftSection.classList.add("col-7", "tab-left-section");
+    listingLeftSection.appendChild(createListingTitleTextElement(tabPromise));
+    return listingLeftSection;
+}
+
+function createListingTitleTextElement(tabPromise) {
+    let listingTitleText = document.createElement("p");
+    listingTitleText.classList.add("align-middle", "tab-text");
+    tabPromise.then(tab => {
+        if (!tab) {
+            return;
+        }
+        setListingTitleText(listingTitleText, tab.title);
+        listingTitleText.setAttribute("data-toggle", "tooltip");
+        listingTitleText.setAttribute("title", tab.url);
+    });
+
+    return listingTitleText;
+}
+
+function setListingTitleText(listingTitleText, title) {
+    listingTitleText.textContent = fitTitleTextToListing(title);
 }
 
 const GLOBAL_TITLE_LENGTH_LIMIT = 16;
@@ -163,16 +177,18 @@ function fitTitleTextToListing(title) {
 function createListingRightSectionElement(tabPromise) {
     let listingRightSection = document.createElement("div");
     listingRightSection.classList.add("col-4", "tab-right-section");
-    listingRightSection.append(createListingActionsElement(tabPromise));
+    listingRightSection.appendChild(createListingActionsElement(tabPromise));
     return listingRightSection;
 }
 
 function createListingActionsElement(tabPromise) {
     let listingActions = document.createElement("div");
     listingActions.classList.add("btn-group", "btn-group-lg", "float-right", "tab-options");
-    listingActions.append(createListingDeleteButtonElement(tabPromise),
+    listingActions.append(
+        createListingDeleteButtonElement(tabPromise),
         createListingSaveCloseButtonElement(tabPromise),
-        createListingDismissButtonElement(tabPromise));
+        createListingDismissButtonElement(tabPromise)
+    );
     return listingActions;
 }
 
