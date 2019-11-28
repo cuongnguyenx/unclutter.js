@@ -27,7 +27,7 @@ function addTabListing(tabId) {
     <li class="list-group-item container-fluid tab-listing" id="tab-listing-1">
         <div class="row no-gutters tab-listing-content">
             <div class="col-8 tab-left-section">
-                <p class="align-middle tab-text">Sample Tab 1</p>
+                <p class="align-middle tab-text"><img src="" alt="" height="42" width="42">Sample Tab 1</img></p>
             </div>
             <div class="col-4 tab-right-section">
                 <div class="btn-group btn-group-lg float-right tab-options">
@@ -71,14 +71,21 @@ async function createListingElement(tabId) {
 function createListingContentElement(tabPromise) {
     let listingContent = document.createElement("div");
     listingContent.classList.add("row", "no-gutters", "tab-listing-content");
-    listingContent.append(createListingLeftSectionElement(tabPromise),
+    listingContent.append(createListingIconSectionElement(tabPromise), createListingLeftSectionElement(tabPromise),
         createListingRightSectionElement(tabPromise));
     return listingContent;
 }
 
+function createListingIconSectionElement(tabPromise) {
+    let listingIconSection = document.createElement("div");
+    listingIconSection.classList.add("col-1", "tab-left-section");
+    listingIconSection.append(createListingFavIconElement(tabPromise))
+    return listingIconSection
+}
+
 function createListingLeftSectionElement(tabPromise) {
     let listingLeftSection = document.createElement("div");
-    listingLeftSection.classList.add("col-8", "tab-left-section");
+    listingLeftSection.classList.add("col-7", "tab-left-section");
     listingLeftSection.append(createListingTitleTextElement(tabPromise));
     return listingLeftSection;
 }
@@ -91,7 +98,10 @@ function createListingTitleTextElement(tabPromise) {
             return;
         }
         setListingTitleText(listingTitleText, tab.title);
+        listingTitleText.setAttribute("data-toggle", "tooltip");
+        listingTitleText.setAttribute("title", tab.url);
     });
+
     return listingTitleText;
 }
 
@@ -99,7 +109,26 @@ function setListingTitleText(listingTitleText, title) {
     listingTitleText.textContent = fitTitleTextToListing(title);
 }
 
-const GLOBAL_TITLE_LENGTH_LIMIT = 18;
+function createListingFavIconElement(tabPromise) {
+    let listingFavIcon = document.createElement("img");
+    listingFavIcon.classList.add("align-middle", "icon");
+    listingFavIcon.height = 32
+    listingFavIcon.width = 32
+    tabPromise.then(tab => {
+        if (!tab) {
+            return;
+        }
+        setListingFavIcon(listingFavIcon, tab.url);
+    });
+    return listingFavIcon;
+}
+
+function setListingFavIcon(listingFavIcon, url) {
+    console.log("http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico")
+    listingFavIcon.src = "http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico"
+}
+
+const GLOBAL_TITLE_LENGTH_LIMIT = 16;
 
 function fitTitleTextToListing(title) {
     if (title.length < GLOBAL_TITLE_LENGTH_LIMIT) {
@@ -289,3 +318,23 @@ function updateTabList() {
     //     tabList.textContent = "Empty!";
     // }
 }
+
+// #######################################################
+function getLinkRoot(link) {
+    let startIndex = link.search("https://"); // should be 0 if exist
+    if (startIndex > -1) {
+        startIndex += 8
+    } else {
+        startIndex = 0
+    }
+
+    let endIndex = link.indexOf("/", startIndex);
+    if (endIndex === -1) {
+        endIndex = link.length
+    }
+
+    return link.indexOf("www.") === -1 ? link.substring(0, endIndex).replace("https://", "www.") :
+        link.substring(0, endIndex).replace("https://", "")
+}
+
+// #########################################################
