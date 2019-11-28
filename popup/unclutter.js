@@ -79,8 +79,8 @@ function createListingContentElement(tabPromise) {
 function createListingIconSectionElement(tabPromise) {
     let listingIconSection = document.createElement("div");
     listingIconSection.classList.add("col-1", "tab-left-section");
-    listingIconSection.append(createListingFavIconElement(tabPromise))
-    return listingIconSection
+    listingIconSection.appendChild(createListingFavIconElement(tabPromise));
+    return listingIconSection;
 }
 
 function createListingLeftSectionElement(tabPromise) {
@@ -112,8 +112,8 @@ function setListingTitleText(listingTitleText, title) {
 function createListingFavIconElement(tabPromise) {
     let listingFavIcon = document.createElement("img");
     listingFavIcon.classList.add("align-middle", "icon");
-    listingFavIcon.height = 32
-    listingFavIcon.width = 32
+    listingFavIcon.height = 32;
+    listingFavIcon.width = 32;
     tabPromise.then(tab => {
         if (!tab) {
             return;
@@ -124,8 +124,25 @@ function createListingFavIconElement(tabPromise) {
 }
 
 function setListingFavIcon(listingFavIcon, url) {
-    console.log("http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico")
-    listingFavIcon.src = "http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico"
+    console.log("http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico");
+    listingFavIcon.src = "http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico";
+}
+
+function getLinkRoot(link) {
+    let startIndex = link.search("https://"); // should be 0 if exist
+    if (startIndex > -1) {
+        startIndex += 8;
+    } else {
+        startIndex = 0;
+    }
+
+    let endIndex = link.indexOf("/", startIndex);
+    if (endIndex === -1) {
+        endIndex = link.length;
+    }
+
+    return link.indexOf("www.") === -1 ? link.substring(0, endIndex).replace("https://", "www.") :
+        link.substring(0, endIndex).replace("https://", "");
 }
 
 const GLOBAL_TITLE_LENGTH_LIMIT = 16;
@@ -318,23 +335,3 @@ function updateTabList() {
     //     tabList.textContent = "Empty!";
     // }
 }
-
-// #######################################################
-function getLinkRoot(link) {
-    let startIndex = link.search("https://"); // should be 0 if exist
-    if (startIndex > -1) {
-        startIndex += 8
-    } else {
-        startIndex = 0
-    }
-
-    let endIndex = link.indexOf("/", startIndex);
-    if (endIndex === -1) {
-        endIndex = link.length
-    }
-
-    return link.indexOf("www.") === -1 ? link.substring(0, endIndex).replace("https://", "www.") :
-        link.substring(0, endIndex).replace("https://", "")
-}
-
-// #########################################################
