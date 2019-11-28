@@ -33,22 +33,37 @@ body {
 }
 
 .navbar {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
   background: #643764;
+}
+
+.view-option {
+  background: #643764;
+  border: 1px solid #643764;
+}
+
+.view-option:hover {
+  transition: all 0.2s;
+  border-color: #FFFFFF;
+  background: #555555;
+}
+
+.view-option.active-view {
+  border-color: #BBBBBB;
+  background: #484848;
+}
+
+.view-option.active-view:hover {
+  border-color: #FFFFFF;
+  background: #555555;
 }
 
 .nav-link {
   font-size: 2em;
   color: #FFFFFF;
-  background: #643764;
 }
 
 .nav-link:hover {
-  transition: all 0.1s;
   color: #FFFFFF;
-  background: #555555
 }
 
 
@@ -67,7 +82,7 @@ body {
 .tab-listing {
   overflow: hidden;
   transition: max-height 0.25s ease-in;
-  max-height: 50px;
+  max-height: 3.5em;
   margin: 0%;
   padding: 0%;
   border-color: #BBBBBB;
