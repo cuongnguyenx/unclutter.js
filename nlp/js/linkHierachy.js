@@ -162,7 +162,8 @@ function getLinkRoot(link) {
         endIndex = link.length
     }
 
-    return link.substring(0, endIndex)
+    return (link.indexOf("www.") === -1) ? link.substring(0, endIndex).replace("https://", "www.") :
+        link.substring(0, endIndex).replace("https://", "")
 }
 
 // return the parent of this link. I.E https://nytimes.com/a/b/c will yield https://nytimes.com/a/b

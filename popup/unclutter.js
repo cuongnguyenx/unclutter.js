@@ -60,7 +60,8 @@ async function createListingElement(tabId) {
     listing.classList.add("list-group-item", "container-fluid", "tab-listing", "removed");
     listing.id = `tab-listing-${tabId}`;
     let tabPromise = browser.tabs.get(tabId);
-    listing.appendChild(createListingContentElement(tabPromise));
+    let categories = await getCategoriesOfWebsite(tabId);
+    listing.appendChild(createListingContentElement(tabPromise, categories));
 
     if (!await tabPromise) {
         return undefined;
@@ -68,11 +69,18 @@ async function createListingElement(tabId) {
     return listing;
 }
 
-function createListingContentElement(tabPromise) {
+// return an array of categories, as specified in websites.js
+async function getCategoriesOfWebsite(tabId) {
+    let tab_true = await browser.tabs.get(tabId)
+    let categorizer = new Categorizer();
+    return categorizer.search_category(tab_true.url)
+}
+
+function createListingContentElement(tabPromise, categories) {
     let listingContent = document.createElement("div");
     listingContent.classList.add("row", "no-gutters", "tab-listing-content");
-    listingContent.append(createListingIconSectionElement(tabPromise), createListingLeftSectionElement(tabPromise),
-        createListingRightSectionElement(tabPromise));
+    listingContent.append(createListingIconSectionElement(tabPromise), createListingLeftSectionElement(tabPromise), createListingMiddleSectionElement(categories),
+    createListingRightSectionElement(tabPromise, categories));
     return listingContent;
 }
 
@@ -85,7 +93,7 @@ function createListingIconSectionElement(tabPromise) {
 
 function createListingLeftSectionElement(tabPromise) {
     let listingLeftSection = document.createElement("div");
-    listingLeftSection.classList.add("col-7", "tab-left-section");
+    listingLeftSection.classList.add("col-6", "tab-left-section");
     listingLeftSection.append(createListingTitleTextElement(tabPromise));
     return listingLeftSection;
 }
@@ -145,7 +153,7 @@ function getLinkRoot(link) {
         link.substring(0, endIndex).replace("https://", "");
 }
 
-const GLOBAL_TITLE_LENGTH_LIMIT = 16;
+const GLOBAL_TITLE_LENGTH_LIMIT = 14;
 
 function fitTitleTextToListing(title) {
     if (title.length < GLOBAL_TITLE_LENGTH_LIMIT) {
@@ -160,7 +168,100 @@ function fitTitleTextToListing(title) {
     return title;
 }
 
-function createListingRightSectionElement(tabPromise) {
+function createListingMiddleSectionElement(categories) {
+    let listingMiddleSection = document.createElement("div");
+    listingMiddleSection.classList.add("col-1", "tab-middle-section");
+    listingMiddleSection.append(createListingCategoriesContainerElement(categories));
+    return listingMiddleSection;
+}
+
+function createListingCategoriesContainerElement(categories) {
+    let listingMiddleContainer = document.createElement("div");
+    listingMiddleContainer.classList.add("float-left", "container", "tab-categories");
+
+    let listingMidRow = document.createElement("div")
+    listingMidRow.classList.add("row", "tab-category-row")
+    if (categories.length === 1) {
+        listingMidRow.append(createCategoryIcons(categories[0], true))
+    } else if (categories.length >= 2) {
+        listingMidRow.append(createCategoryIcons(categories[0], false), createCategoryIcons(categories[1], false))
+    }
+
+    listingMiddleContainer.append(listingMidRow)
+
+    return listingMiddleContainer
+}
+
+function createCategoryIcons(category, largeText) {
+    let categoryIcon = document.createElement("div");
+    if (largeText) {
+        categoryIcon.classList.add("col-12", "align-middle", "tab-category", "large")
+    } else {
+        categoryIcon.classList.add("col-6", "align-middle", "tab-category")
+    }
+    categoryIcon.textContent = getCategoryEmoji(category)
+    return categoryIcon
+}
+
+function getCategoryEmoji(category) {
+    switch (category) {
+        case "Adult": {
+            return String.fromCodePoint(0x1F51E)
+        }
+
+        case "Arts": {
+            return String.fromCodePoint(0x1F3A8)
+        }
+
+        case "Business": {
+            return String.fromCodePoint(0x1F4B5);
+        }
+
+        case "Computers": {
+            return String.fromCodePoint(0x1F5A5);
+        }
+
+        case "Games": {
+            return String.fromCodePoint(0x1F3AE);
+        }
+
+        case "Health": {
+            return String.fromCodePoint(0x2695);
+        }
+
+        case "News": {
+            return String.fromCodePoint(0x1F4F0);
+        }
+
+        case "Recreation": {
+            return String.fromCodePoint(0x1F3D6);
+        }
+
+        case "Education": {
+            return String.fromCodePoint(0x1F4DA);
+        }
+
+        case "Science": {
+            return String.fromCodePoint(0x1F52C);
+        }
+
+        case "Shopping": {
+            return String.fromCodePoint(0x1F6CD);
+        }
+
+        case "Sports": {
+            return String.fromCodePoint(0x1F3C8);
+        }
+
+        case "Miscellaneous": {
+            return String.fromCodePoint(0x1F937);
+        }
+
+    }
+}
+
+
+function createListingRightSectionElement(tabPromise, categories) {
     let listingRightSection = document.createElement("div");
     listingRightSection.classList.add("col-4", "tab-right-section");
     listingRightSection.append(createListingActionsElement(tabPromise));

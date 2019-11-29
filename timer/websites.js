@@ -2,7 +2,7 @@ class Categorizer {
     constructor() {
         this.categories_websites = [adult, arts, business, computers, games, health, news, recreation,
             education, science, shopping, sports]
-        this.keys = ["Adults", "Arts", "Business", "Computers", "Games", "Health", "News",
+        this.keys = ["Adult", "Arts", "Business", "Computers", "Games", "Health", "News",
             "Recreation", "Education", "Science", "Shopping", "Sports"]
 
         this.category_website_dict = {}
@@ -12,17 +12,18 @@ class Categorizer {
     }
 
     search_category(website) {
-        let idx = 99999999999 // Arbitrary large number
-        let category = "Miscellaneous"
-        let website_root = getLinkRoot(website).replace("https://", "www.")
+        let category = []
+        let website_root = getLinkRoot(website)
         console.log(website_root)
         this.keys.forEach(element => {
             let idx_get = this.category_website_dict[element].indexOf(website_root)
-            if (idx_get !== -1 && idx_get < idx) {
-                idx = idx_get
-                category = element
+            if (idx_get !== -1) {
+                category = category.concat([element])
             }
         });
+        if (category.length === 0) {
+            category = ["Miscellaneous"]
+        }
         return category
     }
 }
