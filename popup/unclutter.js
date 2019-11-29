@@ -194,6 +194,8 @@ function createListingCategoriesContainerElement(categories) {
 
 function createCategoryIcons(category, largeText) {
     let categoryIcon = document.createElement("div");
+    categoryIcon.setAttribute("data-toggle", "tooltip");
+    categoryIcon.setAttribute("title", category);
     if (largeText) {
         categoryIcon.classList.add("col-12", "align-middle", "tab-category", "large")
     } else {
