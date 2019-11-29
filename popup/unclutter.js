@@ -1,11 +1,55 @@
 const tabList = document.getElementById("tab-list");
+let viewNavElements = initializeNavBar();
 
-browser.storage.local.get("temp").then(loadInitialTabList);
+function initializeNavBar() {
+    return [
+        initializeTabsViewNav(),
+        initializeBookmarksViewNav(),
+        initializeSettingsViewNav()
+    ];
+}
 
-// TODO: Add bookmarks view
-// TODO: Add settings view
+function initializeTabsViewNav() {
+    let tabsViewNav = document.getElementById("nav-tabs-view");
+
+    tabsViewNav.addEventListener("click", handleViewNavClick);
+
+    return tabsViewNav;
+}
+
+function handleViewNavClick(event) {
+    viewNavElements.forEach((viewNavElement) => {
+        if (viewNavElement.id === event.currentTarget.id) {
+            viewNavElement.classList.add("active-view");
+        }
+        else {
+            viewNavElement.classList.remove("active-view");
+        }
+    });
+}
+
+function initializeBookmarksViewNav() {
+    let bookmarksViewNav = document.getElementById("nav-bookmarks-view");
+
+    bookmarksViewNav.addEventListener("click", handleViewNavClick);
+
+    return bookmarksViewNav;
+}
+
+function initializeSettingsViewNav() {
+    let settingsViewNav = document.getElementById("nav-settings-view");
+
+    settingsViewNav.addEventListener("click", handleViewNavClick);
+
+    return settingsViewNav;
+}
+
+// TODO: Create bookmarks view
+// TODO: Create settings view
 
 // TODO: Add visual categorization system to tab view
+
+browser.storage.local.get("temp").then(loadInitialTabList);
 
 function loadInitialTabList(tabs) {
     if (!(tabs && tabs.temp)) {
