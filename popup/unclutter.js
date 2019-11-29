@@ -266,15 +266,15 @@ function getCategoryEmoji(category) {
 function createListingRightSectionElement(tabPromise, categories) {
     let listingRightSection = document.createElement("div");
     listingRightSection.classList.add("col-4", "tab-right-section");
-    listingRightSection.append(createListingActionsElement(tabPromise));
+    listingRightSection.append(createListingActionsElement(tabPromise, categories));
     return listingRightSection;
 }
 
-function createListingActionsElement(tabPromise) {
+function createListingActionsElement(tabPromise, categories) {
     let listingActions = document.createElement("div");
     listingActions.classList.add("btn-group", "btn-group-lg", "float-right", "tab-options");
     listingActions.append(createListingDeleteButtonElement(tabPromise),
-        createListingSaveCloseButtonElement(tabPromise),
+        createListingSaveCloseButtonElement(tabPromise, categories),
         createListingDismissButtonElement(tabPromise));
     return listingActions;
 }
@@ -290,7 +290,7 @@ function createListingDeleteButtonElement(tabPromise) {
         if (!tab) {
             return;
         }
-        addActionToButton(listingDeleteButton, "perm_close", tab.id);
+        addActionToButton(listingDeleteButton, "perm_close", tab.id, []);
     });
 
     return listingDeleteButton;
@@ -302,16 +302,17 @@ function createListingDeleteIconElement() {
     return listingDeleteIcon;
 }
 
-function addActionToButton(button, action, tabId) {
+function addActionToButton(button, action, tabId, categories) {
     button.addEventListener("click", () => {
         browser.runtime.sendMessage({
             tabId: tabId,
+            categories: categories,
             action: action
         });
     });
 }
 
-function createListingSaveCloseButtonElement(tabPromise) {
+function createListingSaveCloseButtonElement(tabPromise, categories) {
     let listingSaveCloseButton = document.createElement("a");
     listingSaveCloseButton.classList.add("btn", "tab-button");
     listingSaveCloseButton.setAttribute("data-toggle", "tooltip");
@@ -322,7 +323,7 @@ function createListingSaveCloseButtonElement(tabPromise) {
         if (!tab) {
             return;
         }
-        addActionToButton(listingSaveCloseButton, "save_close", tab.id);
+        addActionToButton(listingSaveCloseButton, "save_close", tab.id, categories);
     });
 
     return listingSaveCloseButton;
@@ -345,7 +346,7 @@ function createListingDismissButtonElement(tabPromise) {
         if (!tab) {
             return;
         }
-        addActionToButton(listingDismissButton, "dismiss", tab.id);
+        addActionToButton(listingDismissButton, "dismiss", tab.id, []);
     });
 
     return listingDismissButton;

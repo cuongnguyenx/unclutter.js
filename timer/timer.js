@@ -271,7 +271,12 @@ browser.storage.onChanged.addListener((changes, areaName) => {
         updateBadge(changes.temp.newValue.length);
     }
     else if (areaName === "sync") {
-        updateSettings(changes.settings);
+        if (changes.settings) {
+            updateSettings(changes.settings);
+        } else if (changes.bookmarks) {
+            console.log(changes.bookmarks)
+        }
+
     }
 });
 
@@ -348,21 +353,21 @@ const POSSIBLE_ACTIONS = {
 };
 
 function runAction(actionToPerform) {
-    POSSIBLE_ACTIONS[actionToPerform.action](actionToPerform.tabId);
+    POSSIBLE_ACTIONS[actionToPerform.action](actionToPerform.tabId, actionToPerform.categories);
 }
 
 function dismissTab(tabId) {
     stopTrackingTab(tabId);
 }
 
-function saveCloseTab(tabId) {
-    addBookmark(tabId).then(() => {
+function saveCloseTab(tabId, categories) {
+    addBookmark(tabId, categories).then(() => {
         stopTrackingTab(tabId);
         removeTab(tabId);
     });
 }
 
-async function addBookmark(tabId) {
+async function addBookmark(tabId, categories) {
     return browser.tabs.get(tabId).then(async (tab) => {
         let bookmarks = (await browser.storage.sync.get("bookmarks")).bookmarks;
 
@@ -370,7 +375,7 @@ async function addBookmark(tabId) {
             return;
         }
 
-        await saveNewBookmark(bookmarks, tab);
+        await saveNewBookmark(bookmarks, tab, categories);
     });
 }
 
@@ -378,12 +383,12 @@ function bookmarkAlreadyExists(bookmarks, tab) {
     return bookmarks.find(bookmark => bookmark.url === tab.url);
 }
 
-async function saveNewBookmark(bookmarks, tab) {
+async function saveNewBookmark(bookmarks, tab, categories) {
     bookmarks.push({
         url: tab.url,
         title: tab.title,
         time_closed: tab.lastAccessed,
-        category: website_Categorizer.search_category(tab.url)
+        category: categories
     });
 
     await browser.storage.sync.set({
