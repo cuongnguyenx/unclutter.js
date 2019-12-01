@@ -49,57 +49,60 @@ body {
     font-family: Candara, sans-serif;
     font-size: medium;
     color: #9fcdff;
-    margin: 0% 2% 0% 15%;
 }
 
-.nav-font-bond {
+.navbar-brand {
+    padding-top: 8%;
+}
+
+.nav-font-bold {
     display: flex;
     flex-direction: row;
     text-align: left;
     font-family: Roboto Light, sans-serif;
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: bold;
-  background: #643764;
+    background: #643764;
 }
 
 .view-option {
-  background: #643764;
-  border: 1px solid #643764;
+    background: #643764;
+    border: 1px solid #643764;
 }
 
 .view-option.active-view {
-  border-color: #BBBBBB;
-  background: #484848;
+    border-color: #BBBBBB;
+    background: #484848;
 }
 
 .view-option:hover {
-  transition: all 0.2s;
-  border-color: #FFFFFF;
-  background: #555555;
+    transition: all 0.2s;
+    border-color: #FFFFFF;
+    background: #555555;
 }
 
 .popup-view {
-  overflow: none;
-  transition: max-width 0.5s ease-in;
-  max-width: 42em;
+    overflow: none;
+    transition: max-width 0.5s ease-in;
+    max-width: 42em;
 }
 
 .popup-view.removed {
-  overflow: none;
-  transition: max-width 0.5s ease-out;
-  max-width: 0px;
+    overflow: none;
+    transition: max-width 0.5s ease-out;
+    max-width: 0px;
 }
 
 .popup-view.removed .tab-list-container {
-  overflow-y: hidden;
+    overflow-y: hidden;
 }
 
 .nav-link {
     font-size: 2em;
     color: #FFFFFF;
     background: #643764;
-  font-size: 2em;
-  color: #FFFFFF;
+    font-size: 2em;
+    color: #FFFFFF;
 }
 
 .nav-link:hover {
@@ -122,14 +125,14 @@ body {
 }
 
 .tab-listing {
-  overflow: hidden;
-  transition: max-height 0.25s ease-in;
-  max-height: 3.5em;
-  margin: 0%;
-  padding: 0%;
-  border-color: #BBBBBB;
-  background: #646464;
-  color: #BBBBBB;
+    overflow: hidden;
+    transition: max-height 0.25s ease-in;
+    max-height: 3.5em;
+    margin: 0%;
+    padding: 0%;
+    border-color: #BBBBBB;
+    background: #646464;
+    color: #BBBBBB;
 }
 
 .tab-listing:hover {
@@ -152,16 +155,16 @@ body {
 }
 
 .tab-icon-section {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .icon {
-  margin: 20% 2% 5% 15%;
-  height: 60%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    margin: 20% 2% 5% 15%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .tab-left-section {
@@ -278,6 +281,6 @@ body {
 }
 
 .tab-button:hover {
-  transition: all 0.2s;
-  color: #FFFFFF !important;
+    transition: all 0.2s;
+    color: #FFFFFF !important;
 }
