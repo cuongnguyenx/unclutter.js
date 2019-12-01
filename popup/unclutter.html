@@ -21,14 +21,14 @@
         <nav class="navbar navbar-expand-sm container-fluid">
             <ul class="navbar-nav nav-pills nav-fill d-flex flex-row w-100">
                 <li class="nav-item">
-                    <div class="nav-link w-100 text-left">
-                        <img class="d-inline-block align-top" src="../shared/assets/logo-96.png" width="30"
-                            height="30" alt="">
+                    <div class="nav-brand w-100 text-left align-middle">
+                        <img class="d-inline-block align-top" src="../shared/assets/logo-96.png" width="30" height="30"
+                            alt="">
                         <p class="d-inline-block align-middle">Unclutter</p>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link w-100 text-center view-option active-view" id="nav-tabs-view" href="#">Tabs</a>
+                    <a class="nav-link w-100 text-center view-option" id="nav-tabs-view" href="#">Tabs</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link w-100 text-center view-option" id="nav-bookmarks-view" href="#">Bookmarks</a>
@@ -39,7 +39,7 @@
             </ul>
         </nav>
 
-        <div class="w-100 h-100">
+        <div class="w-100 h-100 d-flex flex-row">
             <div class="w-100 h-100 popup-view" id="tabs-view">
                 <div class="overflow-auto mx-auto d-flex flex-column tab-list-container">
                     <ul class="list-group tab-list" id="tab-list">
@@ -83,10 +83,22 @@
                 </div>
             </div>
             <div class="w-100 h-100 popup-view" id="bookmarks-view">
-
+                <div class="overflow-auto mx-auto d-flex flex-column tab-list-container">
+                    <ul class="w-100 list-group">
+                        <li class="list-group-item">
+                            <p>Sample Category 1</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="w-100 h-100 popup-view" id="settings-view">
-
+                <div class="overflow-auto mx-auto d-flex flex-column tab-list-container">
+                    <ul class="w-100 list-group">
+                        <li class="list-group-item">
+                            <p>Sample Setting 1</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>

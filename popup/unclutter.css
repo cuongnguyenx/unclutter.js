@@ -79,13 +79,19 @@ body {
 }
 
 .popup-view {
+  overflow: none;
   transition: max-width 0.5s ease-in;
   max-width: 42em;
 }
 
 .popup-view.removed {
+  overflow: none;
   transition: max-width 0.5s ease-out;
-  max-width: 0em;
+  max-width: 0px;
+}
+
+.popup-view.removed .tab-list-container {
+  overflow-y: hidden;
 }
 
 .nav-link {
@@ -99,8 +105,8 @@ body {
 .nav-link:hover {
     transition: all 0.1s;
     color: #FFFFFF;
-    background: #555555
-  color: #FFFFFF;
+    background: #555555;
+    color: #FFFFFF;
 }
 
 .tab-list-container {

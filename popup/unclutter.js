@@ -1,5 +1,11 @@
 const tabList = document.getElementById("tab-list");
 let viewNavElements = initializeNavBar();
+const NAV_ID_TO_VIEW = {
+    "nav-tabs-view": document.getElementById("tabs-view"),
+    "nav-bookmarks-view": document.getElementById("bookmarks-view"),
+    "nav-settings-view": document.getElementById("settings-view")
+};
+switchToView(viewNavElements[0]);
 
 function initializeNavBar() {
     return [
@@ -17,23 +23,29 @@ function initializeTabsViewNav() {
     return tabsViewNav;
 }
 
-const NAV_ID_TO_VIEW = {
-    "nav-tabs-view": document.getElementById("tabs-view"),
-    "nav-bookmarks-view": document.getElementById("bookmarks-view"),
-    "nav-settings-view": document.getElementById("settings-view")
-};
-
 function handleViewNavClick(event) {
+    switchToView(event.currentTarget);
+}
+
+function switchToView(newViewNav) {
     viewNavElements.forEach((viewNavElement) => {
-        if (viewNavElement.id === event.currentTarget.id) {
-            viewNavElement.classList.add("active-view");
-            NAV_ID_TO_VIEW[viewNavElement.id].classList.remove("removed");
+        if (viewNavElement.id === newViewNav.id) {
+            activateView(viewNavElement);
         }
         else {
-            viewNavElement.classList.remove("active-view");
-            NAV_ID_TO_VIEW[viewNavElement.id].classList.add("removed");
+            deactivateView(viewNavElement);
         }
     });
+}
+
+function activateView(viewNavElement) {
+    viewNavElement.classList.add("active-view");
+    NAV_ID_TO_VIEW[viewNavElement.id].classList.remove("removed");
+}
+
+function deactivateView(viewNavElement) {
+    viewNavElement.classList.remove("active-view");
+    NAV_ID_TO_VIEW[viewNavElement.id].classList.add("removed");
 }
 
 function initializeBookmarksViewNav() {
@@ -111,7 +123,7 @@ function addTabListing(tabId) {
 function createPadding() {
     let listing = document.createElement("li");
     listing.classList.add("container-fluid", "tab-listing");
-    return listing
+    return listing;
 }
 async function createListingElement(tabId) {
     let listing = document.createElement("li");
@@ -247,7 +259,7 @@ function createListingCategoriesContainerElement(categories) {
 
     listingMiddleContainer.append(listingMidRow)
 
-    return listingMiddleContainer
+    return listingMiddleContainer;
 }
 
 function createCategoryIcons(category, largeText) {
