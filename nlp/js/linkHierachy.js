@@ -299,13 +299,13 @@ function generateRootAndBranches(hierachy) {
             continue
         }
         if (countTabs(website) !== 1) {
-            currArr = currArr.concat([website.replace('/\t/gi', '')])
+            currArr = currArr.concat([website.replace(/\t/gi, '')])
         } else {
             if (currArr.length === 0) {
-                currArr = currArr.concat([website.replace('/\t/gi', '')])
+                currArr = currArr.concat([website.replace(/\t/gi, '')])
             } else {
                 result.push(currArr);
-                currArr = [website.replace('/\t/gi', '')]
+                currArr = [website.replace(/\t/gi, '')]
             }
 
         }
@@ -315,6 +315,7 @@ function generateRootAndBranches(hierachy) {
 }
 
 
+/*
 let testHierachy = new linkHierachy("master");
 addToTreeIndividual(testHierachy, "https://amazon.com/a/b/c", testHierachy.tree.traverseBF);
 addToTreeIndividual(testHierachy,"https://amazon.com/a/b", testHierachy.tree.traverseBF);
@@ -327,11 +328,10 @@ addToTreeIndividual(testHierachy, "https://nytimes.com/a/c/", testHierachy.tree.
 addToTreeMass(testHierachy, ["https://vnexpress.net/a/b", "https://vnexpress.net/b/c/d", "https://vnexpress.net/b/c"],
     testHierachy.tree.traverseBF);
 
-/*
 testHierachy.tree.traverseDF(callbackxx, testHierachy);
 for (var i = 0; i < testHierachy.globalHierachy.length; i++) {
     console.log(testHierachy.globalHierachy[i]);
 }
 */
 
-console.log(generateRootAndBranches(testHierachy))
+// console.log(generateRootAndBranches(testHierachy))
