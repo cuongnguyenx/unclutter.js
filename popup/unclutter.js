@@ -17,13 +17,21 @@ function initializeTabsViewNav() {
     return tabsViewNav;
 }
 
+const NAV_ID_TO_VIEW = {
+    "nav-tabs-view": document.getElementById("tabs-view"),
+    "nav-bookmarks-view": document.getElementById("bookmarks-view"),
+    "nav-settings-view": document.getElementById("settings-view")
+};
+
 function handleViewNavClick(event) {
     viewNavElements.forEach((viewNavElement) => {
         if (viewNavElement.id === event.currentTarget.id) {
             viewNavElement.classList.add("active-view");
+            NAV_ID_TO_VIEW[viewNavElement.id].classList.remove("removed");
         }
         else {
             viewNavElement.classList.remove("active-view");
+            NAV_ID_TO_VIEW[viewNavElement.id].classList.add("removed");
         }
     });
 }

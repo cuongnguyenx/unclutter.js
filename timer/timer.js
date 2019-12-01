@@ -215,7 +215,6 @@ browser.tabs.onActivated.addListener((activeInfo) => {
     let prevTabId = activeInfo.previousTabId;
 
     console.log("NEW FOCUSED!");
-    console.log(activeInfo);
 
     if (prevTabId !== undefined) {
         startTimeMap.set(prevTabId, Date.now());
