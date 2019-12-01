@@ -149,7 +149,7 @@ Tree.prototype.remove = function (data, fromData, traversal) {
 };
 
 // get the top-level domain of a website. I.E https://nytimes.com/a/b/c will yield https://nytimes.com
-function getLinkRoot(link) {
+function getLinkRoot(link, startWWW) {
     let startIndex = link.search("https://"); // should be 0 if exist
     if (startIndex > -1) {
         startIndex += 8
@@ -162,8 +162,13 @@ function getLinkRoot(link) {
         endIndex = link.length
     }
 
-    return (link.indexOf("www.") === -1) ? link.substring(0, endIndex).replace("https://", "www.") :
-        link.substring(0, endIndex).replace("https://", "")
+    if (startWWW) {
+        return (link.indexOf("www.") === -1) ? link.substring(0, endIndex).replace("https://", "www.") :
+            link.substring(0, endIndex).replace("https://", "")
+    } else {
+        return link.substring(0, endIndex)
+    }
+
 }
 
 // return the parent of this link. I.E https://nytimes.com/a/b/c will yield https://nytimes.com/a/b
@@ -247,7 +252,7 @@ let callbackxx = function (node, level, hierachy) {
 };
 
 function addToTreeIndividual(hierachy, data, traversal) {
-    let root = getLinkRoot(data)
+    let root = getLinkRoot(data, false)
     let foundNode = false;
     var callbackTop = function (node) {
         if (node.data === root) {
@@ -269,7 +274,47 @@ function addToTreeMass(hierachy, dataMul, traversal) {
     });
 }
 
-/*
+function countTabs(website) {
+    let res = 0;
+    let currInd = 0;
+    while (true) {
+       let ind =  website.indexOf("\t", currInd)
+        if (ind !== -1) {
+            res ++;
+            currInd = ind + 1;
+        } else {
+            break;
+        }
+    }
+    return res
+}
+
+function generateRootAndBranches(hierachy) {
+    testHierachy.tree.traverseDF(callbackxx, testHierachy);
+    let result = []
+    let currArr = []
+    for (var i = 0; i < hierachy.globalHierachy.length; i++) {
+        let website = hierachy.globalHierachy[i];
+        if (website === "master") {
+            continue
+        }
+        if (countTabs(website) !== 1) {
+            currArr = currArr.concat([website.replace('/\t/gi', '')])
+        } else {
+            if (currArr.length === 0) {
+                currArr = currArr.concat([website.replace('/\t/gi', '')])
+            } else {
+                result.push(currArr);
+                currArr = [website.replace('/\t/gi', '')]
+            }
+
+        }
+    }
+    result.push(currArr)
+    return result;
+}
+
+
 let testHierachy = new linkHierachy("master");
 addToTreeIndividual(testHierachy, "https://amazon.com/a/b/c", testHierachy.tree.traverseBF);
 addToTreeIndividual(testHierachy,"https://amazon.com/a/b", testHierachy.tree.traverseBF);
@@ -282,10 +327,11 @@ addToTreeIndividual(testHierachy, "https://nytimes.com/a/c/", testHierachy.tree.
 addToTreeMass(testHierachy, ["https://vnexpress.net/a/b", "https://vnexpress.net/b/c/d", "https://vnexpress.net/b/c"],
     testHierachy.tree.traverseBF);
 
+/*
 testHierachy.tree.traverseDF(callbackxx, testHierachy);
 for (var i = 0; i < testHierachy.globalHierachy.length; i++) {
     console.log(testHierachy.globalHierachy[i]);
 }
- */
+*/
 
-
+console.log(generateRootAndBranches(testHierachy))

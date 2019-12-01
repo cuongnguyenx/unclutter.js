@@ -13,7 +13,7 @@ class Categorizer {
 
     search_category(website) {
         let category = []
-        let website_root = getLinkRoot(website)
+        let website_root = getLinkRoot(website, true)
         console.log(website_root)
         this.keys.forEach(element => {
             let idx_get = this.category_website_dict[element].indexOf(website_root)
