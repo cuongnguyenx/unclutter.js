@@ -1,213 +1,235 @@
 html,
 body {
-  height: 42em;
-  width: 42em;
-  overflow: hidden;
+    height: 42em;
+    width: 42em;
+    overflow: hidden;
 }
 
 .tooltip.bs-tooltip-right .arrow:before {
-  border-right-color: #441744;
+    border-right-color: #441744;
 }
 
 .tooltip.bs-tooltip-left .arrow:before {
-  border-left-color: #441744;
+    border-left-color: #441744;
 }
 
 .tooltip.bs-tooltip-bottom .arrow:before {
-  border-bottom-color: #441744;
+    border-bottom-color: #441744;
 }
 
 .tooltip.bs-tooltip-top .arrow:before {
-  border-top-color: #441744;
+    border-top-color: #441744;
 }
 
 .tooltip-inner {
-  background: #643764;
-  border: 1px solid #441744;
+    background: #643764;
+    border: 1px solid #441744;
 }
 
 .popup-content {
-  height: 100%;
-  width: 100%;
-  background: #646464;
+    height: 100%;
+    width: 100%;
+    background: #646464;
 }
 
 .navbar {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  background: #643764;
+    background: #643764;
+}
+
+.navbar-brand {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.nav-font {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    font-family: Candara, sans-serif;
+    font-size: medium;
+    color: #9fcdff;
+    margin: 0% 2% 0% 15%;
+}
+
+.nav-font-bond {
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    font-family: Roboto Light, sans-serif;
+    font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .nav-link {
-  font-size: 2em;
-  color: #FFFFFF;
-  background: #643764;
+    font-size: 2em;
+    color: #FFFFFF;
+    background: #643764;
 }
 
 .nav-link:hover {
-  transition: all 0.1s;
-  color: #FFFFFF;
-  background: #555555
+    transition: all 0.1s;
+    color: #FFFFFF;
+    background: #555555
 }
 
 
 .tab-list-container {
-  width: 100%;
-  height: 88%;
-  overflow-x: hidden;
-  overflow-y: auto;
+    width: 100%;
+    height: 88%;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .tab-list {
-  margin: 2%;
-  padding: 1%;
+    margin: 2%;
+    padding-bottom: 10%;
 }
 
 .tab-listing {
-  overflow: hidden;
-  transition: max-height 0.25s ease-in;
-  max-height: 50px;
-  margin: 0%;
-  padding: 0%;
-  border-color: #BBBBBB;
-  background: #646464;
-  color: #BBBBBB;
+    overflow: hidden;
+    transition: max-height 0.25s ease-in;
+    max-height: 50px;
+    margin: 0%;
+    padding: 0%;
+    border-color: #BBBBBB;
+    background: #646464;
+    color: #BBBBBB;
 }
 
 .tab-listing:hover {
-  transition: all 0.05s;
-  background: #565656;
-  border-color: #8a208a;
-  /* border-color: #992323; */
+    transition: all 0.05s;
+    background: #565656;
+    border-color: #8a208a;
+    /* border-color: #992323; */
 }
 
 .tab-listing.removed {
-  transition: all 0.25s ease-out;
-  max-height: 0px;
-  border-top: none;
-  border-bottom: none;
+    transition: all 0.25s ease-out;
+    max-height: 0px;
+    border-top: none;
+    border-bottom: none;
 }
 
 .tab-listing-content {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .tab-left-section {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .tab-text {
-  margin: 0% 2% 0% 5%;
-  height: 100%;
-  font-size: 2.0rem;
-  font-weight: 340;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    margin: 0% 2% 0% 5%;
+    height: 100%;
+    font-size: 2.0rem;
+    font-weight: 340;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .tab-middle-section {
-  height: 100%;
+    height: 100%;
 }
 
 .tab-categories {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .tab-category-row {
-  height: 35%;
+    height: 35%;
 }
 
 .tab-category {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  height: 100%;
-  margin-top: 7%;
-  margin-bottom: 7%;
-  margin-left: 18%;
-  color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    margin-top: 7%;
+    margin-bottom: 7%;
+    margin-left: 17%;
+    color: #000000;
 }
 
 .tab-category.large {
-  margin-left: 0%;
-  margin-top: 27%;
-  font-size: 1.8rem
+    margin-left: 0%;
+    margin-top: 27%;
+    font-size: 1.8rem
 }
 
 .tab-category.adults {
-  background: rgb(255, 35, 156);
+    background: rgb(255, 35, 156);
 }
 
 .tab-category.arts {
-  background: rgb(192, 192, 16);
+    background: rgb(192, 192, 16);
 }
 
 .tab-category.business {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .tab-category.computers {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .tab-category.games {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .tab-category.health {
-  background: rgb(255, 0, 0);
+    background: rgb(255, 0, 0);
 }
 
 .tab-category.news {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .tab-category.recreation {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .tab-category.education {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .tab-category.science {
-  background: #008800;
+    background: #008800;
 }
 
 .tab-category.shopping {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .tab-category.sports {
-  background: #FFFFFF;
+    background: #FFFFFF;
 }
 
 .icon {
-  margin: 20% 2% 5% 15%;
-  height: 60%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    margin: 20% 2% 5% 15%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .tab-right-section {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .tab-options {
-  height: 100%;
-  width: 100%;
+    height: 100%;
+    width: 100%;
 }
 
 .tab-button:hover {
-  transition: all 0.2s;
-  color: #FFFFFF !important;
+    transition: all 0.2s;
+    color: #FFFFFF !important;
 }

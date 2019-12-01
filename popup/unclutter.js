@@ -20,6 +20,7 @@ function addTabListings(tabIdsToBeAdded) {
     tabIdsToBeAdded.forEach(tabId => {
         addTabListing(tabId);
     });
+    // addListingElementToTabView(createPadding());
 }
 
 function addTabListing(tabId) {
@@ -55,6 +56,11 @@ function addTabListing(tabId) {
     });
 }
 
+function createPadding() {
+    let listing = document.createElement("li");
+    listing.classList.add("container-fluid", "tab-listing");
+    return listing
+}
 async function createListingElement(tabId) {
     let listing = document.createElement("li");
     listing.classList.add("list-group-item", "container-fluid", "tab-listing", "removed");
@@ -253,6 +259,18 @@ function getCategoryEmoji(category) {
 
         case "Sports": {
             return String.fromCodePoint(0x1F3C8);
+        }
+
+        case "Email": {
+            return String.fromCodePoint(0x1F4E7);
+        }
+
+        case "Audio Visual": {
+            return String.fromCodePoint(0x1F3A5);
+        }
+
+        case "Social Media": {
+            return String.fromCodePoint(0x1F587);
         }
 
         case "Miscellaneous": {
