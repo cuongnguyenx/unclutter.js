@@ -59,20 +59,49 @@ body {
     font-family: Roboto Light, sans-serif;
     font-size: 1.5rem;
     font-weight: bold;
+  background: #643764;
+}
+
+.view-option {
+  background: #643764;
+  border: 1px solid #643764;
+}
+
+.view-option.active-view {
+  border-color: #BBBBBB;
+  background: #484848;
+}
+
+.view-option:hover {
+  transition: all 0.2s;
+  border-color: #FFFFFF;
+  background: #555555;
+}
+
+.popup-view {
+  transition: max-width 0.5s ease-in;
+  max-width: 42em;
+}
+
+.popup-view.removed {
+  transition: max-width 0.5s ease-out;
+  max-width: 0em;
 }
 
 .nav-link {
     font-size: 2em;
     color: #FFFFFF;
     background: #643764;
+  font-size: 2em;
+  color: #FFFFFF;
 }
 
 .nav-link:hover {
     transition: all 0.1s;
     color: #FFFFFF;
     background: #555555
+  color: #FFFFFF;
 }
-
 
 .tab-list-container {
     width: 100%;
@@ -87,14 +116,14 @@ body {
 }
 
 .tab-listing {
-    overflow: hidden;
-    transition: max-height 0.25s ease-in;
-    max-height: 50px;
-    margin: 0%;
-    padding: 0%;
-    border-color: #BBBBBB;
-    background: #646464;
-    color: #BBBBBB;
+  overflow: hidden;
+  transition: max-height 0.25s ease-in;
+  max-height: 3.5em;
+  margin: 0%;
+  padding: 0%;
+  border-color: #BBBBBB;
+  background: #646464;
+  color: #BBBBBB;
 }
 
 .tab-listing:hover {
@@ -114,6 +143,19 @@ body {
 .tab-listing-content {
     height: 100%;
     width: 100%;
+}
+
+.tab-icon-section {
+  height: 100%;
+  width: 100%;
+}
+
+.icon {
+  margin: 20% 2% 5% 15%;
+  height: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .tab-left-section {
@@ -230,6 +272,6 @@ body {
 }
 
 .tab-button:hover {
-    transition: all 0.2s;
-    color: #FFFFFF !important;
+  transition: all 0.2s;
+  color: #FFFFFF !important;
 }

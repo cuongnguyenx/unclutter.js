@@ -1,11 +1,63 @@
 const tabList = document.getElementById("tab-list");
+let viewNavElements = initializeNavBar();
 
-browser.storage.local.get("temp").then(loadInitialTabList);
+function initializeNavBar() {
+    return [
+        initializeTabsViewNav(),
+        initializeBookmarksViewNav(),
+        initializeSettingsViewNav()
+    ];
+}
 
-// TODO: Add bookmarks view
-// TODO: Add settings view
+function initializeTabsViewNav() {
+    let tabsViewNav = document.getElementById("nav-tabs-view");
+
+    tabsViewNav.addEventListener("click", handleViewNavClick);
+
+    return tabsViewNav;
+}
+
+const NAV_ID_TO_VIEW = {
+    "nav-tabs-view": document.getElementById("tabs-view"),
+    "nav-bookmarks-view": document.getElementById("bookmarks-view"),
+    "nav-settings-view": document.getElementById("settings-view")
+};
+
+function handleViewNavClick(event) {
+    viewNavElements.forEach((viewNavElement) => {
+        if (viewNavElement.id === event.currentTarget.id) {
+            viewNavElement.classList.add("active-view");
+            NAV_ID_TO_VIEW[viewNavElement.id].classList.remove("removed");
+        }
+        else {
+            viewNavElement.classList.remove("active-view");
+            NAV_ID_TO_VIEW[viewNavElement.id].classList.add("removed");
+        }
+    });
+}
+
+function initializeBookmarksViewNav() {
+    let bookmarksViewNav = document.getElementById("nav-bookmarks-view");
+
+    bookmarksViewNav.addEventListener("click", handleViewNavClick);
+
+    return bookmarksViewNav;
+}
+
+function initializeSettingsViewNav() {
+    let settingsViewNav = document.getElementById("nav-settings-view");
+
+    settingsViewNav.addEventListener("click", handleViewNavClick);
+
+    return settingsViewNav;
+}
+
+// TODO: Create bookmarks view
+// TODO: Create settings view
 
 // TODO: Add visual categorization system to tab view
+
+browser.storage.local.get("temp").then(loadInitialTabList);
 
 function loadInitialTabList(tabs) {
     if (!(tabs && tabs.temp)) {
@@ -92,7 +144,7 @@ function createListingContentElement(tabPromise, categories) {
 
 function createListingIconSectionElement(tabPromise) {
     let listingIconSection = document.createElement("div");
-    listingIconSection.classList.add("col-1", "tab-left-section");
+    listingIconSection.classList.add("col-1", "tab-icon-section");
     listingIconSection.appendChild(createListingFavIconElement(tabPromise));
     return listingIconSection;
 }
