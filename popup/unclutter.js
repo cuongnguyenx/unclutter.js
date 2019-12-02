@@ -2,16 +2,16 @@ const tabList = document.getElementById("tab-list");
 let viewNavElements = initializeNavBar();
 const NAV_ID_TO_VIEW = {
     "nav-tabs-view": document.getElementById("tabs-view"),
-    "nav-bookmarks-view": document.getElementById("bookmarks-view"),
-    "nav-settings-view": document.getElementById("settings-view")
+    "nav-bookmarks-view": document.getElementById("bookmarks-view")
+    // "nav-settings-view": document.getElementById("settings-view")
 };
 switchToView(viewNavElements[0]);
 
 function initializeNavBar() {
     return [
         initializeTabsViewNav(),
-        initializeBookmarksViewNav(),
-        initializeSettingsViewNav()
+        initializeBookmarksViewNav()
+        // initializeSettingsViewNav()
     ];
 }
 
