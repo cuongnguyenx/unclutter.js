@@ -51,7 +51,7 @@ body {
 
 .logo {
     position: relative;
-    top: -0.12em;
+    top: -0.15em;
 }
 
 .nav-item:not(:first-child) {
@@ -76,17 +76,20 @@ body {
 }
 
 .view-option {
+    transition: all 0.2s;
+    box-shadow: 0.05em 0.05em 0.1em #000000;
     background: #643764;
     border: 1px solid #441744;
+    cursor: pointer;
 }
 
 .view-option.active-view {
+    box-shadow: none;
     border-color: #BBBBBB;
     background: #484848;
 }
 
 .view-option:hover {
-    transition: all 0.2s;
     border-color: #FFFFFF;
     background: #555555;
 }
@@ -98,7 +101,6 @@ body {
 }
 
 .popup-view.removed {
-    overflow: none;
     transition: max-width 0.5s ease-out;
     max-width: 0px;
 }
@@ -137,12 +139,16 @@ body {
 .tab-listing {
     overflow: hidden;
     transition: max-height 0.25s ease-in;
+    transition: background 0.25s;
+    transition: border 0.25s;
     max-height: 3.5em;
     margin-right: 1%;
     padding: 0%;
+    transition: background 0.05s;
+    transition: border-color 0.05s;
     border-color: #BBBBBB;
     background: #646464;
-    box-shadow: 3px 3px #000000;
+    box-shadow: 3px 3px 5px #000000;
     color: #BBBBBB;
 }
 
@@ -151,7 +157,6 @@ body {
 }
 
 .tab-listing:hover {
-    transition: all 0.05s;
     background: #565656;
     border-color: #8a208a;
     /* border-color: #992323; */
@@ -298,4 +303,21 @@ body {
 .tab-button:hover {
     transition: all 0.2s;
     color: #FFFFFF !important;
+}
+
+.bookmark-list {
+
+}
+
+.bookmark-listing {
+    background: #646464;
+}
+
+.bookmark-listing:not(:first-child) {
+    margin-top: 2%;
+}
+
+.bookmark-category-title {
+    font-size: 2.0rem;
+    font-weight: 340;
 }
