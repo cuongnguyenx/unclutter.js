@@ -219,8 +219,7 @@ function getLinkRoot(link) {
         endIndex = link.length;
     }
 
-    return link.indexOf("www.") === -1 ? link.substring(0, endIndex).replace("https://", "www.") :
-        link.substring(0, endIndex).replace("https://", "");
+    return link.substring(0, endIndex).replace("https://", "").replace("www.", "");
 }
 
 const GLOBAL_TITLE_LENGTH_LIMIT = 14;
