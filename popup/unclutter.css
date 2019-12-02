@@ -78,13 +78,13 @@ body {
 .view-option {
     transition: all 0.2s;
     box-shadow: 0.05em 0.05em 0.1em #000000;
+    color: #FFFFFF !important;
     background: #643764;
     border: 1px solid #441744;
     cursor: pointer;
 }
 
 .view-option.active-view {
-    box-shadow: none;
     border-color: #BBBBBB;
     background: #484848;
 }
