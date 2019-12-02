@@ -114,7 +114,7 @@ async function clearTemporaryStorage() {
     return browser.storage.local.set({
         temp: []
     }).then(() => {
-        console.log("Temporary storage initialized successfully!");
+        console.log("Temporary storage Cleared");
         updateBadge(0);
     });
 }

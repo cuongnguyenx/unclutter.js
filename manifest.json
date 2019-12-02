@@ -26,12 +26,6 @@
     "browser_style": true
   },
   "homepage_url": "https://vnexpress.net",
-  "content_scripts": [
-    {
-      "matches": ["*://*/*"],
-      "js": []
-    }
-  ],
 
   "background": {
     "scripts": [
@@ -39,12 +33,15 @@
       "nlp/js/NLP.js",
       "nlp/js/linkHierachy.js",
       "timer/websites.js",
-      "timer/timer.js",
+      "background.js",
       "nlp/bower_components/underscore/underscore.js"
     ]
   },
 
   "options_ui": {
     "page": "settings/options.html"
-  }
+  },
+  "web_accessible_resources":
+    ["shared/assets/avenir-roman.otf", "shared/assets/avenir-roman.woff2"]
+
 }
