@@ -52,7 +52,7 @@ body {
 }
 
 .navbar-brand {
-    padding-top: 8%;
+    margin-top: 6%;
 }
 
 .nav-font-bold {
@@ -60,9 +60,8 @@ body {
     flex-direction: row;
     text-align: left;
     font-family: Roboto Light, sans-serif;
-    font-size: 2rem;
+    font-size: 2.3rem;
     font-weight: bold;
-    background: #643764;
 }
 
 .view-option {
