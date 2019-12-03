@@ -392,9 +392,11 @@ function createListingDeleteIconElement() {
 function addActionToButton(button, action, tabId, categories) {
     button.addEventListener("click", () => {
         browser.runtime.sendMessage({
-            tabId: tabId,
-            categories: categories,
-            action: action
+            action: action,
+            actionInfo: {
+                tabId: tabId,
+                categories: categories
+            }
         });
     });
 }
@@ -486,7 +488,6 @@ function addBookmarkListing(bookmark) {
     bookmark.category.foreach((category) => {
         addUrlListingToCategory(urlListing, category);
     });
-    // TODO: Implement bookmark listing additions
 }
 
 function createUrlListingElement(bookmark) {
@@ -548,7 +549,12 @@ function createUrlListingDeleteIconElement() {
 }
 
 function removeBookmarkListing(bookmark) {
-    // TODO: Implement bookmark removal
+    browser.runtime.sendMessage({
+        action: "remove_bookmark",
+        actionInfo: {
+            url: bookmark.url
+        }
+    });
 }
 
 function addUrlListingToCategory(urlListing, category) {
