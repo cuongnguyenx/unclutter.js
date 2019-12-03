@@ -391,7 +391,6 @@ function createListingDeleteIconElement() {
 
 function addActionToButton(button, action, tabId, categories) {
     button.addEventListener("click", () => {
-        console.log("CLICK EVENT!");
         browser.runtime.sendMessage({
             action: action,
             actionInfo: {
@@ -492,7 +491,8 @@ function addBookmarkListing(bookmark) {
 
 function createUrlListingElement(bookmark) {
     let urlListing = document.createElement("li");
-    urlListing.classList.add("list-group-item", "d-flex flex-row", "bookmark-url-listing");
+    urlListing.classList.add("list-group-item", "d-flex", "flex-row", "bookmark-url-listing", "removed");
+    urlListing.id = `url-listing-${hashString(bookmark.url)}`;
 
     urlListing.append(
         createUrlListingTitleElement(bookmark),
@@ -500,20 +500,6 @@ function createUrlListingElement(bookmark) {
     );
 
     return urlListing;
-}
-
-function createUrlListingTitleElement(bookmark) {
-    let urlListingTitle = document.createElement("p");
-    urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
-    urlListingTitle.id = `url-listing-${hashString(bookmark.url)}`;
-
-    urlListingTitle.addEventListener("click", () => {
-        browser.tabs.create({
-            url: bookmark.url
-        });
-    });
-
-    return urlListingTitle;
 }
 
 function hashString(string) {
@@ -526,6 +512,19 @@ function hashString(string) {
         hash |= 0; // Convert to 32bit integer
     }
     return hash;
+}
+
+function createUrlListingTitleElement(bookmark) {
+    let urlListingTitle = document.createElement("p");
+    urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
+
+    urlListingTitle.addEventListener("click", () => {
+        browser.tabs.create({
+            url: bookmark.url
+        });
+    });
+
+    return urlListingTitle;
 }
 
 function createUrlListingDeleteElement(bookmark) {
@@ -561,6 +560,32 @@ function removeBookmarkListings(bookmarks) {
     bookmarks.forEach((bookmark) => {
         removeBookmarkListing(bookmark);
     });
+}
+
+function removeBookmarkListing(bookmark) {
+    let urlHash = hashString(bookmark.url);
+    bookmark.category.forEach(() => {
+        let urlListing = document.getElementById(`url-listing-${urlHash}`);
+
+        urlListing.addEventListener("transitionend", (event) => {
+            if (event.propertyName === "max-height") {
+                urlListing.remove();
+            }
+        });
+
+        urlListing.classList.add("removed");
+    }).forEach((category) => {
+        let bookmarkCategory = document.getElementById(`bookmark-category-${normifyCategories(category)}`);
+        let categoryUrlList = document.getElementById(`bookmark-category-${normifyCategories(category)}`)
+            .getElementsByClassName("bookmark-url-list")[0];
+        if (categoryUrlList.getElementsByTagName("li").length === 0) {
+            removeBookmarkCategory(bookmarkCategory);
+        }
+    });
+}
+
+function removeBookmarkCategory(bookmarkCategoryElement) {
+    // TODO: Remove category
 }
 
 function addUrlListingToCategory(urlListing, category) {
@@ -615,11 +640,11 @@ function addBookmarkCategory(categoryName) {
         collapseIcon.classList.add("btn", "bookmark-toggle-collapse-icon")
 
         let collapseHelper = document.createElement("i");
-        collapseHelper.classList.add("fa fa-angle-right fa-2x")
+        collapseHelper.classList.add("fa", "fa-angle-right", "fa-2x")
         collapseIcon.appendChild(collapseHelper);
 
         categoryHeader.append(categorySymbol, categoryTitle, collapseIcon, collapseHelper);
-        bookmarkList.append(categoryHeader)
+        bookmarkList.append(categoryHeader);
     }
 }
 
@@ -704,9 +729,9 @@ function processChangesToBookmarkList(bookmarkChanges) {
 }
 
 function processBookmarkAddition(bookmarkChanges) {
-    addBookmarkListings(bookmarkChanges.newValue.filter(bookmark => !bookmarkChanges.oldValue.includes(bookmark)))
+    addBookmarkListings(bookmarkChanges.newValue.filter(bookmark => !bookmarkChanges.oldValue.includes(bookmark)));
 }
 
 function processBookmarkRemovals(bookmarkChanges) {
-    removeBookmarkListings(bookmarkChanges.oldValue.filter(bookmark => !bookmarkChanges.newValue.includes(bookmark)))
+    removeBookmarkListings(bookmarkChanges.oldValue.filter(bookmark => !bookmarkChanges.newValue.includes(bookmark)));
 }
