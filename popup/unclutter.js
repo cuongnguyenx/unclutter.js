@@ -396,7 +396,6 @@ function createListingDeleteIconElement() {
 
 function addActionToButton(button, action, tabId, categories) {
     button.addEventListener("click", () => {
-        console.log(button.toString());
         browser.runtime.sendMessage({
             action: action,
             actionInfo: {
@@ -540,7 +539,7 @@ function createUrlListingDeleteElement(bookmark) {
     urlListingDeleteButton.appendChild(createUrlListingDeleteIconElement());
 
     urlListingDeleteButton.addEventListener("click", () => {
-        removeBookmarkListing(bookmark);
+        removeBookmark(bookmark);
     });
 
     return urlListingDeleteButton;
@@ -553,7 +552,7 @@ function createUrlListingDeleteIconElement() {
     return urlListingDeleteIcon;
 }
 
-function removeBookmarkListing(bookmark) {
+function removeBookmark(bookmark) {
     browser.runtime.sendMessage({
         action: "remove_bookmark",
         actionInfo: {
