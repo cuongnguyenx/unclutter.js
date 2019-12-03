@@ -17,81 +17,100 @@
 </head>
 
 <body>
-<div class="popup-content no-au">
-    <nav class="navbar container-fluid">
-        <ul class="navbar-nav nav-pills nav-fill d-flex flex-row w-100">
-            <li class="nav-item">
-                <div class="w-100 text-left align-content-center nav-font-bond">
-                    <img class="d-inline-block align-content-center" src="../shared/assets/logo-96.png" width="32"
-                         height="32"
-                         alt="">
-                    UnClutter
+    <div class="popup-content no-au">
+        <nav class="navbar">
+            <ul class="overflow-hidden navbar-nav nav-pills nav-fill d-flex flex-row w-100">
+                <li class="nav-item">
+                    <div class="nav-brand w-100 text-left align-items-center align-text-center nav-font-bond">
+                        <img class="d-inline-block m-0 logo" src="../shared/assets/logo-96.png" width="30" height="30"
+                            alt="">
+                        UnClutter
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link m-0 p-0 w-100 text-center view-option nav-font" id="nav-tabs-view">Tabs</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link m-0 p-0 w-100 text-center view-option nav-font"
+                        id="nav-bookmarks-view">Bookmarks</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="w-100 h-100 d-flex flex-row">
+            <div class="w-100 h-100 popup-view" id="tabs-view">
+                <div class="overflow-auto mx-auto d-flex flex-column tab-list-container">
+                    <ul class="list-group tab-list" id="tab-list">
+                        <li class="list-group-item container-fluid tab-listing" id="tab-listing--1">
+                            <div class="row no-gutters tab-listing-content">
+                                <div class="col-1 tab-left-section">
+                                    <img src="http://icons.duckduckgo.com/ip2/sample.net.ico" height="24" width="24"
+                                        class="icon align-middle">
+                                </div>
+                                <div class="col-6 tab-left-section">
+                                    <p class="align-middle tab-text">Sample Tab 2</p>
+                                </div>
+                                <div class="col-1 tab-middle-section">
+                                    <div class="float-left container tab-categories">
+                                        <div class="row tab-category-row">
+                                            <div class="col-6 align-middle tab-category">
+                                                🔬
+                                            </div>
+                                            <div class="col-6 align-middle tab-category">
+                                                🔞
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-4 tab-right-section">
+                                        <div class="btn-group btn-group-lg float-right tab-options">
+                                            <a class="btn tab-button" data-toggle="tooltip" title="Permanently close">
+                                                <i class="fa fa-trash fa-2x"></i>
+                                            </a>
+                                            <a class="btn tab-button" data-toggle="tooltip" title="Save and close">
+                                                <i class="fa fa-save fa-2x"></i>
+                                            </a>
+                                            <a class="btn tab-button" data-toggle="tooltip" title="Dismiss">
+                                                <i class="fa fa-times fa-2x"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-            </li>
-            <li class="nav-item">
-                <a class="nav-font w-100 text-center view-option" id="nav-tabs-view" href="#">Tabs</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-font w-100 text-center view-option" id="nav-bookmarks-view" href="#">Bookmarks</a>
-            </li>
-        </ul>
-    </nav>
-
-    <div class="w-100 h-100 d-flex flex-row">
-        <div class="w-100 h-100 popup-view" id="tabs-view">
-            <div class="overflow-auto mx-auto d-flex flex-column tab-list-container">
-                <ul class="list-group" id="tab-list">
-                    <li class="list-group-item container-fluid tab-listing" id="tab-listing-1">
-                        <div class="row no-gutters tab-listing-content">
-                            <div class="col-1 tab-left-section">
-                                <img src="http://icons.duckduckgo.com/ip2/sample.net.ico" height="24" width="24"
-                                     class="icon align-middle">
-                            </div>
-                            <div class="col-6 tab-left-section">
-                                <p class="align-middle tab-text">Sample Tab 2</p>
-                            </div>
-                            <div class="col-1 tab-middle-section">
-                                <div class="float-left container tab-categories">
-                                    <div class="row tab-category-row">
-                                        <div class="col-6 align-middle tab-category">
-                                            🔬
-                                        </div>
-                                        <div class="col-6 align-middle tab-category">
-                                            🔞
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4 tab-right-section">
-                                    <div class="btn-group btn-group-lg float-right tab-options">
-                                        <a class="btn tab-button" data-toggle="tooltip" title="Permanently close">
-                                            <i class="fa fa-trash fa-2x"></i>
-                                        </a>
-                                        <a class="btn tab-button" data-toggle="tooltip" title="Save and close">
-                                            <i class="fa fa-save fa-2x"></i>
-                                        </a>
-                                        <a class="btn tab-button" data-toggle="tooltip" title="Dismiss">
-                                            <i class="fa fa-times fa-2x"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
             </div>
-        </div>
-        <div class="w-100 h-100 popup-view" id="bookmarks-view">
-            <div class="overflow-auto mx-auto d-flex flex-column tab-list-container">
-                <ul class="w-100 list-group">
-                    <li class="list-group-item">
-                        <p>Sample Category 1</p>
-                    </li>
-                </ul>
+            <div class="w-100 h-100 popup-view" id="bookmarks-view">
+                <div class="overflow-auto mx-auto d-flex flex-row tab-list-container">
+                    <ul class="mx-2 my-2 w-100 list-group bookmark-list">
+                        <li class="rounded list-group-item bookmark-listing">
+                            <div class="d-flex flex-column">
+                                <p class="h-100 w-50 bookmark-category-title">Sample Category 1</p>
+                            </div>
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    URL1
+                                </li>
+                                <li class="list-group-item">
+                                    URL2
+                                </li>
+                                <li class="list-group-item">
+                                    URL3
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="rounded list-group-item bookmark-listing">
+                            <p>Sample Category 2</p>
+                        </li>
+                        <li class="rounded list-group-item bookmark-listing">
+                            <p>Sample Category 3</p>
+                        </li>
+                    </ul>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
 </body>
 
 </html>

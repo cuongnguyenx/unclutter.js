@@ -31,8 +31,7 @@ function switchToView(newViewNav) {
     viewNavElements.forEach((viewNavElement) => {
         if (viewNavElement.id === newViewNav.id) {
             activateView(viewNavElement);
-        }
-        else {
+        } else {
             deactivateView(viewNavElement);
         }
     });
@@ -140,16 +139,16 @@ async function createListingElement(tabId) {
 
 // return an array of categories, as specified in websites.js
 async function getCategoriesOfWebsite(tabId) {
-    let tab_true = await browser.tabs.get(tabId)
+    let tab_true = await browser.tabs.get(tabId);
     let categorizer = new Categorizer();
-    return categorizer.search_category(tab_true.url)
+    return categorizer.search_category(tab_true.url);
 }
 
 function createListingContentElement(tabPromise, categories) {
     let listingContent = document.createElement("div");
     listingContent.classList.add("row", "no-gutters", "tab-listing-content");
     listingContent.append(createListingIconSectionElement(tabPromise), createListingLeftSectionElement(tabPromise), createListingMiddleSectionElement(categories),
-    createListingRightSectionElement(tabPromise, categories));
+        createListingRightSectionElement(tabPromise, categories));
     return listingContent;
 }
 
@@ -247,15 +246,15 @@ function createListingCategoriesContainerElement(categories) {
     let listingMiddleContainer = document.createElement("div");
     listingMiddleContainer.classList.add("float-left", "container", "tab-categories");
 
-    let listingMidRow = document.createElement("div")
-    listingMidRow.classList.add("row", "tab-category-row")
+    let listingMidRow = document.createElement("div");
+    listingMidRow.classList.add("row", "tab-category-row");
     if (categories.length === 1) {
-        listingMidRow.append(createCategoryIcons(categories[0], true))
+        listingMidRow.append(createCategoryIcons(categories[0], true));
     } else if (categories.length >= 2) {
-        listingMidRow.append(createCategoryIcons(categories[0], false), createCategoryIcons(categories[1], false))
+        listingMidRow.append(createCategoryIcons(categories[0], false), createCategoryIcons(categories[1], false));
     }
 
-    listingMiddleContainer.append(listingMidRow)
+    listingMiddleContainer.append(listingMidRow);
 
     return listingMiddleContainer;
 }
@@ -265,22 +264,22 @@ function createCategoryIcons(category, largeText) {
     categoryIcon.setAttribute("data-toggle", "tooltip");
     categoryIcon.setAttribute("title", category);
     if (largeText) {
-        categoryIcon.classList.add("col-12", "align-middle", "tab-category", "large")
+        categoryIcon.classList.add("col-12", "align-middle", "tab-category", "large");
     } else {
-        categoryIcon.classList.add("col-6", "align-middle", "tab-category")
+        categoryIcon.classList.add("col-6", "align-middle", "tab-category");
     }
-    categoryIcon.textContent = getCategoryEmoji(category)
-    return categoryIcon
+    categoryIcon.textContent = getCategoryEmoji(category);
+    return categoryIcon;
 }
 
 function getCategoryEmoji(category) {
     switch (category) {
         case "Adult": {
-            return String.fromCodePoint(0x1F51E)
+            return String.fromCodePoint(0x1F51E);
         }
 
         case "Arts": {
-            return String.fromCodePoint(0x1F3A8)
+            return String.fromCodePoint(0x1F3A8);
         }
 
         case "Business": {
