@@ -50,10 +50,19 @@ function deactivateView(viewNavElement) {
 
 function initializeBookmarksViewNav() {
     let bookmarksViewNav = document.getElementById("nav-bookmarks-view");
-
     bookmarksViewNav.addEventListener("click", handleViewNavClick);
 
+    let searchBar = document.getElementById("bookmark-filter");
+    searchBar.addEventListener("keydown", handleSearchBarKeyTyped);
     return bookmarksViewNav;
+}
+
+function handleSearchBarKeyTyped() {
+    let search_query = document.querySelector("#bookmark-filter").value
+    let bookmarkListings = document.getElementsByClassName("bookmark-url-listing")
+    bookmarkListings.forEach(listings => {
+        let textCont = bookmarkListings.getElementById("bookmark-url-listing-title")
+    })
 }
 
 function initializeSettingsViewNav() {
@@ -502,6 +511,21 @@ function createUrlListingElement(bookmark) {
     return urlListing;
 }
 
+function createUrlListingTitleElement(bookmark) {
+    let urlListingTitle = document.createElement("p");
+    urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
+    urlListingTitle.textContent = fitTitleTextToListing(bookmark.title)
+    urlListingTitle.id = `url-listing-${bookmark.url}`;
+
+    urlListingTitle.addEventListener("click", () => {
+        browser.tabs.create({
+            url: bookmark.url
+        });
+    });
+
+    return urlListingTitle;
+}
+
 function hashString(string) {
     let hash = 0,
         i, chr;
@@ -512,19 +536,6 @@ function hashString(string) {
         hash |= 0; // Convert to 32bit integer
     }
     return hash;
-}
-
-function createUrlListingTitleElement(bookmark) {
-    let urlListingTitle = document.createElement("p");
-    urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
-
-    urlListingTitle.addEventListener("click", () => {
-        browser.tabs.create({
-            url: bookmark.url
-        });
-    });
-
-    return urlListingTitle;
 }
 
 function createUrlListingDeleteElement(bookmark) {
@@ -590,13 +601,10 @@ function removeBookmarkCategory(bookmarkCategoryElement) {
 
 function addUrlListingToCategory(urlListing, category) {
     addBookmarkCategory(category);
-    let bookmarkCategoryElement = document.getElementById(`bookmark-category-${normifyCategories(category)}`);
+    console.log(category)
+    let bookmarkCategoryElement = document.getElementById(`bookmark-category-` + normifyCategories(category));
 
     bookmarkCategoryElement.getElementsByClassName("bookmark-url-list")[0].appendChild(urlListing);
-
-    bookmarkCategoryElement.getElementsByClassName("bookmark-category-header")[0].addEventListener("click", () => {
-        toggleCategoryCollapse(bookmarkCategoryElement);
-    });
 
     setTimeout(() => {
         urlListing.classList.remove("removed");
@@ -623,9 +631,15 @@ function expandCategory(urlList) {
 
 // example category id would be "bookmark-category-audio-visual"
 function addBookmarkCategory(categoryName) {
+
     if (!document.getElementById("bookmark-category-" + normifyCategories(categoryName))) {
+        let categoryWrapper = document.createElement("li");
+        categoryWrapper.classList.add("rounded", "list-group-item", "bookmark-listing")
+        categoryWrapper.id = "bookmark-category-" + normifyCategories(categoryName)
+
         let categoryHeader = document.createElement('div');
         categoryHeader.classList.add("d-flex", "flex-row", "bookmark-category-header");
+        categoryHeader.addEventListener("click", function(){toggleCategoryCollapse(categoryWrapper)});
 
         let categorySymbol = document.createElement("p");
         categorySymbol.classList.add("m-0", "align-middle", "bookmark-category-symbol");
@@ -642,8 +656,13 @@ function addBookmarkCategory(categoryName) {
         collapseHelper.classList.add("fa", "fa-angle-right", "fa-2x")
         collapseIcon.appendChild(collapseHelper);
 
+        let urlList = document.createElement("ul")
+        urlList.classList.add("list-group", "m-0", "px-2", "pb-2", "pt-4", "bookmark-url-list")
+
         categoryHeader.append(categorySymbol, categoryTitle, collapseIcon, collapseHelper);
-        bookmarkList.append(categoryHeader);
+        categoryWrapper.append(categoryHeader, urlList);
+
+        bookmarkList.append(categoryWrapper);
     }
 }
 
