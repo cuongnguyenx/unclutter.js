@@ -50,10 +50,15 @@ function deactivateView(viewNavElement) {
 
 function initializeBookmarksViewNav() {
     let bookmarksViewNav = document.getElementById("nav-bookmarks-view");
-
     bookmarksViewNav.addEventListener("click", handleViewNavClick);
 
+    let searchBar = document.getElementById("bookmark-filter");
+    searchBar.addEventListener("keydown", handleSearchBarKeyTyped);
     return bookmarksViewNav;
+}
+
+function handleSearchBarKeyTyped() {
+
 }
 
 function initializeSettingsViewNav() {
@@ -391,6 +396,7 @@ function createListingDeleteIconElement() {
 
 function addActionToButton(button, action, tabId, categories) {
     button.addEventListener("click", () => {
+        console.log(button.toString());
         browser.runtime.sendMessage({
             action: action,
             actionInfo: {
@@ -476,7 +482,7 @@ function loadInitialBookmarkList(bookmarkResult) {
 }
 
 function addBookmarkListings(bookmarks) {
-    bookmarks.foreach((bookmark) => {
+    bookmarks.forEach((bookmark) => {
         addBookmarkListing(bookmark);
     });
 }
@@ -484,7 +490,7 @@ function addBookmarkListings(bookmarks) {
 function addBookmarkListing(bookmark) {
     let urlListing = createUrlListingElement(bookmark);
 
-    bookmark.category.foreach((category) => {
+    bookmark.category.forEach((category) => {
         addUrlListingToCategory(urlListing, category);
     });
 }
@@ -554,8 +560,10 @@ function removeBookmarkListing(bookmark) {
             url: bookmark.url
         }
     });
+}
+
 function removeBookmarkListings(bookmarks) {
-    bookmarks.foreach((bookmark) => {
+    bookmarks.forEach((bookmark) => {
         removeBookmarkListing(bookmark);
     });
 }
@@ -646,7 +654,7 @@ function processChangesToTabQueue(tabQueueChanges) {
 }
 
 function processQueueAdditions(tabQueueChanges) {
-    removeTabListings(tabQueueChanges.newValue.filter(tab => !tabQueueChanges.oldValue.includes(tab)));
+    addTabListings(tabQueueChanges.newValue.filter(tab => !tabQueueChanges.oldValue.includes(tab)));
 }
 
 function processQueueRemovals(tabQueueChanges) {
