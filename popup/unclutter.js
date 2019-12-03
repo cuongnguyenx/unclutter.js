@@ -496,6 +496,7 @@ function addBookmarkCategory(categoryName) {
         collapseIcon.appendChild(collapseHelper);
 
         categoryHeader.append(categorySymbol, categoryTitle, collapseIcon, collapseHelper);
+        bookmarkList.append(categoryHeader)
     }
 }
 
