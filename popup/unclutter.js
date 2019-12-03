@@ -74,7 +74,6 @@ function loadInitialTabList(tabs) {
     if (!(tabs && tabs.temp)) {
         return;
     }
-
     addTabListings(tabs.temp);
 }
 
@@ -86,6 +85,7 @@ function addTabListings(tabIdsToBeAdded) {
 }
 
 function addTabListing(tabId) {
+    console.log(tabId)
     /* Listing HTML:
     <li class="list-group-item container-fluid tab-listing" id="tab-listing-1">
         <div class="row no-gutters tab-listing-content">
@@ -118,11 +118,7 @@ function addTabListing(tabId) {
     });
 }
 
-function createPadding() {
-    let listing = document.createElement("li");
-    listing.classList.add("container-fluid", "tab-padding");
-    return listing;
-}
+
 async function createListingElement(tabId) {
     let listing = document.createElement("li");
     listing.classList.add("list-group-item", "container-fluid", "tab-listing", "removed");
@@ -166,6 +162,14 @@ function createListingLeftSectionElement(tabPromise) {
     return listingLeftSection;
 }
 
+function navigateToAppropriateTab(id) {
+    browser.tabs.update(id, {
+        active: true
+    }).then((e) => {
+        console.log("Tab has become active, id: " + id);
+    })
+}
+
 function createListingTitleTextElement(tabPromise) {
     let listingTitleText = document.createElement("p");
     listingTitleText.classList.add("align-middle", "tab-text");
@@ -176,6 +180,9 @@ function createListingTitleTextElement(tabPromise) {
         setListingTitleText(listingTitleText, tab.title);
         listingTitleText.setAttribute("data-toggle", "tooltip");
         listingTitleText.setAttribute("title", tab.url);
+        listingTitleText.addEventListener("click", function () {
+            navigateToAppropriateTab(tab.id);
+        })
     });
 
     return listingTitleText;
@@ -431,6 +438,7 @@ function createListingDismissButtonElement(tabPromise) {
     return listingDismissButton;
 }
 
+
 function createListingDismissIconElement() {
     let listingDeleteIcon = document.createElement("i");
     listingDeleteIcon.classList.add("fa", "fa-times", "fa-2x");
@@ -488,7 +496,6 @@ function removeTabListing(tabId) {
     if (!listingToBeRemoved) {
         return;
     }
-
     queueListingRemoval(listingToBeRemoved);
     collapseListing(listingToBeRemoved);
 }

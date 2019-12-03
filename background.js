@@ -157,6 +157,7 @@ async function incrementTabTime(tabId) {
             removeTab(tabId);
         } else {
             await addDataToTempStorage(tabId);
+            await suspendTab(tabId);
             runTimeMap.set(tabId, inactiveTime);
         }
     } else {
@@ -170,12 +171,20 @@ async function addDataToTempStorage(id) {
     let storedTabsDatabase = await browser.storage.local.get("temp");
     let currTemp = storedTabsDatabase.temp;
     if (!(currTemp.includes(id))) {
-        console.log(id);
         let newTemp = currTemp.concat([id]);
         browser.storage.local.set({
             temp: newTemp
         }).then(e => {
             console.log("Tab added to Temp queue successfully!");
+        });
+    }
+}
+
+async function suspendTab(id) {
+    let currTab = await browser.tabs.get(id);
+    if (!currTab.audible) {
+        browser.tabs.discard(id).then(() => {
+            console.log("Tab suspended, id: " + id);
         });
     }
 }
