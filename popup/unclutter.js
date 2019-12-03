@@ -58,7 +58,11 @@ function initializeBookmarksViewNav() {
 }
 
 function handleSearchBarKeyTyped() {
-
+    let search_query = document.querySelector("#bookmark-filter").value
+    let bookmarkListings = document.getElementsByClassName("bookmark-url-listing")
+    bookmarkListings.forEach(listings => {
+        let textCont = bookmarkListings.getElementById("bookmark-url-listing-title")
+    })
 }
 
 function initializeSettingsViewNav() {
@@ -509,7 +513,8 @@ function createUrlListingElement(bookmark) {
 function createUrlListingTitleElement(bookmark) {
     let urlListingTitle = document.createElement("p");
     urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
-    urlListingTitle.id = `url-listing-${hashString(bookmark.url)}`;
+    urlListingTitle.textContent = fitTitleTextToListing(bookmark.title)
+    urlListingTitle.id = `url-listing-${bookmark.url}`;
 
     urlListingTitle.addEventListener("click", () => {
         browser.tabs.create({

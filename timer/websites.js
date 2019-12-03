@@ -3,7 +3,7 @@ class Categorizer {
         this.categories_websites = [email, audiovisual, socialMedia, adult, arts, business, computers, games, health, news, recreation,
             education, science, shopping, sports]
         this.keys = ["Email", "Audio Visual", "Social Media", "Adult", "Arts", "Business", "Computers", "Games", "Health", "News",
-            "Recreation", "Education", "Science", "Shopping", "Sports"]
+            "Recreation", "Education", "Science", "Shopping", "Sports", "Miscellaneous"]
 
         this.category_website_dict = {}
         for (let i = 0; i < this.keys.length; i++) {
