@@ -84,7 +84,6 @@ function addTabListings(tabIdsToBeAdded) {
     tabIdsToBeAdded.forEach(tabId => {
         addTabListing(tabId);
     });
-    // addListingElementToTabView(createPadding());
 }
 
 function addTabListing(tabId) {
@@ -122,7 +121,7 @@ function addTabListing(tabId) {
 
 function createPadding() {
     let listing = document.createElement("li");
-    listing.classList.add("container-fluid", "tab-listing");
+    listing.classList.add("container-fluid", "tab-padding");
     return listing;
 }
 async function createListingElement(tabId) {

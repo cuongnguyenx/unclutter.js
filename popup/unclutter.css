@@ -138,6 +138,14 @@ url('../shared/assets/avenir-roman.woff2') format('woff2'), /* Pretty Modern Bro
     color: #BBBBBB;
 }
 
+.tab-padding {
+    overflow: hidden;
+    transition: max-height 0.25s ease-in;
+    max-height: 3.5em;
+    margin: 1% 2% 0% 1%;
+    visibility: hidden;
+}
+
 .tab-listing:hover {
     transition: all 0.05s;
     background: #565656;
