@@ -22,7 +22,7 @@
             <ul class="overflow-hidden navbar-nav nav-pills nav-fill d-flex flex-row w-100">
                 <li class="nav-item">
                     <div class="nav-brand w-100 text-left align-items-center align-text-center nav-font-bond">
-                        <img class="d-inline-block m-0 logo" src="../shared/assets/logo-96.png" width="30" height="30"
+                        <img class="d-inline-block logo" src="../shared/assets/logo-96.png" width="30" height="30"
                             alt="">
                         UnClutter
                     </div>
@@ -80,14 +80,21 @@
                     </ul>
                 </div>
             </div>
-            <div class="w-100 h-100 popup-view" id="bookmarks-view">
-                <div class="overflow-auto mx-auto d-flex flex-row tab-list-container">
-                    <ul class="mx-2 my-2 w-100 list-group bookmark-list">
+            <div class="h-100 w-100 popup-view" id="bookmarks-view">
+                <div class="overflow-auto d-flex flex-row bookmark-list-container">
+                    <ul class="overflow-auto m-2 w-100 list-group bookmark-list">
+
                         <li class="rounded list-group-item bookmark-listing">
-                            <div class="d-flex flex-column">
-                                <p class="h-100 w-50 bookmark-category-title">Sample Category 1</p>
+
+                            <div class="d-flex flex-row">
+                                <p class="m-0 align-middle bookmark-category-symbol">🔬</p>
+                                <p class="my-0 mr-0 ml-1 flex-grow-1 bookmark-category-title">Sample Category 1</p>
+                                <a class="btn tab-button" data-toggle="tooltip" title="Dismiss">
+                                    <i class="fa fa-angle-right fa-2x"></i>
+                                </a>
                             </div>
-                            <ul class="list-group">
+
+                            <ul class="list-group m-0 p-0 bookmark-url-list removed">
                                 <li class="list-group-item">
                                     URL1
                                 </li>
@@ -98,13 +105,21 @@
                                     URL3
                                 </li>
                             </ul>
+
                         </li>
+
                         <li class="rounded list-group-item bookmark-listing">
-                            <p>Sample Category 2</p>
+                            <div class="d-flex flex-column">
+                                <p class="m-0 bookmark-category-title">Sample Category 2</p>
+                            </div>
                         </li>
+
                         <li class="rounded list-group-item bookmark-listing">
-                            <p>Sample Category 3</p>
+                            <div class="d-flex flex-column m-0 p-0">
+                                <p class="m-0 bookmark-category-title">Sample Category 3</p>
+                            </div>
                         </li>
+
                     </ul>
                 </div>
             </div>
