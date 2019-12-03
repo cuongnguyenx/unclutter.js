@@ -391,6 +391,7 @@ function createListingDeleteIconElement() {
 
 function addActionToButton(button, action, tabId, categories) {
     button.addEventListener("click", () => {
+        console.log("CLICK EVENT!");
         browser.runtime.sendMessage({
             action: action,
             actionInfo: {
@@ -648,7 +649,7 @@ function processChangesToTabQueue(tabQueueChanges) {
 }
 
 function processQueueAdditions(tabQueueChanges) {
-    removeTabListings(tabQueueChanges.newValue.filter(tab => !tabQueueChanges.oldValue.includes(tab)));
+    addTabListings(tabQueueChanges.newValue.filter(tab => !tabQueueChanges.oldValue.includes(tab)));
 }
 
 function processQueueRemovals(tabQueueChanges) {

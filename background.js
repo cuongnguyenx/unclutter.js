@@ -348,9 +348,6 @@ function updateSettings(settings) {
 browser.runtime.onMessage.addListener(onMessageListener);
 
 function onMessageListener(message, sender, sendResponse) {
-    if (!(message.tabId && message.action)) {
-        return;
-    }
     runAction(message);
 }
 
