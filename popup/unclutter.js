@@ -1,4 +1,5 @@
 const tabList = document.getElementById("tab-list");
+const bookmarkList = document.getElementById("bookmark-list");
 let viewNavElements = initializeNavBar();
 const NAV_ID_TO_VIEW = {
     "nav-tabs-view": document.getElementById("tabs-view"),
@@ -463,11 +464,35 @@ function transitionListingElementEntry(listingElement) {
     }, 10);
 }
 
+browser.storage.sync.get("bookmarks").then(loadInitialBookmarkList);
+
+function loadInitialBookmarkList(bookmarkResult) {
+    if (!(bookmarkResult && bookmarkResult.bookmarks)) {
+        return;
+    }
+
+    addBookmarkListings(bookmarkResult.bookmarks);
+}
+
+function addBookmarkListings(bookmarks) {
+    bookmarks.foreach((bookmark) => {
+        addBookmarkListing(bookmark);
+    });
+}
+
+function addBookmarkListing() {
+    // TODO: Implement bookmark listing additions
+
+}
+
 browser.storage.onChanged.addListener(onStorageChange);
 
 function onStorageChange(changes) {
     if (changes.temp) {
         processChangesToTabQueue(changes.temp);
+    }
+    if (changes.bookmarks) {
+        processChangesToBookmarkList(changes.bookmarks);
     }
 }
 
@@ -524,4 +549,8 @@ function updateTabList() {
     // if (tabList.childElementCount === 0) {
     //     tabList.textContent = "Empty!";
     // }
+}
+
+function processChangesToBookmarkList(bookmarks) {
+
 }
