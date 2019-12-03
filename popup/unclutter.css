@@ -388,8 +388,11 @@ body {
 }
 
 .bookmark-url-listing {
+    overflow: hidden;
     transition: background 0.2s;
     transition: border 0.1s;
+    transition: max-height 0.2s;
+    max-height: 8em;
     background: #d6d8d9;
     border-color: #000000;
     box-shadow: 3px 3px 3px #000000;
@@ -398,6 +401,10 @@ body {
 .bookmark-url-listing:hover {
     background: #888888;
     border-color: #d6d8d9;
+}
+
+.bookmark-url-listing.removed {
+    max-height: 0px;
 }
 
 .bookmark-url-listing:not(:first-child) {
