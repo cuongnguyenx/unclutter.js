@@ -319,12 +319,25 @@ body {
     color: #BBBBBB;
 }
 
+.bookmark-listing:hover {
+    transition: border-color 0.2s;
+    border-color: #8a208a;
+}
+
 .bookmark-listing:not(:first-child) {
     margin-top: 2%;
 }
 
 .bookmark-category-symbol {
     font-size: x-large;
+}
+
+.bookmark-category-header:hover {
+    cursor: pointer;
+}
+
+.bookmark-category-header:hover .bookmark-toggle-collapse-icon {
+    color: #FFFFFF;
 }
 
 .bookmark-category-title {
@@ -343,18 +356,12 @@ body {
     max-height: 0px;
 }
 
-.bookmark-category-header:hover {
-    cursor: pointer;
-}
-.bookmark-category-header:hover .bookmark-toggle-collapse-icon {
-    color: #FFFFFF;
-}
-
 .bookmark-url-listing {
     background: #d6d8d9;
 }
 
 .bookmark-url-listing:hover {
+    transition: background 0.2s;
     background: #888888;
 }
 
@@ -368,6 +375,7 @@ body {
     transition: color 0.2s;
     color: #000000 !important;
 }
+
 .bookmark-delete-button:hover {
     color: #555555 !important;
 }
