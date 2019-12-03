@@ -474,6 +474,7 @@ function loadInitialBookmarkList(bookmarkResult) {
     addBookmarkListings(bookmarkResult.bookmarks);
 }
 
+// example category id would be "bookmark-category-audio-visual"
 function addBookmarkCategory(categoryName) {
     if (!document.getElementById("bookmark-category-" + normifyCategories(categoryName))) {
         let categoryHeader = document.createElement('div');
