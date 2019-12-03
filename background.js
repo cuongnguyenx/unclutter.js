@@ -284,7 +284,6 @@ browser.storage.onChanged.addListener((changes, areaName) => {
         } else if (changes.bookmarks) {
             console.log(changes.bookmarks);
         }
-
     }
 });
 
