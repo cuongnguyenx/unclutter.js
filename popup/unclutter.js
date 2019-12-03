@@ -475,7 +475,7 @@ function loadInitialBookmarkList(bookmarkResult) {
 }
 
 function addBookmarkCategory(categoryName) {
-    if (!document.getElementById("bookmark-category-"))
+    if (!document.getElementById("bookmark-category-"));
 }
 
 function addBookmarkListings(bookmarks) {
