@@ -516,7 +516,7 @@ function createUrlListingTitleElement(bookmark) {
 }
 
 function hashString(string) {
-    var hash = 0,
+    let hash = 0,
         i, chr;
     if (string.length === 0) return hash;
     for (i = 0; i < string.length; i++) {
@@ -555,7 +555,34 @@ function addUrlListingToCategory(urlListing, category) {
     addBookmarkCategory(category);
     let bookmarkCategoryElement = document.getElementById(`bookmark-category-${normifyCategories(category)}`);
 
+    urlListing.classList.add("removed");
 
+    bookmarkCategoryElement.getElementsByClassName("bookmark-url-list")[0].appendChild(urlListing);
+
+    bookmarkCategoryElement.getElementsByClassName("bookmark-category-header")[0].addEventListener("click", () => {
+        toggleCategoryCollapse(bookmarkCategoryElement);
+    });
+
+    setTimeout(() => {
+        urlListing.classList.remove("removed");
+    }, 10);
+}
+
+function toggleCategoryCollapse(category) {
+    let urlList = category.getElementsByClassName("bookmark-url-list")[0];
+    if (urlList.classList.contains("removed")) {
+        expandCategory(urlList);
+    } else {
+        collapseCategory(urlList);
+    }
+}
+
+function collapseCategory(urlList) {
+    urlList.classList.add("removed");
+}
+
+function expandCategory(urlList) {
+    urlList.classList.remove("removed");
 }
 
 // example category id would be "bookmark-category-audio-visual"
@@ -659,25 +686,6 @@ function updateTabList() {
     // }
 }
 
-document.getElementById("bookmark-category-sample")
-    .getElementsByClassName("bookmark-category-header")[0]
-    .addEventListener("click", () => {
-        toggleCategoryCollapse(document.getElementById("bookmark-category-sample"));
-    });
-
-function toggleCategoryCollapse(category) {
-    let urlList = category.getElementsByClassName("bookmark-url-list")[0];
-    if (urlList.classList.contains("removed")) {
-        expandCategory(urlList);
-    } else {
-        collapseCategory(urlList);
-    }
-}
-
-function collapseCategory(urlList) {
-    urlList.classList.add("removed");
-}
-
-function expandCategory(urlList) {
-    urlList.classList.remove("removed");
+function processChangesToBookmarkList(bookmarkChanges) {
+    // TODO: Add bookmark list updating
 }
