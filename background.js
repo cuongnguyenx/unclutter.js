@@ -75,7 +75,7 @@ async function setupBookmarkStorage() {
     return browser.storage.sync.get("bookmarks")
         .then((queryResult) => {
             // TODO remove || true in prod
-            if (!queryResult.bookmarks || true) {
+            if (!queryResult.bookmarks) {
                 initializeBookmarks();
             }
         });

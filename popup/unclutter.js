@@ -469,7 +469,6 @@ function loadInitialBookmarkList(bookmarkResult) {
     if (!(bookmarkResult && bookmarkResult.bookmarks)) {
         return;
     }
-
     addBookmarkListings(bookmarkResult.bookmarks);
 }
 
@@ -546,8 +545,10 @@ function createUrlListingDeleteIconElement() {
     return urlListingDeleteIcon;
 }
 
-function removeBookmarkListing(bookmark) {
-    // TODO: Implement bookmark removal
+function removeBookmarkListings(bookmarks) {
+    bookmarks.foreach((bookmark) => {
+        removeBookmarkListing(bookmark);
+    });
 }
 
 function addUrlListingToCategory(urlListing, category) {
@@ -686,5 +687,14 @@ function updateTabList() {
 }
 
 function processChangesToBookmarkList(bookmarkChanges) {
-    // TODO: Add bookmark list updating
+    processBookmarkAddition(bookmarkChanges);
+    processBookmarkRemovals(bookmarkChanges);
+}
+
+function processBookmarkAddition(bookmarkChanges) {
+    addBookmarkListings(bookmarkChanges.newValue.filter(bookmark => !bookmarkChanges.oldValue.includes(bookmark)))
+}
+
+function processBookmarkRemovals(bookmarkChanges) {
+    removeBookmarkListings(bookmarkChanges.oldValue.filter(bookmark => !bookmarkChanges.newValue.includes(bookmark)))
 }
