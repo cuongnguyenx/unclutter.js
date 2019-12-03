@@ -662,7 +662,7 @@ function addBookmarkCategory(categoryName) {
         collapseIcon.appendChild(collapseHelper);
 
         let urlList = document.createElement("ul")
-        urlList.classList.add("list-group", "m-0", "px-2", "pb-2", "pt-4", "bookmark-url-list")
+        urlList.classList.add("list-group", "m-0", "px-2", "pb-2", "pt-4", "bookmark-url-list", "removed")
 
         categoryHeader.append(categorySymbol, categoryTitle, collapseIcon, collapseHelper);
         categoryWrapper.append(categoryHeader, urlList);
