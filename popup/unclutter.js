@@ -475,7 +475,36 @@ function loadInitialBookmarkList(bookmarkResult) {
 }
 
 function addBookmarkCategory(categoryName) {
-    if (!document.getElementById("bookmark-category-"))
+    if (!document.getElementById("bookmark-category-" + normifyCategories(categoryName))) {
+        let categoryHeader = document.createElement('div');
+        categoryHeader.classList.add("d-flex", "flex-row", "bookmark-category-header");
+
+        let categorySymbol = document.createElement("p");
+        categorySymbol.classList.add("m-0", "align-middle", "bookmark-category-symbol");
+        categorySymbol.textContent = getCategoryEmoji(categoryName);
+
+        let categoryTitle = document.createElement("p");
+        categoryTitle.classList.add("m-0", "pl-1", "flex-grow-1", "bookmark-category-title")
+        categoryTitle.textContent = categoryName
+
+        let collapseIcon = document.createElement("a")
+        collapseIcon.classList.add("btn", "bookmark-toggle-collapse-icon")
+
+        let collapseHelper = document.createElement("i");
+        collapseHelper.classList.add("fa fa-angle-right fa-2x")
+        collapseIcon.appendChild(collapseHelper);
+
+        categoryHeader.append(categorySymbol, categoryTitle, collapseIcon, collapseHelper);
+    }
+}
+
+function normifyCategories(categoryName) {
+    let words = categoryName.split(' ');
+    let retString = "";
+    for (var i = 0; i < words.length; i++) {
+        retString = retString + words[i].toLowerCase() + "-";
+    }
+    return retString.substring(0, retString.length - 1);
 }
 
 function addBookmarkListings(bookmarks) {
