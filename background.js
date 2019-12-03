@@ -357,33 +357,34 @@ function onMessageListener(message, sender, sendResponse) {
 const POSSIBLE_ACTIONS = {
     dismiss: dismissTab,
     save_close: saveCloseTab,
-    perm_close: permCloseTab
+    perm_close: permCloseTab,
+    remove_bookmark: deleteBookmark
 };
 
 function runAction(actionToPerform) {
-    POSSIBLE_ACTIONS[actionToPerform.action](actionToPerform.tabId, actionToPerform.categories);
+    POSSIBLE_ACTIONS[actionToPerform.action](actionToPerform.actionInfo);
 }
 
-function dismissTab(tabId) {
-    stopTrackingTab(tabId);
+function dismissTab(actionInfo) {
+    stopTrackingTab(actionInfo.tabId);
 }
 
-function saveCloseTab(tabId, categories) {
-    addBookmark(tabId, categories).then(() => {
-        stopTrackingTab(tabId);
-        removeTab(tabId);
+function saveCloseTab(actionInfo) {
+    addBookmark(actionInfo.tabId, actionInfo.categories).then(() => {
+        stopTrackingTab(actionInfo.tabId);
+        removeTab(actionInfo.tabId);
     });
 }
 
-async function addBookmark(tabId, categories) {
-    return browser.tabs.get(tabId).then(async (tab) => {
+async function addBookmark(actionInfo) {
+    return browser.tabs.get(actionInfo.tabId).then(async (tab) => {
         let bookmarks = (await browser.storage.sync.get("bookmarks")).bookmarks;
 
         if (bookmarkAlreadyExists(bookmarks, tab)) {
             return;
         }
 
-        await saveNewBookmark(bookmarks, tab, categories);
+        await saveNewBookmark(bookmarks, tab, actionInfo.categories);
     });
 }
 
@@ -412,4 +413,19 @@ function permCloseTab(tabId) {
 function stopTrackingTab(tabId) {
     removeTabFromMaps(tabId);
     removeFromTemp(tabId);
+}
+
+function deleteBookmark(actionInfo) {
+    browser.storage.sync.get("bookmarks").then(async (bookmarkResult) => {
+        let bookmarks = bookmarkResult.bookmarks;
+
+        let bookmarkIndex = bookmarkResult.findIndex((element) => element.url === actionInfo.url);
+
+        if (bookmarkIndex > -1) {
+            bookmarks.splice(bookmarkIndex, 1);
+            await browser.storage.sync.set({
+                bookmarks: bookmarks
+            });
+        }
+    });
 }

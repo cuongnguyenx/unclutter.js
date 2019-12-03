@@ -208,6 +208,7 @@ function createListingFavIconElement(tabPromise) {
 }
 
 function setListingFavIcon(listingFavIcon, url) {
+    console.log("http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico");
     listingFavIcon.src = "http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico";
 }
 
@@ -391,9 +392,11 @@ function createListingDeleteIconElement() {
 function addActionToButton(button, action, tabId, categories) {
     button.addEventListener("click", () => {
         browser.runtime.sendMessage({
-            tabId: tabId,
-            categories: categories,
-            action: action
+            action: action,
+            actionInfo: {
+                tabId: tabId,
+                categories: categories
+            }
         });
     });
 }
@@ -484,7 +487,6 @@ function addBookmarkListing(bookmark) {
     bookmark.category.foreach((category) => {
         addUrlListingToCategory(urlListing, category);
     });
-    // TODO: Implement bookmark listing additions
 }
 
 function createUrlListingElement(bookmark) {
@@ -545,6 +547,13 @@ function createUrlListingDeleteIconElement() {
     return urlListingDeleteIcon;
 }
 
+function removeBookmarkListing(bookmark) {
+    browser.runtime.sendMessage({
+        action: "remove_bookmark",
+        actionInfo: {
+            url: bookmark.url
+        }
+    });
 function removeBookmarkListings(bookmarks) {
     bookmarks.foreach((bookmark) => {
         removeBookmarkListing(bookmark);
