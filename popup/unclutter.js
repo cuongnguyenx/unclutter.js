@@ -474,6 +474,90 @@ function loadInitialBookmarkList(bookmarkResult) {
     addBookmarkListings(bookmarkResult.bookmarks);
 }
 
+function addBookmarkListings(bookmarks) {
+    bookmarks.foreach((bookmark) => {
+        addBookmarkListing(bookmark);
+    });
+}
+
+function addBookmarkListing(bookmark) {
+    let urlListing = createUrlListingElement(bookmark);
+
+    bookmark.category.foreach((category) => {
+        addUrlListingToCategory(urlListing, category);
+    });
+    // TODO: Implement bookmark listing additions
+}
+
+function createUrlListingElement(bookmark) {
+    let urlListing = document.createElement("li");
+    urlListing.classList.add("list-group-item", "d-flex flex-row", "bookmark-url-listing");
+
+    urlListing.append(
+        createUrlListingTitleElement(bookmark),
+        createUrlListingDeleteElement(bookmark)
+    );
+
+    return urlListing;
+}
+
+function createUrlListingTitleElement(bookmark) {
+    let urlListingTitle = document.createElement("p");
+    urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
+    urlListingTitle.id = `url-listing-${hashString(bookmark.url)}`;
+
+    urlListingTitle.addEventListener("click", () => {
+        browser.tabs.create({
+            url: bookmark.url
+        });
+    });
+
+    return urlListingTitle;
+}
+
+function hashString(string) {
+    var hash = 0,
+        i, chr;
+    if (string.length === 0) return hash;
+    for (i = 0; i < string.length; i++) {
+        chr = string.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
+
+function createUrlListingDeleteElement(bookmark) {
+    let urlListingDeleteButton = document.createElement("a");
+    urlListingDeleteButton.classList.add("btn", "btn-danger", "bookmark-delete-button");
+
+    urlListingDeleteButton.appendChild(createUrlListingDeleteIconElement());
+
+    urlListingDeleteButton.addEventListener("click", () => {
+        removeBookmarkListing(bookmark);
+    });
+
+    return urlListingDeleteButton;
+}
+
+function createUrlListingDeleteIconElement() {
+    let urlListingDeleteIcon = document.createElement("i");
+    urlListingDeleteIcon.classList.add("fa", "fa-trash", "fa-2x");
+
+    return urlListingDeleteIcon;
+}
+
+function removeBookmarkListing(bookmark) {
+    // TODO: Implement bookmark removal
+}
+
+function addUrlListingToCategory(urlListing, category) {
+    addBookmarkCategory(category);
+    let bookmarkCategoryElement = document.getElementById(`bookmark-category-${normifyCategories(category)}`);
+
+
+}
+
 // example category id would be "bookmark-category-audio-visual"
 function addBookmarkCategory(categoryName) {
     if (!document.getElementById("bookmark-category-" + normifyCategories(categoryName))) {
@@ -507,16 +591,6 @@ function normifyCategories(categoryName) {
         retString = retString + words[i].toLowerCase() + "-";
     }
     return retString.substring(0, retString.length - 1);
-}
-
-function addBookmarkListings(bookmarks) {
-    bookmarks.foreach((bookmark) => {
-        addBookmarkListing(bookmark);
-    });
-}
-
-function addBookmarkListing() {
-    // TODO: Implement bookmark listing additions
 }
 
 browser.storage.onChanged.addListener(onStorageChange);
