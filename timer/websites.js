@@ -1,7 +1,7 @@
 class Categorizer {
     constructor() {
         this.categories_websites = [email, audiovisual, socialMedia, adult, arts, business, computers, games, health, news, recreation,
-            education, science, shopping, sports]
+            education, science, shopping, sports, miscellaneous]
         this.keys = ["Email", "Audio Visual", "Social Media", "Adult", "Arts", "Business", "Computers", "Games", "Health", "News",
             "Recreation", "Education", "Science", "Shopping", "Sports", "Miscellaneous"]
 
@@ -33,6 +33,8 @@ class Categorizer {
         return category
     }
 }
+
+let miscellaneous = ""
 
 let email = "www.mail.aol.com\n" +
             "www.fastmail.com\n" +

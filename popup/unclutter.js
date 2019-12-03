@@ -538,19 +538,6 @@ function hashString(string) {
     return hash;
 }
 
-function createUrlListingTitleElement(bookmark) {
-    let urlListingTitle = document.createElement("p");
-    urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
-
-    urlListingTitle.addEventListener("click", () => {
-        browser.tabs.create({
-            url: bookmark.url
-        });
-    });
-
-    return urlListingTitle;
-}
-
 function createUrlListingDeleteElement(bookmark) {
     let urlListingDeleteButton = document.createElement("a");
     urlListingDeleteButton.classList.add("btn", "btn-danger", "bookmark-delete-button");
@@ -614,15 +601,12 @@ function removeBookmarkCategory(bookmarkCategoryElement) {
 
 function addUrlListingToCategory(urlListing, category) {
     addBookmarkCategory(category);
-    let bookmarkCategoryElement = document.getElementById(`bookmark-category-${normifyCategories(category)}`);
+    console.log(category)
+    let bookmarkCategoryElement = document.getElementById(`bookmark-category-` + normifyCategories(category));
 
     urlListing.classList.add("removed");
 
     bookmarkCategoryElement.getElementsByClassName("bookmark-url-list")[0].appendChild(urlListing);
-
-    bookmarkCategoryElement.getElementsByClassName("bookmark-category-header")[0].addEventListener("click", () => {
-        toggleCategoryCollapse(bookmarkCategoryElement);
-    });
 
     setTimeout(() => {
         urlListing.classList.remove("removed");
@@ -632,8 +616,10 @@ function addUrlListingToCategory(urlListing, category) {
 function toggleCategoryCollapse(category) {
     let urlList = category.getElementsByClassName("bookmark-url-list")[0];
     if (urlList.classList.contains("removed")) {
+        console.log("Expand")
         expandCategory(urlList);
     } else {
+        console.log("Collapse")
         collapseCategory(urlList);
     }
 }
@@ -648,9 +634,15 @@ function expandCategory(urlList) {
 
 // example category id would be "bookmark-category-audio-visual"
 function addBookmarkCategory(categoryName) {
+
     if (!document.getElementById("bookmark-category-" + normifyCategories(categoryName))) {
+        let categoryWrapper = document.createElement("li");
+        categoryWrapper.classList.add("rounded", "list-group-item", "bookmark-listing")
+        categoryWrapper.id = "bookmark-category-" + normifyCategories(categoryName)
+
         let categoryHeader = document.createElement('div');
         categoryHeader.classList.add("d-flex", "flex-row", "bookmark-category-header");
+        categoryHeader.addEventListener("click", function(){toggleCategoryCollapse(categoryWrapper)});
 
         let categorySymbol = document.createElement("p");
         categorySymbol.classList.add("m-0", "align-middle", "bookmark-category-symbol");
@@ -667,8 +659,13 @@ function addBookmarkCategory(categoryName) {
         collapseHelper.classList.add("fa", "fa-angle-right", "fa-2x")
         collapseIcon.appendChild(collapseHelper);
 
+        let urlList = document.createElement("ul")
+        urlList.classList.add("list-group", "m-0", "px-2", "pb-2", "pt-4", "bookmark-url-list")
+
         categoryHeader.append(categorySymbol, categoryTitle, collapseIcon, collapseHelper);
-        bookmarkList.append(categoryHeader);
+        categoryWrapper.append(categoryHeader, urlList);
+
+        bookmarkList.append(categoryWrapper);
     }
 }
 
