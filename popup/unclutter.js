@@ -474,6 +474,10 @@ function loadInitialBookmarkList(bookmarkResult) {
     addBookmarkListings(bookmarkResult.bookmarks);
 }
 
+function addBookmarkCategory(categoryName) {
+    if (!document.getElementById("bookmark-category-"))
+}
+
 function addBookmarkListings(bookmarks) {
     bookmarks.foreach((bookmark) => {
         addBookmarkListing(bookmark);
