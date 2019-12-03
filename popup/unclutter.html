@@ -82,26 +82,29 @@
             </div>
             <div class="h-100 w-100 popup-view" id="bookmarks-view">
                 <div class="overflow-auto d-flex flex-row bookmark-list-container">
-                    <ul class="overflow-auto m-2 w-100 list-group bookmark-list">
+                    <ul class="overflow-auto m-2 w-100 list-group bookmark-list" id="bookmark-list">
 
                         <li class="rounded list-group-item bookmark-listing">
 
-                            <div class="d-flex flex-row">
+                            <div class="d-flex flex-row bookmark-category-header">
                                 <p class="m-0 align-middle bookmark-category-symbol">🔬</p>
-                                <p class="my-0 mr-0 ml-1 flex-grow-1 bookmark-category-title">Sample Category 1</p>
-                                <a class="btn tab-button" data-toggle="tooltip" title="Dismiss">
+                                <p class="m-0 pl-1 flex-grow-1 bookmark-category-title">Sample Category 1</p>
+                                <a class="btn bookmark-toggle-collapse-icon">
                                     <i class="fa fa-angle-right fa-2x"></i>
                                 </a>
                             </div>
 
-                            <ul class="list-group m-0 p-0 bookmark-url-list removed">
-                                <li class="list-group-item">
-                                    URL1
+                            <ul class="list-group mt-3 p-0 bookmark-url-list">
+                                <li class="list-group-item d-flex flex-row bookmark-url-listing">
+                                    <p class="m-0 flex-grow-1 bookmark-url-listing-title">URL 1</p>
+                                    <a class="btn bookmark-delete-button">
+                                        <i class="fa fa-trash fa-2x"></i>
+                                    </a>
                                 </li>
-                                <li class="list-group-item">
+                                <li class="list-group-item bookmark-url-listing">
                                     URL2
                                 </li>
-                                <li class="list-group-item">
+                                <li class="list-group-item bookmark-url-listing">
                                     URL3
                                 </li>
                             </ul>

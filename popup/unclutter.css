@@ -342,3 +342,32 @@ body {
 .bookmark-url-list.removed {
     max-height: 0px;
 }
+
+.bookmark-category-header:hover {
+    cursor: pointer;
+}
+.bookmark-category-header:hover .bookmark-toggle-collapse-icon {
+    color: #FFFFFF;
+}
+
+.bookmark-url-listing {
+    background: #d6d8d9;
+}
+
+.bookmark-url-listing:hover {
+    background: #888888;
+}
+
+.bookmark-url-listing-title {
+    font-size: 2.0rem;
+    font-weight: 340;
+    color: #000000;
+}
+
+.bookmark-delete-button {
+    transition: color 0.2s;
+    color: #000000 !important;
+}
+.bookmark-delete-button:hover {
+    color: #555555 !important;
+}

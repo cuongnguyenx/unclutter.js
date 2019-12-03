@@ -273,7 +273,7 @@ browser.storage.onChanged.addListener((changes, areaName) => {
         if (changes.settings) {
             updateSettings(changes.settings);
         } else if (changes.bookmarks) {
-            console.log(changes.bookmarks)
+            console.log(changes.bookmarks);
         }
 
     }
