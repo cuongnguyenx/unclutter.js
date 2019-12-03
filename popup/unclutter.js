@@ -585,6 +585,25 @@ function updateTabList() {
     // }
 }
 
-function processChangesToBookmarkList(bookmarks) {
+document.getElementById("bookmark-category-sample")
+    .getElementsByClassName("bookmark-category-header")[0]
+    .addEventListener("click", () => {
+        toggleCategoryCollapse(document.getElementById("bookmark-category-sample"));
+    });
 
+function toggleCategoryCollapse(category) {
+    let urlList = category.getElementsByClassName("bookmark-url-list")[0];
+    if (urlList.classList.contains("removed")) {
+        expandCategory(urlList);
+    } else {
+        collapseCategory(urlList);
+    }
+}
+
+function collapseCategory(urlList) {
+    urlList.classList.add("removed");
+}
+
+function expandCategory(urlList) {
+    urlList.classList.remove("removed");
 }

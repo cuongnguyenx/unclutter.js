@@ -333,6 +333,8 @@ body {
 }
 
 .bookmark-listing {
+    transition: border-color 0.2s;
+    transition: background 0.2s;
     overflow: none;
     border-color: #BBBBBB;
     background: #646464;
@@ -341,7 +343,7 @@ body {
 }
 
 .bookmark-listing:hover {
-    transition: border-color 0.2s;
+    background: #565656;
     border-color: #8a208a;
 }
 
@@ -353,8 +355,13 @@ body {
     cursor: pointer;
 }
 
+.bookmark-toggle-collapse-icon {
+    transition: color 0.2s;
+}
+
+.bookmark-toggle-collapse-icon:hover,
 .bookmark-category-header:hover .bookmark-toggle-collapse-icon {
-    color: #FFFFFF;
+    color: #FFFFFF !important;
 }
 
 .bookmark-category-symbol {
@@ -374,17 +381,23 @@ body {
 }
 
 .bookmark-url-list.removed {
+    overflow: hidden;
+    margin: 0px !important;
+    padding: 0px !important;
     max-height: 0px;
 }
 
 .bookmark-url-listing {
     transition: background 0.2s;
+    transition: border 0.1s;
     background: #d6d8d9;
+    border-color: #000000;
     box-shadow: 3px 3px 3px #000000;
 }
 
 .bookmark-url-listing:hover {
     background: #888888;
+    border-color: #d6d8d9;
 }
 
 .bookmark-url-listing:not(:first-child) {
@@ -392,13 +405,13 @@ body {
 }
 
 .bookmark-url-listing-title {
+    transition: color 0.1s;
     font-size: 2.0rem;
     font-weight: 340;
     color: #000000;
 }
 
 .bookmark-url-listing-title:hover {
-    transition: color 0.2s;
     color: #FFFFFF;
     cursor: pointer;
 }
