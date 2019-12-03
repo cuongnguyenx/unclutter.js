@@ -208,7 +208,6 @@ function createListingFavIconElement(tabPromise) {
 }
 
 function setListingFavIcon(listingFavIcon, url) {
-    console.log("http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico");
     listingFavIcon.src = "http://icons.duckduckgo.com/ip2/" + getLinkRoot(url) + ".ico";
 }
 
