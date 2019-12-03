@@ -482,7 +482,6 @@ function addBookmarkListings(bookmarks) {
 
 function addBookmarkListing() {
     // TODO: Implement bookmark listing additions
-
 }
 
 browser.storage.onChanged.addListener(onStorageChange);

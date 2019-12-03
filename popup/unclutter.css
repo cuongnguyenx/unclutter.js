@@ -7,8 +7,9 @@ body {
 
 @font-face {
     font-family: 'Avenir-R';
-    src: url('../shared/assets/avenir-roman.otf') format('opentype');
-url('../shared/assets/avenir-roman.woff2') format('woff2'), /* Pretty Modern Browsers */
+    src: url('../shared/assets/avenir-roman.otf') format('opentype'),
+        url('../shared/assets/avenir-roman.woff2') format('woff2');
+    /* Pretty Modern Browsers */
 }
 
 .tooltip.bs-tooltip-right .arrow:before {
@@ -348,10 +349,6 @@ url('../shared/assets/avenir-roman.woff2') format('woff2'), /* Pretty Modern Bro
     margin-top: 2%;
 }
 
-.bookmark-category-symbol {
-    font-size: x-large;
-}
-
 .bookmark-category-header:hover {
     cursor: pointer;
 }
@@ -360,16 +357,20 @@ url('../shared/assets/avenir-roman.woff2') format('woff2'), /* Pretty Modern Bro
     color: #FFFFFF;
 }
 
+.bookmark-category-symbol {
+    font-size: x-large;
+}
+
 .bookmark-category-title {
     font-size: 2.0rem;
     font-weight: 340;
 }
 
 .bookmark-url-list {
-    overflow-x: hidden;
+    overflow-x: none;
     overflow-y: auto;
     transition: max-height 0.2s;
-    max-height: 100em;
+    max-height: 20em;
 }
 
 .bookmark-url-list.removed {
@@ -377,12 +378,17 @@ url('../shared/assets/avenir-roman.woff2') format('woff2'), /* Pretty Modern Bro
 }
 
 .bookmark-url-listing {
+    transition: background 0.2s;
     background: #d6d8d9;
+    box-shadow: 3px 3px 3px #000000;
 }
 
 .bookmark-url-listing:hover {
-    transition: background 0.2s;
     background: #888888;
+}
+
+.bookmark-url-listing:not(:first-child) {
+    margin-top: 2%;
 }
 
 .bookmark-url-listing-title {
@@ -391,11 +397,8 @@ url('../shared/assets/avenir-roman.woff2') format('woff2'), /* Pretty Modern Bro
     color: #000000;
 }
 
-.bookmark-delete-button {
+.bookmark-url-listing-title:hover {
     transition: color 0.2s;
-    color: #000000 !important;
-}
-
-.bookmark-delete-button:hover {
-    color: #555555 !important;
+    color: #FFFFFF;
+    cursor: pointer;
 }
