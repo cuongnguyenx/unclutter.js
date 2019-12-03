@@ -609,8 +609,6 @@ function addUrlListingToCategory(urlListing, category) {
     console.log(category)
     let bookmarkCategoryElement = document.getElementById(`bookmark-category-` + normifyCategories(category));
 
-    urlListing.classList.add("removed");
-
     bookmarkCategoryElement.getElementsByClassName("bookmark-url-list")[0].appendChild(urlListing);
 
     setTimeout(() => {
@@ -618,13 +616,12 @@ function addUrlListingToCategory(urlListing, category) {
     }, 10);
 }
 
-function toggleCategoryCollapse(category) {
-    let urlList = category.getElementsByClassName("bookmark-url-list")[0];
+function toggleCategoryCollapse(categoryListing) {
+    let urlList = categoryListing.getElementsByClassName("bookmark-url-list")[0];
     if (urlList.classList.contains("removed")) {
-        console.log("Expand")
         expandCategory(urlList);
-    } else {
-        console.log("Collapse")
+    }
+    else {
         collapseCategory(urlList);
     }
 }
