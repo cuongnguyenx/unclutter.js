@@ -199,7 +199,7 @@ function createListingTitleTextElement(tabPromise) {
 }
 
 function setListingTitleText(listingTitleText, title) {
-    listingTitleText.textContent = fitTitleTextToListing(title);
+    listingTitleText.textContent = fitTitleTextToListing(title, "tabs");
 }
 
 function createListingFavIconElement(tabPromise) {
@@ -237,9 +237,14 @@ function getLinkRoot(link) {
     return link.substring(0, endIndex).replace("https://", "").replace("www.", "");
 }
 
-const GLOBAL_TITLE_LENGTH_LIMIT = 14;
+let GLOBAL_TITLE_LENGTH_LIMIT = 14;
 
-function fitTitleTextToListing(title) {
+function fitTitleTextToListing(title, section) {
+    if (section === "bookmarks") {
+        GLOBAL_TITLE_LENGTH_LIMIT = 32;
+    } else {
+        GLOBAL_TITLE_LENGTH_LIMIT = 14;
+    }
     if (title.length < GLOBAL_TITLE_LENGTH_LIMIT) {
         return title;
     }
@@ -514,7 +519,7 @@ function createUrlListingElement(bookmark) {
 function createUrlListingTitleElement(bookmark) {
     let urlListingTitle = document.createElement("p");
     urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
-    urlListingTitle.textContent = fitTitleTextToListing(bookmark.title)
+    urlListingTitle.textContent = fitTitleTextToListing(bookmark.title, "bookmarks")
     urlListingTitle.id = `url-listing-${bookmark.url}`;
 
     urlListingTitle.addEventListener("click", () => {

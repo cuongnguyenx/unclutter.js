@@ -50,7 +50,7 @@ body {
     font-size: large;
 }
 
-#myInput {
+#bookmark-filter {
     background-image: url('../shared/assets/search.png'); /* Add a search icon to input */
     background-position: 10px 12px; /* Position the search icon */
     background-size: 24px 24px;
