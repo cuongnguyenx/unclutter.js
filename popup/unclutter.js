@@ -476,7 +476,7 @@ function loadInitialBookmarkList(bookmarkResult) {
 }
 
 function addBookmarkListings(bookmarks) {
-    bookmarks.foreach((bookmark) => {
+    bookmarks.forEach((bookmark) => {
         addBookmarkListing(bookmark);
     });
 }
@@ -484,7 +484,7 @@ function addBookmarkListings(bookmarks) {
 function addBookmarkListing(bookmark) {
     let urlListing = createUrlListingElement(bookmark);
 
-    bookmark.category.foreach((category) => {
+    bookmark.category.forEach((category) => {
         addUrlListingToCategory(urlListing, category);
     });
 }
@@ -534,7 +534,7 @@ function createUrlListingDeleteElement(bookmark) {
     urlListingDeleteButton.appendChild(createUrlListingDeleteIconElement());
 
     urlListingDeleteButton.addEventListener("click", () => {
-        removeBookmarkListing(bookmark);
+        removeBookmark(bookmark);
     });
 
     return urlListingDeleteButton;
@@ -547,15 +547,17 @@ function createUrlListingDeleteIconElement() {
     return urlListingDeleteIcon;
 }
 
-function removeBookmarkListing(bookmark) {
+function removeBookmark(bookmark) {
     browser.runtime.sendMessage({
         action: "remove_bookmark",
         actionInfo: {
             url: bookmark.url
         }
     });
+}
+
 function removeBookmarkListings(bookmarks) {
-    bookmarks.foreach((bookmark) => {
+    bookmarks.forEach((bookmark) => {
         removeBookmarkListing(bookmark);
     });
 }

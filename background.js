@@ -370,7 +370,7 @@ function dismissTab(actionInfo) {
 }
 
 function saveCloseTab(actionInfo) {
-    addBookmark(actionInfo.tabId, actionInfo.categories).then(() => {
+    addBookmark(actionInfo).then(() => {
         stopTrackingTab(actionInfo.tabId);
         removeTab(actionInfo.tabId);
     });
@@ -405,9 +405,9 @@ async function saveNewBookmark(bookmarks, tab, categories) {
     });
 }
 
-function permCloseTab(tabId) {
-    stopTrackingTab(tabId);
-    removeTab(tabId);
+function permCloseTab(actionInfo) {
+    stopTrackingTab(actionInfo.tabId);
+    removeTab(actionInfo.tabId);
 }
 
 function stopTrackingTab(tabId) {
