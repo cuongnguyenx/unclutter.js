@@ -73,10 +73,7 @@ function initializeSettingsViewNav() {
     return settingsViewNav;
 }
 
-// TODO: Create bookmarks view
 // TODO: Create settings view
-
-// TODO: Add visual categorization system to tab view
 
 browser.storage.local.get("temp").then(loadInitialTabList);
 
@@ -96,6 +93,7 @@ function addTabListings(tabIdsToBeAdded) {
 
 function addTabListing(tabId) {
     console.log(tabId);
+    // TODO: Update CSS for tab listings to use a flex box like the bookmark list so that sizing is more consistent
     /* Listing HTML:
     <li class="list-group-item container-fluid tab-listing" id="tab-listing-1">
         <div class="row no-gutters tab-listing-content">
@@ -454,10 +452,10 @@ function addBookmarkListings(bookmarks) {
 }
 
 function addBookmarkListing(bookmark) {
-    let urlListing = createUrlListingElement(bookmark);
-
+    // FIXME: Bug exists where duplicate listings appear in one category when a bookmark belongs to multiple categories.
+    // Note that this only occurs when the bookmark is first added. Reloading the UI fixes the issue
     bookmark.category.forEach((category) => {
-        addUrlListingToCategory(urlListing, category);
+        addUrlListingToCategory(createUrlListingElement(bookmark), category);
     });
 }
 
@@ -567,7 +565,6 @@ function expandCategory(urlList) {
 
 // example category id would be "bookmark-category-audio-visual"
 function addBookmarkCategory(categoryName) {
-
     if (!document.getElementById("bookmark-category-" + normalizeCategories(categoryName))) {
         let categoryWrapper = document.createElement("li");
         categoryWrapper.classList.add("rounded", "list-group-item", "bookmark-listing");
@@ -711,6 +708,9 @@ function removeBookmarkListing(bookmark) {
 }
 
 function deleteBookmarkListingElement(urlHash) {
+    // FIXME: Delete will repeatedly try to delete the same listing element because
+    // the listing will not be deleted by the time it is called again. Find a way to
+    // force the method to wait or find all elements at once with matching IDs.
     let urlListing = document.getElementById(`url-listing-${urlHash}`);
 
     urlListing.addEventListener("transitionend", (event) => {
