@@ -58,11 +58,11 @@ function initializeBookmarksViewNav() {
 }
 
 function handleSearchBarKeyTyped() {
-    let search_query = document.querySelector("#bookmark-filter").value
-    let bookmarkListings = document.getElementsByClassName("bookmark-url-listing")
+    let search_query = document.querySelector("#bookmark-filter").value;
+    let bookmarkListings = document.getElementsByClassName("bookmark-url-listing");
     bookmarkListings.forEach(listings => {
-        let textCont = bookmarkListings.getElementById("bookmark-url-listing-title")
-    })
+        let textCont = bookmarkListings.getElementById("bookmark-url-listing-title");
+    });
 }
 
 function initializeSettingsViewNav() {
@@ -95,7 +95,7 @@ function addTabListings(tabIdsToBeAdded) {
 }
 
 function addTabListing(tabId) {
-    console.log(tabId)
+    console.log(tabId);
     /* Listing HTML:
     <li class="list-group-item container-fluid tab-listing" id="tab-listing-1">
         <div class="row no-gutters tab-listing-content">
@@ -153,7 +153,9 @@ async function getCategoriesOfWebsite(tabId) {
 function createListingContentElement(tabPromise, categories) {
     let listingContent = document.createElement("div");
     listingContent.classList.add("row", "no-gutters", "tab-listing-content");
-    listingContent.append(createListingIconSectionElement(tabPromise), createListingLeftSectionElement(tabPromise), createListingMiddleSectionElement(categories),
+    listingContent.append(createListingIconSectionElement(tabPromise),
+        createListingLeftSectionElement(tabPromise),
+        createListingMiddleSectionElement(categories),
         createListingRightSectionElement(tabPromise, categories));
     return listingContent;
 }
@@ -175,31 +177,54 @@ function createListingLeftSectionElement(tabPromise) {
 function navigateToAppropriateTab(id) {
     browser.tabs.update(id, {
         active: true
-    }).then((e) => {
+    }).then(() => {
         console.log("Tab has become active, id: " + id);
-    })
+    });
 }
 
 function createListingTitleTextElement(tabPromise) {
     let listingTitleText = document.createElement("p");
     listingTitleText.classList.add("align-middle", "tab-text");
     tabPromise.then(tab => {
-        if (!tab) {
-            return;
-        }
-        setListingTitleText(listingTitleText, tab.title);
-        listingTitleText.setAttribute("data-toggle", "tooltip");
-        listingTitleText.setAttribute("title", tab.url);
-        listingTitleText.addEventListener("click", function () {
-            navigateToAppropriateTab(tab.id);
-        })
+        prepareListingTitleText(listingTitleText, tab);
     });
 
     return listingTitleText;
 }
 
+function prepareListingTitleText(listingTitleText, tab) {
+    if (!tab) {
+        return;
+    }
+    setListingTitleText(listingTitleText, tab.title);
+    listingTitleText.setAttribute("data-toggle", "tooltip");
+    listingTitleText.setAttribute("title", tab.url);
+    listingTitleText.addEventListener("click", function () {
+        navigateToAppropriateTab(tab.id);
+    });
+}
+
 function setListingTitleText(listingTitleText, title) {
-    listingTitleText.textContent = fitTitleTextToListing(title, "tabs");
+    listingTitleText.textContent = fitTitleTextToTabListing(title);
+}
+
+const GLOBAL_TAB_TITLE_LENGTH_LIMIT = 14;
+
+function fitTitleTextToTabListing(title) {
+    return fitTitleTextToListing(title, GLOBAL_TAB_TITLE_LENGTH_LIMIT);
+}
+
+function fitTitleTextToListing(title, sizeLimit) {
+    if (title.length < sizeLimit) {
+        return title;
+    }
+
+    title = title.substring(0, sizeLimit);
+    let titleStopPoint = title.lastIndexOf(" ");
+    title = title.substring(0, titleStopPoint < 0 ? sizeLimit : titleStopPoint);
+    title = `${title}...`;
+
+    return title;
 }
 
 function createListingFavIconElement(tabPromise) {
@@ -235,26 +260,6 @@ function getLinkRoot(link) {
     }
 
     return link.substring(0, endIndex).replace("https://", "").replace("www.", "");
-}
-
-let GLOBAL_TITLE_LENGTH_LIMIT = 14;
-
-function fitTitleTextToListing(title, section) {
-    if (section === "bookmarks") {
-        GLOBAL_TITLE_LENGTH_LIMIT = 32;
-    } else {
-        GLOBAL_TITLE_LENGTH_LIMIT = 14;
-    }
-    if (title.length < GLOBAL_TITLE_LENGTH_LIMIT) {
-        return title;
-    }
-
-    title = title.substring(0, GLOBAL_TITLE_LENGTH_LIMIT);
-    let titleStopPoint = title.lastIndexOf(" ");
-    title = title.substring(0, titleStopPoint < 0 ? GLOBAL_TITLE_LENGTH_LIMIT : titleStopPoint);
-    title = `${title}...`;
-
-    return title;
 }
 
 function createListingMiddleSectionElement(categories) {
@@ -294,75 +299,28 @@ function createCategoryIcons(category, largeText) {
     return categoryIcon;
 }
 
+const categoryEmojis = {
+    "Adult": String.fromCodePoint(0x1F51E),
+    "Arts": String.fromCodePoint(0x1F3A8),
+    "Business": String.fromCodePoint(0x1F4B5),
+    "Computers": String.fromCodePoint(0x1F5A5),
+    "Games": String.fromCodePoint(0x1F3AE),
+    "Health": String.fromCodePoint(0x2695),
+    "News": String.fromCodePoint(0x1F4F0),
+    "Recreation": String.fromCodePoint(0x1F3D6),
+    "Education": String.fromCodePoint(0x1F4DA),
+    "Science": String.fromCodePoint(0x1F52C),
+    "Shopping": String.fromCodePoint(0x1F6CD),
+    "Sports": String.fromCodePoint(0x1F3C8),
+    "Email": String.fromCodePoint(0x1F4E7),
+    "Audio Visual": String.fromCodePoint(0x1F3A5),
+    "Social Media": String.fromCodePoint(0x1F587),
+    "Miscellaneous": String.fromCodePoint(0x1F937)
+};
+
 function getCategoryEmoji(category) {
-    switch (category) {
-        case "Adult": {
-            return String.fromCodePoint(0x1F51E);
-        }
-
-        case "Arts": {
-            return String.fromCodePoint(0x1F3A8);
-        }
-
-        case "Business": {
-            return String.fromCodePoint(0x1F4B5);
-        }
-
-        case "Computers": {
-            return String.fromCodePoint(0x1F5A5);
-        }
-
-        case "Games": {
-            return String.fromCodePoint(0x1F3AE);
-        }
-
-        case "Health": {
-            return String.fromCodePoint(0x2695);
-        }
-
-        case "News": {
-            return String.fromCodePoint(0x1F4F0);
-        }
-
-        case "Recreation": {
-            return String.fromCodePoint(0x1F3D6);
-        }
-
-        case "Education": {
-            return String.fromCodePoint(0x1F4DA);
-        }
-
-        case "Science": {
-            return String.fromCodePoint(0x1F52C);
-        }
-
-        case "Shopping": {
-            return String.fromCodePoint(0x1F6CD);
-        }
-
-        case "Sports": {
-            return String.fromCodePoint(0x1F3C8);
-        }
-
-        case "Email": {
-            return String.fromCodePoint(0x1F4E7);
-        }
-
-        case "Audio Visual": {
-            return String.fromCodePoint(0x1F3A5);
-        }
-
-        case "Social Media": {
-            return String.fromCodePoint(0x1F587);
-        }
-
-        case "Miscellaneous": {
-            return String.fromCodePoint(0x1F937);
-        }
-
-    }
+    return categoryEmojis[category];
 }
-
 
 function createListingRightSectionElement(tabPromise, categories) {
     let listingRightSection = document.createElement("div");
@@ -516,10 +474,22 @@ function createUrlListingElement(bookmark) {
     return urlListing;
 }
 
+function hashString(string) {
+    let hash = 0,
+        i, chr;
+    if (string.length === 0) return hash;
+    for (i = 0; i < string.length; i++) {
+        chr = string.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
+        hash |= 0; // Convert to 32bit integer
+    }
+    return hash;
+}
+
 function createUrlListingTitleElement(bookmark) {
     let urlListingTitle = document.createElement("p");
     urlListingTitle.classList.add("m-0", "flex-grow-1", "bookmark-url-listing-title");
-    urlListingTitle.textContent = fitTitleTextToListing(bookmark.title, "bookmarks")
+    urlListingTitle.textContent = fitTitleTextToBookmarkListing(bookmark.title);
     urlListingTitle.id = `url-listing-${bookmark.url}`;
 
     urlListingTitle.addEventListener("click", () => {
@@ -531,16 +501,10 @@ function createUrlListingTitleElement(bookmark) {
     return urlListingTitle;
 }
 
-function hashString(string) {
-    let hash = 0,
-        i, chr;
-    if (string.length === 0) return hash;
-    for (i = 0; i < string.length; i++) {
-        chr = string.charCodeAt(i);
-        hash = ((hash << 5) - hash) + chr;
-        hash |= 0; // Convert to 32bit integer
-    }
-    return hash;
+const GLOBAL_BOOKMARK_TITLE_LENGTH_LIMIT = 32;
+
+function fitTitleTextToBookmarkListing(title) {
+    return fitTitleTextToListing(title, GLOBAL_BOOKMARK_TITLE_LENGTH_LIMIT);
 }
 
 function createUrlListingDeleteElement(bookmark) {
@@ -572,42 +536,10 @@ function removeBookmark(bookmark) {
     });
 }
 
-function removeBookmarkListings(bookmarks) {
-    bookmarks.forEach((bookmark) => {
-        removeBookmarkListing(bookmark);
-    });
-}
-
-function removeBookmarkListing(bookmark) {
-    let urlHash = hashString(bookmark.url);
-    bookmark.category.forEach(() => {
-        let urlListing = document.getElementById(`url-listing-${urlHash}`);
-
-        urlListing.addEventListener("transitionend", (event) => {
-            if (event.propertyName === "max-height") {
-                urlListing.remove();
-            }
-        });
-
-        urlListing.classList.add("removed");
-    }).forEach((category) => {
-        let bookmarkCategory = document.getElementById(`bookmark-category-${normifyCategories(category)}`);
-        let categoryUrlList = document.getElementById(`bookmark-category-${normifyCategories(category)}`)
-            .getElementsByClassName("bookmark-url-list")[0];
-        if (categoryUrlList.getElementsByTagName("li").length === 0) {
-            removeBookmarkCategory(bookmarkCategory);
-        }
-    });
-}
-
-function removeBookmarkCategory(bookmarkCategoryElement) {
-    // TODO: Remove category
-}
-
 function addUrlListingToCategory(urlListing, category) {
     addBookmarkCategory(category);
-    console.log(category)
-    let bookmarkCategoryElement = document.getElementById(`bookmark-category-` + normifyCategories(category));
+    console.log(category);
+    let bookmarkCategoryElement = document.getElementById(`bookmark-category-` + normalizeCategories(category));
 
     bookmarkCategoryElement.getElementsByClassName("bookmark-url-list")[0].appendChild(urlListing);
 
@@ -620,8 +552,7 @@ function toggleCategoryCollapse(categoryListing) {
     let urlList = categoryListing.getElementsByClassName("bookmark-url-list")[0];
     if (urlList.classList.contains("removed")) {
         expandCategory(urlList);
-    }
-    else {
+    } else {
         collapseCategory(urlList);
     }
 }
@@ -637,32 +568,34 @@ function expandCategory(urlList) {
 // example category id would be "bookmark-category-audio-visual"
 function addBookmarkCategory(categoryName) {
 
-    if (!document.getElementById("bookmark-category-" + normifyCategories(categoryName))) {
+    if (!document.getElementById("bookmark-category-" + normalizeCategories(categoryName))) {
         let categoryWrapper = document.createElement("li");
-        categoryWrapper.classList.add("rounded", "list-group-item", "bookmark-listing")
-        categoryWrapper.id = "bookmark-category-" + normifyCategories(categoryName)
+        categoryWrapper.classList.add("rounded", "list-group-item", "bookmark-listing");
+        categoryWrapper.id = "bookmark-category-" + normalizeCategories(categoryName);
 
         let categoryHeader = document.createElement('div');
         categoryHeader.classList.add("d-flex", "flex-row", "bookmark-category-header");
-        categoryHeader.addEventListener("click", function(){toggleCategoryCollapse(categoryWrapper)});
+        categoryHeader.addEventListener("click", function () {
+            toggleCategoryCollapse(categoryWrapper);
+        });
 
         let categorySymbol = document.createElement("p");
         categorySymbol.classList.add("m-0", "align-middle", "bookmark-category-symbol");
         categorySymbol.textContent = getCategoryEmoji(categoryName);
 
         let categoryTitle = document.createElement("p");
-        categoryTitle.classList.add("m-0", "pl-1", "flex-grow-1", "bookmark-category-title")
-        categoryTitle.textContent = categoryName
+        categoryTitle.classList.add("m-0", "pl-1", "flex-grow-1", "bookmark-category-title");
+        categoryTitle.textContent = categoryName;
 
-        let collapseIcon = document.createElement("a")
-        collapseIcon.classList.add("btn", "bookmark-toggle-collapse-icon")
+        let collapseIcon = document.createElement("a");
+        collapseIcon.classList.add("btn", "bookmark-toggle-collapse-icon");
 
         let collapseHelper = document.createElement("i");
-        collapseHelper.classList.add("fa", "fa-angle-right", "fa-2x")
+        collapseHelper.classList.add("fa", "fa-angle-right", "fa-2x");
         collapseIcon.appendChild(collapseHelper);
 
-        let urlList = document.createElement("ul")
-        urlList.classList.add("list-group", "m-0", "px-2", "pb-2", "pt-4", "bookmark-url-list", "removed")
+        let urlList = document.createElement("ul");
+        urlList.classList.add("list-group", "m-0", "px-2", "pb-2", "pt-4", "bookmark-url-list", "removed");
 
         categoryHeader.append(categorySymbol, categoryTitle, collapseIcon, collapseHelper);
         categoryWrapper.append(categoryHeader, urlList);
@@ -671,7 +604,7 @@ function addBookmarkCategory(categoryName) {
     }
 }
 
-function normifyCategories(categoryName) {
+function normalizeCategories(categoryName) {
     let words = categoryName.split(' ');
     let retString = "";
     for (var i = 0; i < words.length; i++) {
@@ -747,14 +680,58 @@ function updateTabList() {
 }
 
 function processChangesToBookmarkList(bookmarkChanges) {
-    processBookmarkAddition(bookmarkChanges);
+    processBookmarkAdditions(bookmarkChanges);
     processBookmarkRemovals(bookmarkChanges);
 }
 
-function processBookmarkAddition(bookmarkChanges) {
+function processBookmarkAdditions(bookmarkChanges) {
     addBookmarkListings(bookmarkChanges.newValue.filter(bookmark => !bookmarkChanges.oldValue.includes(bookmark)));
 }
 
 function processBookmarkRemovals(bookmarkChanges) {
     removeBookmarkListings(bookmarkChanges.oldValue.filter(bookmark => !bookmarkChanges.newValue.includes(bookmark)));
+}
+
+function removeBookmarkListings(bookmarks) {
+    bookmarks.forEach((bookmark) => {
+        removeBookmarkListing(bookmark);
+    });
+}
+
+function removeBookmarkListing(bookmark) {
+    let urlHash = hashString(bookmark.url);
+
+    console.log(bookmark.category);
+    bookmark.category.forEach(() => {
+        deleteBookmarkListingElement(urlHash);
+    });
+    bookmark.category.forEach((category) => {
+        checkToDeleteCategory(category);
+    });
+}
+
+function deleteBookmarkListingElement(urlHash) {
+    let urlListing = document.getElementById(`url-listing-${urlHash}`);
+
+    urlListing.addEventListener("transitionend", (event) => {
+        if (event.propertyName === "max-height") {
+            urlListing.remove();
+        }
+    });
+
+    urlListing.classList.add("removed");
+}
+
+function checkToDeleteCategory(category) {
+    let bookmarkCategory = document.getElementById(`bookmark-category-${normalizeCategories(category)}`);
+    let categoryUrlList = document.getElementById(`bookmark-category-${normalizeCategories(category)}`)
+        .getElementsByClassName("bookmark-url-list")[0];
+    if (categoryUrlList.getElementsByTagName("li").length === 0) {
+        removeBookmarkCategory(bookmarkCategory);
+    }
+}
+
+function removeBookmarkCategory(bookmarkCategoryElement) {
+    // TODO: Add removal animation to categories
+    bookmarkCategoryElement.remove();
 }

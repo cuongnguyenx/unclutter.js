@@ -10,10 +10,10 @@ function Tree(data) {
     this._root = node;
 }
 
-function linkHierachy(data) {
+function linkHierarchy(data) {
     this.tree = new Tree(data);
-    this.globalHierachy = [];
-    this.localHierachy = [];
+    this.globalHierarchy = [];
+    this.localHierarchy = [];
 }
 
 function Queue() {

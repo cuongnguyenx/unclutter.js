@@ -279,11 +279,7 @@ browser.storage.onChanged.addListener((changes, areaName) => {
         updateBadge(changes.temp.newValue.length);
     }
     else if (areaName === "sync") {
-        if (changes.settings) {
-            updateSettings(changes.settings);
-        } else if (changes.bookmarks) {
-            console.log(changes.bookmarks);
-        }
+        updateSyncStorage(changes);
     }
 });
 
@@ -331,6 +327,14 @@ function padWithZeroes(string, padAmount) {
 
 function badgeText(tabCount) {
     return tabCount === 0 ? "" : tabCount.toString();
+}
+
+function updateSyncStorage(changes) {
+    if (changes.settings) {
+        updateSettings(changes.settings);
+    } else if (changes.bookmarks) {
+        console.log(changes.bookmarks);
+    }
 }
 
 function updateSettings(settings) {
@@ -415,7 +419,7 @@ function deleteBookmark(actionInfo) {
     browser.storage.sync.get("bookmarks").then(async (bookmarkResult) => {
         let bookmarks = bookmarkResult.bookmarks;
 
-        let bookmarkIndex = bookmarkResult.findIndex((element) => element.url === actionInfo.url);
+        let bookmarkIndex = bookmarks.findIndex((element) => element.url === actionInfo.url);
 
         if (bookmarkIndex > -1) {
             bookmarks.splice(bookmarkIndex, 1);
